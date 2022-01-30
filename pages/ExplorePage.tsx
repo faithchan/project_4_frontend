@@ -10,11 +10,11 @@ const ExplorePage = () => {
             <SignupSection />
             </div>
 
-            <div className="mx-32">
+            <div className="mx-52">
                 <h1 className="font-header text-gold text-center text-xl">
-                    Featured Artist
+                    Featured Artist NFTs
                 </h1>
-                <div className="flex justify-between mx-24 mt-14">
+                <div className="flex justify-between space-x-14 mt-14">
                     <FeaturedCard />
                     <FeaturedCard />
                     <FeaturedCard />
