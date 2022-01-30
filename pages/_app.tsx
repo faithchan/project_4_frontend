@@ -1,16 +1,25 @@
 import '../styles/globals.css'
-import ExplorePage from './ExplorePage'
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
+import 'tailwindcss/tailwind.css'
+import type { AppProps } from 'next/app'
+import Static from '../components/Static'
+
+import Head from 'next/head'
 
 
-function MyApp() {
-  return <div className="bg-bgimg bg-cover">
-    <Navbar />
-    <ExplorePage />
-    <Footer />
-    
-  </div>
+function MyApp({ Component, pageProps }: AppProps) {
+
+  return (
+
+    <div className="bg-bgimg bg-cover">
+        <Head>
+          <title>ARKIV</title>
+        </Head>
+        <Static>
+          <Component {...pageProps} />
+          </Static>
+       
+    </div>
+  )
 }
 
 export default MyApp

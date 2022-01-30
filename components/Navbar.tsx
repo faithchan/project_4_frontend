@@ -8,10 +8,10 @@ const Navbar = () => {
     return (
         <div className="text-gold font-header text-xs">
             <nav className="flex pt-10 px-32 place-content-between">
-                <span className="mt-10 w-28"><Link href="/"><Image src={logo} alt="Logo" /></Link></span>
+                <span className="mt-10 w-28"><Link href="/"><a><Image src={logo} alt="Logo" /></a></Link></span>
                 <ul className="flex items-right mt-6 h-full tracking-widest">
-                    <li className="mx-10 mt-4"><Link href="/login">LOGIN</Link></li>
-                    <li className="ml-10 mr-20 mt-4 "><Link href="/explore">EXPLORE</Link></li>
+                    <li className="mx-10 mt-4"><Link href="/login"><a>LOGIN</a></Link></li>
+                    <li className="ml-10 mr-20 mt-4 "><Link href="/explore"><a>EXPLORE</a></Link></li>
                     <Search />
                 </ul>
             </nav>

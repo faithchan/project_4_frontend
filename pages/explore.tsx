@@ -2,7 +2,7 @@ import React from 'react'
 import SignupSection from '../components/SignupSection'
 import FeaturedCard from '../components/FeaturedCard'
 
-const ExplorePage = () => {
+const explore = () => {
     return (
         <div className="">
 
@@ -35,4 +35,4 @@ const ExplorePage = () => {
     )
 }
 
-export default ExplorePage
+export default explore

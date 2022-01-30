@@ -16,7 +16,7 @@ module.exports = {
     indigo:"#364861"
   },
 
-  backgroundImage:theme=> ({'bgimg': "url('../public/background.jpg')"})},
+  backgroundImage:theme=> ({'bgimg': "url('/background.jpg')"})},
   },
   plugins: [],
 }
