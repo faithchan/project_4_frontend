@@ -11,10 +11,7 @@ module.exports = {
     },
     
     colors:{
-    blue:{
-      400:"#44535E",
-      450:"#313D45"},
-    gold: "#BBA68D"
+    gold: "#CA9E67"
   },
 
   backgroundImage:theme=> ({'bgimg': "url('../public/background.jpg')"})},
