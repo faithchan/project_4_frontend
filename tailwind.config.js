@@ -11,7 +11,9 @@ module.exports = {
     },
     
     colors:{
-    gold: "#CA9E67"
+    gold: "#CA9E67",
+    purple:"#2C183A",
+    indigo:"#364861"
   },
 
   backgroundImage:theme=> ({'bgimg': "url('../public/background.jpg')"})},
