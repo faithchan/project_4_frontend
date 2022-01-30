@@ -4,17 +4,17 @@ import FeaturedCard from '../components/FeaturedCard'
 
 const explore = () => {
     return (
-        <div className="">
+        <div className="mx-32">
 
-            <div className="">
+            <div>
             <SignupSection />
             </div>
 
-            <div className="mx-52">
+            <div className="">
                 <h1 className="font-header text-gold text-center text-xl">
                     Featured Artist NFTs
                 </h1>
-                <div className="flex justify-between space-x-14 mt-14">
+                <div className="flex flex-wrap justify-center space-x-20">
                     <FeaturedCard />
                     <FeaturedCard />
                     <FeaturedCard />

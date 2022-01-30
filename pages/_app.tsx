@@ -10,7 +10,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
 
-    <div className="bg-bgimg bg-cover">
+    <div>
         <Head>
           <title>ARKIV</title>
         </Head>
