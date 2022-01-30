@@ -17,7 +17,7 @@ module.exports = {
     gold: "#BBA68D"
   },
 
-  backgroundImage:theme=> ({'recipebg': "url('./bg.jpg')",'cafebg': "url('./cafebg.jpg')"})},
+  backgroundImage:theme=> ({'bgimg': "url('../public/background.jpg')"})},
   },
   plugins: [],
 }
