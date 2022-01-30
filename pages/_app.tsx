@@ -1,8 +1,10 @@
 import '../styles/globals.css'
-import type { AppProps } from 'next/app'
 
-function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+
+function MyApp() {
+  return <div className="">
+    <h1 className="font-header">Hi, this is from MyApp</h1>
+  </div>
 }
 
 export default MyApp

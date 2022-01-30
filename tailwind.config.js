@@ -4,7 +4,20 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {fontFamily:{
+      body:"'Montserrat-Medium', san-serif",
+      header:"'Messapia-Bold', sans-serif",
+      
+    },
+    
+    colors:{
+    blue:{
+      400:"#44535E",
+      450:"#313D45"},
+    gold: "#BBA68D"
+  },
+
+  backgroundImage:theme=> ({'recipebg': "url('./bg.jpg')",'cafebg': "url('./cafebg.jpg')"})},
   },
   plugins: [],
 }
