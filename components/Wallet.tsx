@@ -14,16 +14,21 @@ interface WalletProps {
 const Wallet = (props: WalletProps) => {
   const connectWallet = async () => {
     if (typeof window.ethereum !== 'undefined') {
-      const web3Modal = new Web3Modal()
-      const connection = await web3Modal.connect()
-      const provider = new ethers.providers.Web3Provider(connection)
-      const signer = provider.getSigner()
-      const connectedAddress = await signer.getAddress()
-      console.log('Connected Wallet: ', connectedAddress)
-      console.log('signer: ', signer)
-      props.setSigner(signer)
-      props.setWalletAddress(connectedAddress)
-      props.setConnected(true)
+      if (window.ethereum.chainId !== '0x4') {
+        console.log('switch to rinkeby network')
+        changeNetwork()
+      } else {
+        const web3Modal = new Web3Modal()
+        const connection = await web3Modal.connect()
+        const provider = new ethers.providers.Web3Provider(connection)
+        const signer = provider.getSigner()
+        const connectedAddress = await signer.getAddress()
+        console.log('Connected Wallet: ', connectedAddress)
+        console.log('signer: ', signer)
+        props.setSigner(signer)
+        props.setWalletAddress(connectedAddress)
+        props.setConnected(true)
+      }
     } else {
       alert('Please install Metamask')
     }
@@ -34,13 +39,17 @@ const Wallet = (props: WalletProps) => {
     props.setConnected(false)
   }
 
-  useEffect(() => {
-    if (typeof window.ethereum !== 'undefined') {
-      if (window.ethereum.chainId !== '0x4') {
-        console.log('switch to rinkeby network')
-      }
+  const changeNetwork = async () => {
+    try {
+      if (!window.ethereum) throw new Error('No crypto wallet found')
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: '0x4' }],
+      })
+    } catch (err: any) {
+      console.log('error changing network: ', err.message)
     }
-  }, [props.chainId])
+  }
 
   return (
     <div>
