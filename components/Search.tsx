@@ -5,7 +5,7 @@ const Search = () => {
         <div className="relative text-gray-400">
             <input type="search" name="search" placeholder="Search" className="bg-white h-10 pl-5 rounded-full text-sm focus:outline-none"/>
                 <button type="submit" className="absolute right-0 top-0 mt-3 pr-4 ">
-                    ok
+                    go
                 </button>
         </div>
    
