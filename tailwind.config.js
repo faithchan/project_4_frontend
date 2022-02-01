@@ -4,19 +4,18 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {fontFamily:{
-      body:"'Montserrat-Medium', san-serif",
-      header:"'Messapia-Bold', sans-serif",
-      
+    extend: {
+      fontFamily: {
+        body: "'Montserrat-Medium', san-serif",
+        header: "'Messapia-Bold', sans-serif",
+      },
+      colors: {
+        gold: "#CA9E67",
+        purple: "#2C183A",
+        indigo: "#364861",
+      },
+      backgroundImage: (theme) => ({ bgimg: "url('/background.jpg')" }),
     },
-    
-    colors:{
-    gold: "#CA9E67",
-    purple:"#2C183A",
-    indigo:"#364861"
-  },
-
-  backgroundImage:theme=> ({'bgimg': "url('/background.jpg')"})},
   },
   plugins: [],
-}
+};
