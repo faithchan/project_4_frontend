@@ -1,6 +1,6 @@
-import React from "react";
-import SignupSection from "../components/SignupSection";
-import FeaturedCard from "../components/FeaturedCard";
+import React from 'react'
+import SignupSection from '../components/SignupSection'
+import FeaturedCard from '../components/FeaturedCard'
 
 const explore = () => {
   return (
@@ -35,7 +35,7 @@ const explore = () => {
         <hr className="mb-6"></hr>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default explore;
+export default explore

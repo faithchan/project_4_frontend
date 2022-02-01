@@ -1,8 +1,8 @@
-import React from "react";
-import Link from "next/link";
-import Image from "next/image";
-import logo from "../public/ArkivLogo.svg";
-import Search from "./Search";
+import React from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import logo from '../public/ArkivLogo.svg'
+import Search from './Search'
 
 const Navbar = () => {
   return (
@@ -30,7 +30,7 @@ const Navbar = () => {
         </ul>
       </nav>
     </div>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

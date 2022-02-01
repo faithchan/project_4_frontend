@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 
 const FeaturedCard = () => {
   return (
@@ -24,7 +24,7 @@ const FeaturedCard = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default FeaturedCard;
+export default FeaturedCard

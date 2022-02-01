@@ -1,9 +1,9 @@
-import "../styles/globals.css";
-import "tailwindcss/tailwind.css";
-import type { AppProps } from "next/app";
-import Static from "../components/Static";
+import '../styles/globals.css'
+import 'tailwindcss/tailwind.css'
+import type { AppProps } from 'next/app'
+import Static from '../components/Static'
 
-import Head from "next/head";
+import Head from 'next/head'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
       </Static>
     </div>
-  );
+  )
 }
 
-export default MyApp;
+export default MyApp

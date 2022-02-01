@@ -1,36 +1,46 @@
-import { ethers } from "ethers";
-import Web3Modal from "web3modal";
+import { ethers } from 'ethers'
+import Web3Modal from 'web3modal'
+import { useEffect } from 'react'
 
 interface WalletProps {
-  setWalletAddress: (a: string) => void;
-  setSigner: (a: object) => void;
-  setConnected: (a: boolean) => void;
-  connected: boolean;
+  setWalletAddress: (a: string) => void
+  setSigner: (a: object) => void
+  setConnected: (a: boolean) => void
+  setChainId: (a: string) => void
+  connected: boolean
+  chainId: string
 }
 
 const Wallet = (props: WalletProps) => {
   const connectWallet = async () => {
-    if (typeof window.ethereum !== "undefined") {
-      console.log("MetaMask is present");
-      const web3Modal = new Web3Modal();
-      const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const signer = provider.getSigner();
-      const connectedAddress = await signer.getAddress();
-      console.log("Connected Wallet: ", connectedAddress);
-      console.log("signer: ", signer);
-      props.setSigner(signer);
-      props.setWalletAddress(connectedAddress);
-      props.setConnected(true);
+    if (typeof window.ethereum !== 'undefined') {
+      const web3Modal = new Web3Modal()
+      const connection = await web3Modal.connect()
+      const provider = new ethers.providers.Web3Provider(connection)
+      const signer = provider.getSigner()
+      const connectedAddress = await signer.getAddress()
+      console.log('Connected Wallet: ', connectedAddress)
+      console.log('signer: ', signer)
+      props.setSigner(signer)
+      props.setWalletAddress(connectedAddress)
+      props.setConnected(true)
     } else {
-      alert("Please install Metamask");
+      alert('Please install Metamask')
     }
-  };
+  }
 
   const disconnectWallet = async () => {
-    props.setWalletAddress("");
-    props.setConnected(false);
-  };
+    props.setWalletAddress('')
+    props.setConnected(false)
+  }
+
+  useEffect(() => {
+    if (typeof window.ethereum !== 'undefined') {
+      if (window.ethereum.chainId !== '0x4') {
+        console.log('switch to rinkeby network')
+      }
+    }
+  }, [props.chainId])
 
   return (
     <div>
@@ -42,7 +52,7 @@ const Wallet = (props: WalletProps) => {
         <button onClick={connectWallet}>Connect Wallet</button>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Wallet;
+export default Wallet
