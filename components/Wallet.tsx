@@ -1,11 +1,14 @@
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
-import { useState, useEffect } from "react";
 
-const Wallet = () => {
-  const [walletAddress, setWalletAddress] = useState("");
-  const [connected, setConnected] = useState<Boolean>(false);
+interface WalletProps {
+  setWalletAddress: (a: string) => void;
+  setSigner: (a: object) => void;
+  setConnected: (a: boolean) => void;
+  connected: boolean;
+}
 
+const Wallet = (props: WalletProps) => {
   const connectWallet = async () => {
     if (typeof window.ethereum !== "undefined") {
       console.log("MetaMask is present");
@@ -15,21 +18,23 @@ const Wallet = () => {
       const signer = provider.getSigner();
       const connectedAddress = await signer.getAddress();
       console.log("Connected Wallet: ", connectedAddress);
-      setWalletAddress(connectedAddress);
-      setConnected(true);
+      console.log("signer: ", signer);
+      props.setSigner(signer);
+      props.setWalletAddress(connectedAddress);
+      props.setConnected(true);
     } else {
       alert("Please install Metamask");
     }
   };
 
   const disconnectWallet = async () => {
-    setWalletAddress("");
-    setConnected(false);
+    props.setWalletAddress("");
+    props.setConnected(false);
   };
 
   return (
     <div>
-      {connected ? (
+      {props.connected ? (
         <>
           <button onClick={disconnectWallet}>Disconnect</button>
         </>
