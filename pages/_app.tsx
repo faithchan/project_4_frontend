@@ -4,21 +4,22 @@ import type { AppProps } from 'next/app'
 import Static from '../components/Static'
 import Head from 'next/head'
 import userContext from "../context/context"
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 
 
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [login, setLogin] = useState(true)
-  const [designerState, setDesignerState] = useState(false)
-  const [walletID, setWalletID] =useState("123d")
+  const [isLoggedIn, setLogin] = useState(false)
+  const [isDesigner, setDesigner] = useState(false)
+  const [wallet, setWalletID] =useState("123d")
+
   const userLoginData={
-    login: login,
-    designerState: designerState,
-    walletID:walletID
+    login: isLoggedIn,
+    designerState: isDesigner,
+    walletID:wallet,
+
   }
-  console.log(userLoginData)
-  
+
   return (
 
     <div>

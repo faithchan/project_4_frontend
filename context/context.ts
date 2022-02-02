@@ -3,10 +3,8 @@ import React, { createContext } from 'react'
 interface userLoginStatus {
    login:boolean,
    walletID:string,
-   designerState:boolean
+   designerState:boolean,
 }
-
-
 
 const userContext = createContext<userLoginStatus | null>(null);
 
