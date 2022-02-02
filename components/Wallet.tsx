@@ -9,6 +9,7 @@ interface WalletProps {
   setChainId: (a: string) => void
   connected: boolean
   chainId: string
+  signer: any
 }
 
 const Wallet = (props: WalletProps) => {

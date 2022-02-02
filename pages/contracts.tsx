@@ -61,6 +61,7 @@ const Contracts = () => {
         setChainId={setChainId}
         chainId={chainId}
         connected={connected}
+        signer={signer}
       />
     </div>
   )
