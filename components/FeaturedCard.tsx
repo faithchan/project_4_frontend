@@ -4,7 +4,7 @@ const FeaturedCard = () => {
     return (
        
         
-          <div className="w-72 p-8 bg-purple opacity-80 rounded-3xl mt-14">
+          <div className="w-72 p-8 bg-purple opacity-80 rounded-3xl mt-14 shadow-xl hover:shadow-2xl hover:scale-105 transition-all transform duration-500">
             <img className="w-56 h-56 object-cover rounded-3xl" src="https://images.unsplash.com/photo-1617791160505-6f00504e3519?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1856&q=80" alt="" />
             <div className="mt-4">
               <h1 className="text-lg font-bold text-gold font-header tracking-widest">SILO</h1>
