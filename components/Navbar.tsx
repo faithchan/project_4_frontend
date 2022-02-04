@@ -3,6 +3,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import logo from "../public/ArkivLogo.svg"
 import Search from './Search'
+import accountImg from "../public/account.svg"
+
 
 const Navbar = () => {
     return (
@@ -11,7 +13,8 @@ const Navbar = () => {
                 <span className="mt-10 w-28"><Link href="/"><a><Image src={logo} alt="Logo" /></a></Link></span>
                 <ul className="flex items-right mt-6 h-full tracking-widest">
                     <li className="mx-10 mt-4"><Link href="/login"><a>LOGIN</a></Link></li>
-                    <li className="ml-10 mr-20 mt-4 "><Link href="/explore"><a>EXPLORE</a></Link></li>
+                    <li className="ml-10 mr-10 mt-4 "><Link href="/explore"><a>EXPLORE</a></Link></li>
+                    <li className="ml-10 mr-20 mt-2 "><Link href="/explore"><a><Image src={accountImg}></Image></a></Link></li>
                     <Search />
                 </ul>
             </nav>
