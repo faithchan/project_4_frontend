@@ -12,7 +12,7 @@ const LoginForm = () => {
               </div>
               <div>
                 <label className="block mb-1 text-gray-300 font-semibold">Password</label>
-                <input type="text" className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full" />
+                <input type="password" className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full" />
               </div>
             </div>
             <div className="flex justify-center">

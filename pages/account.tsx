@@ -14,7 +14,7 @@ const account = () => {
    <img className="rounded-full" src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"></img>
           
         </div>
-        <p className="text-gold text-2xl font-header mt-10">Marina Davinchi</p>
+        <p className="text-gold text-2xl font-header mt-8">Marina Davinchi</p>
         <span className="text-sm text-gray-300 mt-2 font-body">New York, NY - Los Angeles, CA</span>
     </div>
 
@@ -49,7 +49,7 @@ const account = () => {
     </div>
 
 
-       <div className="grid grid-cols-3 gap-6 my-3">
+       <div className="grid grid-cols-3 gap-6 mt-3 mb-6">
         <img className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg" src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"></img>
         <img className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg" src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"></img>
         <img className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg" src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"></img>
