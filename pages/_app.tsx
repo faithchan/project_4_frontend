@@ -17,7 +17,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     login: isLoggedIn,
     designerState: isDesigner,
     walletID:wallet,
-
   }
 
   return (
