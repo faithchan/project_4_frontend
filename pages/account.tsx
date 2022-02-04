@@ -19,7 +19,6 @@ const account = () => {
     </div>
 
 
-
     <div className="flex justify-center items-center gap-2 my-4">
         <div className="text-center mx-4">
             <p className="text-gold text-sm font-header">102</p>
@@ -35,7 +34,7 @@ const account = () => {
         </div>
     </div>
   
-
+  
     <div className="flex justify-center gap-2 my-5">
         <button className="bg-gold text-sm font-header px-10 py-2 rounded-full text-white shadow-lg">Follow</button>
     </div>
@@ -50,8 +49,13 @@ const account = () => {
     </div>
 
 
-       <div className="grid grid-cols-3 gap-2 my-3">
-            <a className="block bg-center bg-no-repeat bg-cover h-40 w-full rounded-lg" href="" ></a>
+       <div className="grid grid-cols-3 gap-6 my-3">
+        <img className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg" src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"></img>
+        <img className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg" src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"></img>
+        <img className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg" src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"></img>
+        <img className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg" src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"></img>
+        <img className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg" src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"></img>
+        <img className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg" src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"></img>
        </div>
 
 </div>
