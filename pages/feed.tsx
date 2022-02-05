@@ -1,6 +1,6 @@
 import React from 'react'
 
-const explore = () => {
+const feed = () => {
     return (
         <div>
             <h1>test</h1>
@@ -8,4 +8,4 @@ const explore = () => {
     )
 }
 
-export default explore
+export default feed
