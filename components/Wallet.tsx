@@ -1,6 +1,5 @@
 import { ethers } from 'ethers'
 import Web3Modal from 'web3modal'
-import { useEffect } from 'react'
 
 interface WalletProps {
   setWalletAddress: (a: string) => void
@@ -26,6 +25,7 @@ const Wallet = (props: WalletProps) => {
         const connectedAddress = await signer.getAddress()
         console.log('Connected Wallet: ', connectedAddress)
         console.log('signer: ', signer)
+        localStorage.setItem('walletAddress', connectedAddress)
         props.setSigner(signer)
         props.setWalletAddress(connectedAddress)
         props.setConnected(true)
@@ -36,6 +36,7 @@ const Wallet = (props: WalletProps) => {
   }
 
   const disconnectWallet = async () => {
+    localStorage.removeItem('walletAddress')
     props.setWalletAddress('')
     props.setConnected(false)
   }
@@ -56,10 +57,20 @@ const Wallet = (props: WalletProps) => {
     <div>
       {props.connected ? (
         <>
-          <button onClick={disconnectWallet}>Disconnect</button>
+          <button
+            onClick={disconnectWallet}
+            className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8"
+          >
+            Disconnect
+          </button>
         </>
       ) : (
-        <button onClick={connectWallet}>Connect Wallet</button>
+        <button
+          onClick={connectWallet}
+          className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8"
+        >
+          Connect Wallet
+        </button>
       )}
     </div>
   )
