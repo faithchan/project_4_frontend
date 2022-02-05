@@ -7,22 +7,23 @@ import userContext from '../context/context'
 import { useState, useEffect } from 'react'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [isLoggedIn, setLogin] = useState(false)
+  const [isLoggedIn, setLoginState] = useState(false)
   const [isDesigner, setDesigner] = useState(false)
-  const [wallet, setWalletID] = useState('123d')
+  const [walletAddress, setWalletAddress] = useState('123d')
 
   const userLoginData = {
     login: isLoggedIn,
     designerState: isDesigner,
-    walletID: wallet,
+    walletID: walletAddress,
+    setLoginState: (state: boolean) => setLoginState(state),
   }
+
   return (
     <div>
       <userContext.Provider value={userLoginData}>
         <Head>
           <title>ARKIV</title>
         </Head>
-
         <Static>
           <Component {...pageProps} />
         </Static>

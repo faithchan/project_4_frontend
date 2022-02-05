@@ -21,11 +21,7 @@ const Contracts = () => {
   const initialiseContracts = async () => {
     if (signer != undefined) {
       const nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
-      const marketContract = new ethers.Contract(
-        marketplaceaddress,
-        Marketplace.abi,
-        signer
-      )
+      const marketContract = new ethers.Contract(marketplaceaddress, Marketplace.abi, signer)
       console.log('nft: ', nftContract)
       console.log('marketplace: ', marketContract)
       setNftContract(nftContract)

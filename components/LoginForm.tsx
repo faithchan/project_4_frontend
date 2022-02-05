@@ -1,6 +1,7 @@
-import React from 'react'
+import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
+import UserContext from '../context/context'
 
 type FormData = {
   email: string
@@ -9,6 +10,8 @@ type FormData = {
 
 const LoginForm = () => {
   const router = useRouter()
+  const userLoginContext = useContext(UserContext)
+
   const {
     register,
     handleSubmit,
@@ -29,7 +32,7 @@ const LoginForm = () => {
         alert('Invalid Email / Password, please try again')
       } else {
         localStorage.setItem('token', decodedResponse.token)
-        console.log('jwt: ', decodedResponse.token)
+        userLoginContext.setLoginState(true)
         router.push('/')
       }
     } catch (err) {
