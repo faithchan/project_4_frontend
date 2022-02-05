@@ -4,6 +4,7 @@ import Image from 'next/image'
 import logo from '../public/ArkivLogo.svg'
 import Search from './Search'
 import accountImg from '../public/account.svg'
+import exploreImg from '../public/explore.svg'
 
 const Navbar = () => {
   return (
@@ -17,14 +18,33 @@ const Navbar = () => {
           </Link>
         </span>
         <ul className="flex items-right mt-6 h-full tracking-widest">
+          <li className="ml-10 mr-20 mt-2 ">
+            <Link href="/account">
+              <a>
+                <Image src={accountImg}></Image>
+              </a>
+            </Link>
+          </li>
           <li className="mx-10 mt-4">
             <Link href="/login">
               <a>LOGIN</a>
             </Link>
           </li>
-          <li className="ml-10 mr-20 mt-4 ">
+          <li className="ml-10 mr-10 mt-4 ">
+            <Link href="/uploadnft">
+              <a>UPLOAD</a>
+            </Link>
+          </li>
+          <li className="ml-10 mr-10 mt-4 ">
+            <Link href="/trades">
+              <a>TRADES</a>
+            </Link>
+          </li>
+          <li className="ml-10 mr-10 mt-2 ">
             <Link href="/explore">
-              <a>EXPLORE</a>
+              <a>
+                <Image src={exploreImg}></Image>
+              </a>
             </Link>
           </li>
           <Search />

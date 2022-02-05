@@ -1,10 +1,10 @@
 import type { NextPage } from 'next'
-import Explore from './explore'
+import About from './about'
 
 const Home = () => {
   return (
     <div>
-      <Explore />
+      <About />
     </div>
   )
 }
