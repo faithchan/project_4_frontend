@@ -22,7 +22,11 @@ const UploadNFTForm = () => {
   const [signer, setSigner] = useState<any>()
   const [nftContract, setNftContract] = useState({})
   const [fileUrl, setFileUrl] = useState('')
-  const [metadata, setMetadata] = useState<Metadata>()
+  const [metadata, setMetadata] = useState({ name: '', description: '', imageUrl: '' })
+
+  const mintToken = async () => {
+    console.log('nft contract: ', nftContract)
+  }
 
   const initialiseContract = async () => {
     if (signer != undefined) {
@@ -43,16 +47,20 @@ const UploadNFTForm = () => {
       const url = `https://ipfs.infura.io/ipfs/${cid}`
       console.log('ipfs url: ', url)
       setFileUrl(url)
+      setMetadata({ ...metadata, imageUrl: url })
     } catch (e) {
       console.error('Error uploading file: ', e)
     }
   }
 
-  const createNFTMetadata = async () => {}
-
-  const mintToken = async () => {
-    console.log('nft contract: ', nftContract)
+  const handleInputChange = (event: any) => {
+    console.log('metadata: ', metadata)
+    const name = event.target.name
+    const value = event.target.value
+    setMetadata({ ...metadata, [name]: value })
   }
+
+  const createNFTMetadata = async () => {}
 
   const addTokenToDatabase = async () => {}
 
@@ -86,6 +94,8 @@ const UploadNFTForm = () => {
             className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md mt-2"
             type="text"
             placeholder="Silo"
+            name="name"
+            onChange={handleInputChange}
           />
         </div>
         <div className="grid grid-cols-1 mt-5 mx-7">
@@ -95,6 +105,8 @@ const UploadNFTForm = () => {
           <textarea
             className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md mt-2"
             placeholder="Brief write up about NFT"
+            name="description"
+            onChange={handleInputChange}
           />
         </div>
         <div className="grid grid-cols-1 mt-5 mx-7">
