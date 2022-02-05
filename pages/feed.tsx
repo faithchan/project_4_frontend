@@ -1,9 +1,10 @@
 import React from 'react'
+import FeedCard from '../components/FeedCard'
 
 const feed = () => {
     return (
         <div>
-            <h1>test</h1>
+          <FeedCard />
         </div>
     )
 }
