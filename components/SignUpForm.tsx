@@ -1,4 +1,5 @@
 import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/router'
 
 type FormData = {
   username: string
@@ -8,6 +9,7 @@ type FormData = {
 }
 
 const SignUpForm = () => {
+  const router = useRouter()
   const {
     register,
     handleSubmit,

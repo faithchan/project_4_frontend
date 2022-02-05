@@ -8,6 +8,7 @@ type FormData = {
 }
 
 const LoginForm = () => {
+  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -25,10 +26,12 @@ const LoginForm = () => {
       })
       const decodedResponse = await response.json()
       if (decodedResponse.status === 401) {
-        throw new Error('Invalid Email / Password, please try again')
+        alert('Invalid Email / Password, please try again')
+      } else {
+        localStorage.setItem('token', decodedResponse.token)
+        console.log('jwt: ', decodedResponse.token)
+        router.push('/')
       }
-      localStorage.setItem('token', decodedResponse.token)
-      console.log('jwt: ', decodedResponse.token)
     } catch (err) {
       console.error(err)
     }
