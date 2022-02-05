@@ -10,28 +10,18 @@ const SignUpForm = () => {
 
   const onSubmit = async (data: any) => {
     console.log('data: ', data)
-    const response = await fetch(`${process.env.API_ENDPOINT}/users`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newAccount),
-    })
+    try {
+      const response = await fetch(`${process.env.API_ENDPOINT}/users`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+    } catch (err) {
+      console.error(err)
+    }
   }
-
-  interface LoginDetails {
-    username: string
-    email: string
-    password: string
-    walletAddress: string
-  }
-
-  const [newAccount, setNewAccount] = useState<LoginDetails>({
-    email: '',
-    password: '',
-    username: '',
-    walletAddress: '',
-  })
 
   function validateEmail(email: any) {
     const re =
