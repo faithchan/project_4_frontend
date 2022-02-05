@@ -6,13 +6,44 @@ import { ethers } from 'ethers'
 import { create } from 'ipfs-http-client'
 import NFT from '../contract-abis/NFT.json'
 
+const url: string | any = 'https://ipfs.infura.io:5001/api/v0'
+const client = create(url)
+
 const UploadNFTForm = () => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false)
   const [walletAddress, setWalletAddress] = useState('')
   const [connected, setConnected] = useState<boolean>(false)
   const [signer, setSigner] = useState<any>()
+  const [nftContract, setNftContract] = useState({})
+  const [fileUrl, setFileUrl] = useState('')
 
-  const initialiseContract = async () => {}
+  const initialiseContract = async () => {
+    if (signer != undefined) {
+      const nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
+      console.log('nft: ', nftContract)
+      setNftContract(nftContract)
+    } else {
+      alert('Please connect your wallet to mint.')
+    }
+  }
+
+  const onFileUpload = async (e: any) => {
+    const file = e.target.files[0]
+    try {
+      const addedFile = await client.add(file)
+      const url = `https://ipfs.infura.io/ipfs/${addedFile.path}`
+      console.log('ipfs url: ', url)
+      setFileUrl(url)
+    } catch (e) {
+      console.error('Error uploading file: ', e)
+    }
+  }
+
+  const mintToken = async () => {
+    initialiseContract()
+  }
+
+  const addTokenToDatabase = async () => {}
 
   useEffect(() => {
     let token = localStorage.getItem('token')
@@ -24,25 +55,23 @@ const UploadNFTForm = () => {
     }
   }, [])
 
-  // add login check
+  if (!loggedIn) {
+    return (
+      <div className="flex items-center justify-center mt-10 mb-20">
+        <div className="text-white">Please Log In</div>
+      </div>
+    )
+  }
 
   return (
     <div className="flex items-center justify-center mt-10 mb-20">
       <div className="grid w-6/12 md:w-5/12 lg:w-4/12">
         <div className="grid grid-cols-1  mx-7">
-          <label className="md:text-sm text-xs text-white font-body tracking-wider">Title</label>
+          <label className="md:text-sm text-xs text-white font-body tracking-wider">Name</label>
           <input
             className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md mt-2"
             type="text"
             placeholder="Silo"
-          />
-        </div>
-        <div className="grid grid-cols-1 mt-5 mx-7">
-          <label className="md:text-sm text-xs text-white font-body tracking-wider">Pricing</label>
-          <input
-            className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md mt-2"
-            type="text"
-            placeholder="0.01 Eth"
           />
         </div>
         <div className="grid grid-cols-1 mt-5 mx-7">
@@ -52,6 +81,14 @@ const UploadNFTForm = () => {
           <textarea
             className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md mt-2"
             placeholder="Brief write up about NFT"
+          />
+        </div>
+        <div className="grid grid-cols-1 mt-5 mx-7">
+          <label className="md:text-sm text-xs text-white font-body tracking-wider">Price</label>
+          <input
+            className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md mt-2"
+            type="text"
+            placeholder="0.01 Eth"
           />
         </div>
 
@@ -84,7 +121,6 @@ const UploadNFTForm = () => {
             </label>
           </div>
         </div>
-
         <div className="flex items-center justify-center pt-5 pb-5">
           <Wallet
             setWalletAddress={setWalletAddress}
@@ -92,7 +128,10 @@ const UploadNFTForm = () => {
             setConnected={setConnected}
             isConnected={connected}
           />
-          <button className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8">
+          <button
+            className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8"
+            onClick={mintToken}
+          >
             MINT TOKEN
           </button>
         </div>
