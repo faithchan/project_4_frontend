@@ -17,9 +17,9 @@ const Navbar = () => {
                 <ul className="flex items-right mt-6 h-full tracking-widest">
                     <li className="ml-10 mr-10 mt-2 "><Link href="/account"><a><Image src={accountImg}></Image></a></Link></li>
                     {/* <li className="mx-10 mt-4"><Link href="/login"><a>LOGIN</a></Link></li> */}
-                    <li className="ml-10 mr-10 mt-2 "><Link href="/uploadnft"><Image src={uploadImg}></Image></Link></li>
+                    <li className="ml-10 mr-10 mt-2 "><Link href="/uploadnft"><a><Image src={uploadImg}></Image></a></Link></li>
                     <li className="ml-10 mr-10 mt-2 "><Link href="/trades"><a><Image src={tradeImg}></Image></a></Link></li>
-                    <li className="ml-10 mr-10 mt-2 "><Link href="/feed"><a><Image src={homeImg}></Image></a></Link></li>
+                    <li className="ml-10 mr-20 mt-2 "><Link href="/feed"><a><Image src={homeImg}></Image></a></Link></li>
                     <Search />
                 </ul>
             </nav>
