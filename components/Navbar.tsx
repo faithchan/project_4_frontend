@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import logo from '../public/ArkivLogo.svg'
 import Search from './Search'
+import accountImg from '../public/account.svg'
 
 const Navbar = () => {
   return (
