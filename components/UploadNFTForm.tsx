@@ -1,13 +1,19 @@
 import { useEffect, useState } from 'react'
 import jwtDecode from 'jwt-decode'
 import Wallet from '../components/Wallet'
-import { nftaddress, marketplaceaddress } from '../config'
+import { nftaddress } from '../config'
 import { ethers } from 'ethers'
 import { create } from 'ipfs-http-client'
 import NFT from '../contract-abis/NFT.json'
 
 const url: string | any = 'https://ipfs.infura.io:5001/api/v0'
 const client = create(url)
+
+interface Metadata {
+  name: string
+  description: string
+  imageUrl: string
+}
 
 const UploadNFTForm = () => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false)
@@ -16,22 +22,25 @@ const UploadNFTForm = () => {
   const [signer, setSigner] = useState<any>()
   const [nftContract, setNftContract] = useState({})
   const [fileUrl, setFileUrl] = useState('')
+  const [metadata, setMetadata] = useState<Metadata>()
 
   const initialiseContract = async () => {
     if (signer != undefined) {
       const nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
-      console.log('nft: ', nftContract)
       setNftContract(nftContract)
-    } else {
-      alert('Please connect your wallet to mint.')
     }
   }
 
   const onFileUpload = async (e: any) => {
     const file = e.target.files[0]
     try {
-      const addedFile = await client.add(file)
-      const url = `https://ipfs.infura.io/ipfs/${addedFile.path}`
+      console.log(`adding ${file.name} to ipfs....`)
+      const { cid } = await client.add(file, {
+        cidVersion: 1,
+        hashAlg: 'sha2-256',
+      })
+      console.log('cid: ', cid)
+      const url = `https://ipfs.infura.io/ipfs/${cid}`
       console.log('ipfs url: ', url)
       setFileUrl(url)
     } catch (e) {
@@ -39,11 +48,17 @@ const UploadNFTForm = () => {
     }
   }
 
+  const createNFTMetadata = async () => {}
+
   const mintToken = async () => {
-    initialiseContract()
+    console.log('nft contract: ', nftContract)
   }
 
   const addTokenToDatabase = async () => {}
+
+  useEffect(() => {
+    initialiseContract()
+  }, [walletAddress])
 
   useEffect(() => {
     let token = localStorage.getItem('token')
@@ -51,7 +66,6 @@ const UploadNFTForm = () => {
     if (tempToken) {
       let decodedToken: any = jwtDecode(tempToken)
       setLoggedIn(true)
-      console.log('decoded token: ', decodedToken)
     }
   }, [])
 
@@ -117,7 +131,12 @@ const UploadNFTForm = () => {
                   Select a photo
                 </p>
               </div>
-              <input type="file" className="hidden" accept=".jpeg,.jpg,.png,.gif" />
+              <input
+                type="file"
+                className="hidden"
+                accept=".jpeg,.jpg,.png,.gif"
+                onChange={onFileUpload}
+              />
             </label>
           </div>
         </div>
