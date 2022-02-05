@@ -1,12 +1,18 @@
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+
+type FormData = {
+  username: string
+  email: string
+  password: string
+  walletAddress: string
+}
 
 const SignUpForm = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm()
+  } = useForm<FormData>()
 
   const onSubmit = async (data: any) => {
     console.log('data: ', data)
@@ -18,16 +24,33 @@ const SignUpForm = () => {
         },
         body: JSON.stringify(data),
       })
+      const res = await response.json()
+      const { email, username, walletAddress } = res.keyValue
+      if (email) {
+        console.log('duplicate email')
+        alert('This email address has already been used. Please try another.')
+        return
+      }
+      if (username) {
+        console.log('duplicate username')
+        alert('This username has already been used. Please try another.')
+        return
+      }
+      if (walletAddress) {
+        console.log('duplicate wallet address')
+        alert('This wallet address has already been used. Please try another.')
+        return
+      }
     } catch (err) {
-      console.error(err)
+      console.log(err)
     }
   }
 
-  function validateEmail(email: any) {
-    const re =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    return re.test(String(email).toLowerCase())
-  }
+  // function validateEmail(email: any) {
+  //   const re =
+  //     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  //   return re.test(String(email).toLowerCase())
+  // }
 
   return (
     <div className="flex justify-center items-center w-full  mt-4 mb-32">
@@ -41,6 +64,7 @@ const SignUpForm = () => {
                 className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md w-full"
                 {...register('username')}
               />
+              {errors.username?.type === 'required' && 'Username is required'}
             </div>
             <div>
               <label className="block mb-1 text-gray-300 font-semibold">Email</label>
