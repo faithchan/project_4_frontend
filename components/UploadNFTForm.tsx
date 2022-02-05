@@ -21,11 +21,23 @@ const UploadNFTForm = () => {
   const [connected, setConnected] = useState<boolean>(false)
   const [signer, setSigner] = useState<any>()
   const [nftContract, setNftContract] = useState({})
-  const [fileUrl, setFileUrl] = useState('')
+  const [fileName, setFileName] = useState('')
   const [metadata, setMetadata] = useState({ name: '', description: '', imageUrl: '' })
 
   const mintToken = async () => {
-    console.log('nft contract: ', nftContract)
+    console.log('metadata', metadata)
+    createNFTMetadata()
+  }
+
+  const createNFTMetadata = async () => {
+    try {
+      const { cid } = await client.add({ path: `${fileName}`, content: JSON.stringify(metadata) })
+      console.log('cid: ', cid)
+      const url = `https://ipfs.infura.io/ipfs/${cid}`
+      console.log('ipfs url: ', url)
+    } catch (err) {
+      console.error('Error posting metadata to IPFS.')
+    }
   }
 
   const initialiseContract = async () => {
@@ -37,16 +49,19 @@ const UploadNFTForm = () => {
 
   const onFileUpload = async (e: any) => {
     const file = e.target.files[0]
+    setFileName(file.name)
     try {
       console.log(`adding ${file.name} to ipfs....`)
-      const { cid } = await client.add(file, {
-        cidVersion: 1,
-        hashAlg: 'sha2-256',
-      })
+      const { cid } = await client.add(
+        { content: file },
+        {
+          cidVersion: 1,
+          hashAlg: 'sha2-256',
+        }
+      )
       console.log('cid: ', cid)
       const url = `https://ipfs.infura.io/ipfs/${cid}`
       console.log('ipfs url: ', url)
-      setFileUrl(url)
       setMetadata({ ...metadata, imageUrl: url })
     } catch (e) {
       console.error('Error uploading file: ', e)
@@ -54,13 +69,10 @@ const UploadNFTForm = () => {
   }
 
   const handleInputChange = (event: any) => {
-    console.log('metadata: ', metadata)
     const name = event.target.name
     const value = event.target.value
     setMetadata({ ...metadata, [name]: value })
   }
-
-  const createNFTMetadata = async () => {}
 
   const addTokenToDatabase = async () => {}
 
