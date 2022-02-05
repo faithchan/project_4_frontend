@@ -10,12 +10,9 @@ const url: string | any = 'https://ipfs.infura.io:5001/api/v0'
 const client = create(url)
 
 const Contracts = () => {
-  const [walletAddress, setWalletAddress] = useState('')
-  const [connected, setConnected] = useState<boolean>(false)
-  const [chainId, setChainId] = useState<string>('')
   const [nftContract, setNftContract] = useState({})
   const [marketContract, setMarketContract] = useState({})
-  const [signer, setSigner] = useState<any>()
+
   const [fileUrl, setFileUrl] = useState('')
 
   const initialiseContracts = async () => {
@@ -42,10 +39,6 @@ const Contracts = () => {
       console.error('Error uploading file: ', e)
     }
   }
-
-  useEffect(() => {
-    initialiseContracts()
-  }, [walletAddress])
 
   return (
     <div className="text-white">

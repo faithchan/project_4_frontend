@@ -5,10 +5,7 @@ interface WalletProps {
   setWalletAddress: (a: string) => void
   setSigner: (a: object) => void
   setConnected: (a: boolean) => void
-  setChainId: (a: string) => void
-  connected: boolean
-  chainId: string
-  signer: any
+  isConnected: boolean
 }
 
 const Wallet = (props: WalletProps) => {
@@ -55,13 +52,13 @@ const Wallet = (props: WalletProps) => {
 
   return (
     <div>
-      {props.connected ? (
+      {props.isConnected ? (
         <>
           <button
             onClick={disconnectWallet}
             className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8"
           >
-            Disconnect
+            DISCONNECT
           </button>
         </>
       ) : (
@@ -69,7 +66,7 @@ const Wallet = (props: WalletProps) => {
           onClick={connectWallet}
           className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8"
         >
-          Connect Wallet
+          CONNECT WALLET
         </button>
       )}
     </div>

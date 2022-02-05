@@ -1,9 +1,18 @@
 import { useEffect, useState } from 'react'
 import jwtDecode from 'jwt-decode'
 import Wallet from '../components/Wallet'
+import { nftaddress, marketplaceaddress } from '../config'
+import { ethers } from 'ethers'
+import { create } from 'ipfs-http-client'
+import NFT from '../contract-abis/NFT.json'
 
 const UploadNFTForm = () => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false)
+  const [walletAddress, setWalletAddress] = useState('')
+  const [connected, setConnected] = useState<boolean>(false)
+  const [signer, setSigner] = useState<any>()
+
+  const initialiseContract = async () => {}
 
   useEffect(() => {
     let token = localStorage.getItem('token')
@@ -77,7 +86,12 @@ const UploadNFTForm = () => {
         </div>
 
         <div className="flex items-center justify-center pt-5 pb-5">
-          {/* <Wallet /> */}
+          <Wallet
+            setWalletAddress={setWalletAddress}
+            setSigner={setSigner}
+            setConnected={setConnected}
+            isConnected={connected}
+          />
           <button className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8">
             MINT TOKEN
           </button>
