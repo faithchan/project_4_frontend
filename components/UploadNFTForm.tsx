@@ -9,12 +9,6 @@ import NFT from '../contract-abis/NFT.json'
 const url: string | any = 'https://ipfs.infura.io:5001/api/v0'
 const client = create(url)
 
-interface Metadata {
-  name: string
-  description: string
-  imageUrl: string
-}
-
 const UploadNFTForm = () => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false)
   const [walletAddress, setWalletAddress] = useState('')
@@ -26,21 +20,28 @@ const UploadNFTForm = () => {
 
   const mintToken = async () => {
     console.log('nft contract: ', nftContract)
-    if (!metadata.name || !metadata.description || !metadata.imageUrl) {
-      alert('Please do not leave any fields blank.')
-      return
+    if (signer != undefined) {
+      if (!metadata.name || !metadata.description || !metadata.imageUrl) {
+        alert('Please do not leave any fields blank.')
+        return
+      }
+      await createNFTMetadata()
+      console.log(
+        `minting token to address: ${walletAddress} with metadata: ${JSON.stringify(metadata)}}`
+      )
+      const mintTxn = await nftContract.mint(walletAddress, metadata)
+      const txn = await mintTxn.wait()
+      const id = await txn.events[0].args[3]
+      console.log('tokenId: ', id)
+    } else {
+      alert('Please connect your Metamask wallet')
     }
-    await createNFTMetadata()
-    const mintTxn = await nftContract.mint(metadata, walletAddress)
-    const txn = await mintTxn.wait()
-    const id = await txn.events[0].args[3]
-    console.log('tokenId: ', id)
   }
 
   const createNFTMetadata = async () => {
     try {
       const { cid } = await client.add({ path: `${fileName}`, content: JSON.stringify(metadata) })
-      console.log('cid: ', cid)
+      console.log('ipfs cid: ', cid)
       const url = `https://ipfs.infura.io/ipfs/${cid}`
       console.log('token URI: ', url)
     } catch (err) {
@@ -137,7 +138,6 @@ const UploadNFTForm = () => {
             placeholder="0.01 Eth"
           />
         </div>
-
         <div className="grid grid-cols-1 mt-5 mx-7">
           <label className="md:text-sm text-xs text-white font-body tracking-wider">
             Upload Photo
