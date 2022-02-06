@@ -49,13 +49,6 @@ const UploadNFTForm = () => {
     }
   }
 
-  const initialiseContract = async () => {
-    if (signer != undefined) {
-      const nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
-      setNftContract(nftContract)
-    }
-  }
-
   const onFileUpload = async (e: any) => {
     const file = e.target.files[0]
     setFileName(file.name)
@@ -77,6 +70,13 @@ const UploadNFTForm = () => {
     }
   }
 
+  const initialiseContract = async () => {
+    if (signer != undefined) {
+      const nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
+      setNftContract(nftContract)
+    }
+  }
+
   const handleInputChange = (event: any) => {
     const name = event.target.name
     const value = event.target.value
@@ -95,6 +95,7 @@ const UploadNFTForm = () => {
     if (tempToken) {
       let decodedToken: any = jwtDecode(tempToken)
       setLoggedIn(true)
+      console.log('decoded token: ', decodedToken)
     }
   }, [])
 
