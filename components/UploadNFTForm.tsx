@@ -20,13 +20,21 @@ const UploadNFTForm = () => {
   const [walletAddress, setWalletAddress] = useState('')
   const [connected, setConnected] = useState<boolean>(false)
   const [signer, setSigner] = useState<any>()
-  const [nftContract, setNftContract] = useState({})
+  const [nftContract, setNftContract] = useState<any>()
   const [fileName, setFileName] = useState('')
   const [metadata, setMetadata] = useState({ name: '', description: '', imageUrl: '' })
 
   const mintToken = async () => {
-    console.log('metadata', metadata)
-    createNFTMetadata()
+    console.log('nft contract: ', nftContract)
+    if (!metadata.name || !metadata.description || !metadata.imageUrl) {
+      alert('Please do not leave any fields blank.')
+      return
+    }
+    await createNFTMetadata()
+    // const mintTxn = await nftContract.mint(metadata, walletAddress)
+    // const txn = await mintTxn.wait()
+    // const id = await txn.events[0].args[3]
+    // console.log('tokenId: ', id)
   }
 
   const createNFTMetadata = async () => {
@@ -34,7 +42,7 @@ const UploadNFTForm = () => {
       const { cid } = await client.add({ path: `${fileName}`, content: JSON.stringify(metadata) })
       console.log('cid: ', cid)
       const url = `https://ipfs.infura.io/ipfs/${cid}`
-      console.log('ipfs url: ', url)
+      console.log('token URI: ', url)
     } catch (err) {
       console.error('Error posting metadata to IPFS.')
     }
@@ -61,7 +69,7 @@ const UploadNFTForm = () => {
       )
       console.log('cid: ', cid)
       const url = `https://ipfs.infura.io/ipfs/${cid}`
-      console.log('ipfs url: ', url)
+      // console.log('ipfs url: ', url)
       setMetadata({ ...metadata, imageUrl: url })
     } catch (e) {
       console.error('Error uploading file: ', e)
