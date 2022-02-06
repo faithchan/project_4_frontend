@@ -34,6 +34,7 @@ const admin = () => {
           const txn = await nftContract.addToWhitelist(walletAddress)
           const receipt = await txn.wait()
           console.log('whitelist txn: ', receipt)
+          await updateDatabaseStatus()
           setWhitelistAddress('')
         } catch (err) {
           console.error('error adding to whitelist: ', err)
@@ -43,6 +44,27 @@ const admin = () => {
       }
     } else {
       alert('Please connect your Metamask wallet')
+    }
+  }
+
+  const updateDatabaseStatus = async () => {
+    if (walletAddress) {
+      console.log(`updating whitelist status for ${whitelistAddress}`)
+      try {
+        const response = await fetch(`${process.env.API_ENDPOINT}/users/${whitelistAddress}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            whitelistStatus: true,
+          }),
+        })
+        const data = await response.json()
+        console.log('updated user status: ', data)
+      } catch (err) {
+        console.error(err)
+      }
     }
   }
 
