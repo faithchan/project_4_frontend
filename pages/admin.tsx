@@ -10,6 +10,7 @@ const admin = () => {
   const [walletAddress, setWalletAddress] = useState('')
   const [connected, setConnected] = useState<boolean>(false)
   const [signer, setSigner] = useState<any>()
+  const [whitelistedUsers, setWhitelistedUsers] = useState([])
 
   const initialiseContract = async () => {
     if (signer != undefined) {
@@ -108,6 +109,30 @@ const admin = () => {
     }
   }
 
+  const fetchExistingWhitelist = async () => {
+    try {
+      const response = await fetch(`${process.env.API_ENDPOINT}/users/whitelist`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const data = await response.json()
+      setWhitelistedUsers(data)
+      console.log('updated user status: ', data)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const renderWhitelist = whitelistedUsers.map((user: any) => {
+    return (
+      <h1 className="md:text-sm text-xs text-white font-body tracking-wider mb-4">
+        {user.walletAddress}
+      </h1>
+    )
+  })
+
   const handleInputChange = (event: any) => {
     const value = event.target.value
     console.log('value: ', value)
@@ -116,6 +141,7 @@ const admin = () => {
 
   useEffect(() => {
     initialiseContract()
+    fetchExistingWhitelist()
   }, [walletAddress])
 
   return (
@@ -124,6 +150,7 @@ const admin = () => {
         <div className="text-center my-20 font-header tracking-widest text-gold text-2xl">
           MANAGE WHITELIST
         </div>
+        <div className="mb-5">{renderWhitelist}</div>
         <div>
           <div className="grid grid-cols-1 ">
             <label className="md:text-sm text-xs text-white font-body tracking-wider">
