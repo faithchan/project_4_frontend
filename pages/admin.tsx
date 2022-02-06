@@ -3,6 +3,7 @@ import Wallet from '../components/Wallet'
 import { nftaddress } from '../config'
 import { ethers } from 'ethers'
 import NFT from '../contract-abis/NFT.json'
+import jwtDecode from 'jwt-decode'
 
 const admin = () => {
   const [whitelistAddress, setWhitelistAddress] = useState('')
@@ -127,7 +128,7 @@ const admin = () => {
 
   const renderWhitelist = whitelistedUsers.map((user: any) => {
     return (
-      <h1 className="md:text-sm text-xs text-white font-body tracking-wider mb-4">
+      <h1 className="md:text-sm text-xs text-white font-body tracking-wider mb-4" key={user._id}>
         {user.walletAddress}
       </h1>
     )
@@ -143,6 +144,15 @@ const admin = () => {
     initialiseContract()
     fetchExistingWhitelist()
   }, [walletAddress])
+
+  useEffect(() => {
+    let token = localStorage.getItem('token')
+    let tempToken: any = token
+    if (tempToken) {
+      let decodedToken: any = jwtDecode(tempToken)
+      console.log('decoded token: ', decodedToken)
+    }
+  }, [])
 
   return (
     <div className="flex items-center justify-center mt-10 mb-20">
