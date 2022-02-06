@@ -16,12 +16,12 @@ const UploadNFTForm = () => {
   const [signer, setSigner] = useState<any>()
   const [nftContract, setNftContract] = useState<any>()
   const [fileName, setFileName] = useState('')
-  const [metadata, setMetadata] = useState({ name: '', description: '', imageUrl: '' })
+  const [metadata, setMetadata] = useState({ name: '', description: '', image: '' })
 
   const mintToken = async () => {
     console.log('nft contract: ', nftContract)
-    if (signer != undefined) {
-      if (!metadata.name || !metadata.description || !metadata.imageUrl) {
+    if (nftContract) {
+      if (!metadata.name || !metadata.description || !metadata.image) {
         alert('Please do not leave any fields blank.')
         return
       }
@@ -31,17 +31,43 @@ const UploadNFTForm = () => {
       )
       const mintTxn = await nftContract.mint(walletAddress, metadata)
       const txn = await mintTxn.wait()
-      const id = await txn.events[0].args[3]
-      console.log('tokenId: ', id)
+      console.log('txn: ', txn)
+      const id = txn.events[0].args['tokenId']
+      const idNum = id.toNumber()
+      console.log('tokenId: ', idNum)
+      addTokenToDatabase(idNum)
     } else {
       alert('Please connect your Metamask wallet')
+    }
+  }
+
+  const addTokenToDatabase = async (tokenId: number) => {
+    const tokenData = {
+      name: metadata.name,
+      description: metadata.description,
+      image: metadata.image,
+      tokenId: tokenId,
+      creator: walletAddress,
+      owner: walletAddress,
+    }
+    try {
+      const response = await fetch(`${process.env.API_ENDPOINT}/tokens`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(tokenData),
+      })
+      const data = await response.json()
+      console.log('posted token: ', data)
+    } catch (err) {
+      console.error(err)
     }
   }
 
   const createNFTMetadata = async () => {
     try {
       const { cid } = await client.add({ path: `${fileName}`, content: JSON.stringify(metadata) })
-      console.log('ipfs cid: ', cid)
       const url = `https://ipfs.infura.io/ipfs/${cid}`
       console.log('token URI: ', url)
     } catch (err) {
@@ -64,7 +90,7 @@ const UploadNFTForm = () => {
       console.log('cid: ', cid)
       const url = `https://ipfs.infura.io/ipfs/${cid}`
       // console.log('ipfs url: ', url)
-      setMetadata({ ...metadata, imageUrl: url })
+      setMetadata({ ...metadata, image: url })
     } catch (e) {
       console.error('Error uploading file: ', e)
     }
@@ -82,8 +108,6 @@ const UploadNFTForm = () => {
     const value = event.target.value
     setMetadata({ ...metadata, [name]: value })
   }
-
-  const addTokenToDatabase = async () => {}
 
   useEffect(() => {
     initialiseContract()

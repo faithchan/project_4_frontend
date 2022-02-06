@@ -27,7 +27,7 @@ const admin = () => {
   }
 
   const addToWhitelist = async () => {
-    if (signer != undefined) {
+    if (nftContract) {
       if (validateAddress(whitelistAddress) === true) {
         console.log(`adding ${whitelistAddress} to whitelist`)
         try {
