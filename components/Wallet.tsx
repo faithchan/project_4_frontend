@@ -51,7 +51,7 @@ const Wallet = (props: WalletProps) => {
   }
 
   return (
-    <div>
+    <>
       {props.isConnected ? (
         <>
           <button
@@ -69,7 +69,7 @@ const Wallet = (props: WalletProps) => {
           CONNECT
         </button>
       )}
-    </div>
+    </>
   )
 }
 

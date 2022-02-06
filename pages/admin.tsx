@@ -31,10 +31,10 @@ const admin = () => {
       if (validateAddress(whitelistAddress) === true) {
         console.log(`adding ${whitelistAddress} to whitelist`)
         try {
-          const txn = await nftContract.addToWhitelist(walletAddress)
+          const txn = await nftContract.addToWhitelist(whitelistAddress)
           const receipt = await txn.wait()
           console.log('whitelist txn: ', receipt)
-          await updateDatabaseStatus()
+          await updateDatabaseStatus(true)
           setWhitelistAddress('')
         } catch (err) {
           console.error('error adding to whitelist: ', err)
@@ -47,7 +47,47 @@ const admin = () => {
     }
   }
 
-  const updateDatabaseStatus = async () => {
+  const removeFromWhitelist = async () => {
+    if (nftContract) {
+      if (validateAddress(whitelistAddress) === true) {
+        console.log(`removing ${whitelistAddress} from whitelist`)
+        try {
+          const txn = await nftContract.removeFromWhitelist(whitelistAddress)
+          const receipt = await txn.wait()
+          console.log('whitelist txn: ', receipt)
+          await updateDatabaseStatus(false)
+          setWhitelistAddress('')
+        } catch (err) {
+          console.error('error removing from whitelist: ', err)
+        }
+      } else {
+        alert('Please enter a valid address.')
+      }
+    } else {
+      alert('Please connect your Metamask wallet')
+    }
+  }
+
+  const checkWhitelistStatus = async () => {
+    if (nftContract) {
+      if (validateAddress(whitelistAddress) === true) {
+        console.log(`checking ${whitelistAddress} whitelist status`)
+        try {
+          const txn = await nftContract.isWhitelisted(whitelistAddress)
+          console.log('whitelist txn: ', txn)
+          setWhitelistAddress('')
+        } catch (err) {
+          console.error('checking whitelist status: ', err)
+        }
+      } else {
+        alert('Please enter a valid address.')
+      }
+    } else {
+      alert('Please connect your Metamask wallet')
+    }
+  }
+
+  const updateDatabaseStatus = async (status: boolean) => {
     if (walletAddress) {
       console.log(`updating whitelist status for ${whitelistAddress}`)
       try {
@@ -57,7 +97,7 @@ const admin = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            whitelistStatus: true,
+            whitelistStatus: status,
           }),
         })
         const data = await response.json()
@@ -82,12 +122,12 @@ const admin = () => {
     <div className="flex items-center justify-center mt-10 mb-20">
       <div className="grid w-6/12 md:w-5/12 lg:w-4/12">
         <div className="text-center my-20 font-header tracking-widest text-gold text-2xl">
-          MANAGE ACCOUNTS
+          MANAGE WHITELIST
         </div>
         <div>
           <div className="grid grid-cols-1 ">
             <label className="md:text-sm text-xs text-white font-body tracking-wider">
-              Add to Whitelist
+              Wallet Address
             </label>
             <input
               className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md mt-2"
@@ -97,7 +137,7 @@ const admin = () => {
               value={whitelistAddress}
             />
           </div>
-          <div className="flex items-center justify-center py-5 grid grid-cols-2">
+          <div className="flex items-center justify-center py-5 grid grid-cols-4">
             <Wallet
               setWalletAddress={setWalletAddress}
               setSigner={setSigner}
@@ -109,6 +149,18 @@ const admin = () => {
               onClick={addToWhitelist}
             >
               ADD
+            </button>
+            <button
+              className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8"
+              onClick={removeFromWhitelist}
+            >
+              REMOVE
+            </button>
+            <button
+              className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8"
+              onClick={checkWhitelistStatus}
+            >
+              VERIFY
             </button>
           </div>
         </div>
