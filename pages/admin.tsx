@@ -34,6 +34,7 @@ const admin = () => {
           const txn = await nftContract.addToWhitelist(walletAddress)
           const receipt = await txn.wait()
           console.log('whitelist txn: ', receipt)
+          setWhitelistAddress('')
         } catch (err) {
           console.error('error adding to whitelist: ', err)
         }
@@ -71,6 +72,7 @@ const admin = () => {
               type="text"
               name="whitelistAddress"
               onChange={handleInputChange}
+              value={whitelistAddress}
             />
           </div>
           <div className="flex items-center justify-center py-5 grid grid-cols-2">
