@@ -31,10 +31,10 @@ const UploadNFTForm = () => {
       return
     }
     await createNFTMetadata()
-    // const mintTxn = await nftContract.mint(metadata, walletAddress)
-    // const txn = await mintTxn.wait()
-    // const id = await txn.events[0].args[3]
-    // console.log('tokenId: ', id)
+    const mintTxn = await nftContract.mint(metadata, walletAddress)
+    const txn = await mintTxn.wait()
+    const id = await txn.events[0].args[3]
+    console.log('tokenId: ', id)
   }
 
   const createNFTMetadata = async () => {
