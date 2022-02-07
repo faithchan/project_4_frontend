@@ -5,9 +5,9 @@ import 'tailwindcss/tailwind.css'
 const Layout = ({ children }: { children: any }) => {
   return (
     <div className="bg-bgimg bg-cover">
-      <Navbar/>
-            <main>{children}</main>
-      <Footer/>
+      <Navbar />
+      <main>{children}</main>
+      <Footer />
     </div>
   )
 }

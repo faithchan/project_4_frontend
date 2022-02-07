@@ -1,10 +1,10 @@
 import type { NextPage } from 'next'
 import About from './about'
 
-const Home= () => {
+const Home = () => {
   return (
     <div>
-    <About/>
+      <About />
     </div>
   )
 }
