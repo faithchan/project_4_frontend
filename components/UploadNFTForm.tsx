@@ -1,5 +1,5 @@
 import React from 'react'
-
+import ListNFTToken from "./ListNFTToken"
 interface uploadProps{
     ListModal:boolean,
     setListModal:(a:boolean)=>void
@@ -8,10 +8,9 @@ interface uploadProps{
 
 const UploadNFTForm = (props:uploadProps) => {
     console.log(props.ListModal , "Line 10 of UploadNFTForm.tsx")
-    props.setListModal(true)
     return (
         <div className="flex items-center justify-center mt-10 mb-20">
-            {/* {props.ListModal?<h1>successfull</h1>:""} */}
+            {props.ListModal?<ListNFTToken ListModal={props.ListModal} setListModal={props.setListModal}/>:""}
                 <form className="grid w-6/12 md:w-5/12 lg:w-4/12">
                     <div className="grid grid-cols-1  mx-7">
                     <label className="md:text-sm text-xs text-white font-body tracking-wider">Title</label>
@@ -42,7 +41,7 @@ const UploadNFTForm = (props:uploadProps) => {
                     </div>
 
                     <div className='flex items-center justify-center pt-5 pb-5'>
-                    <button className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8">MINT TOKEN</button>
+                    <button className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8" onClick={(e)=>{e.preventDefault();props.setListModal(true)}}>MINT TOKEN</button>
                     </div>
 
                 </form>
