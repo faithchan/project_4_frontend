@@ -1,8 +1,17 @@
 import React from 'react'
 
-const UploadNFTForm = () => {
+interface uploadProps{
+    ListModal:boolean,
+    setListModal:(a:boolean)=>void
+}
+
+
+const UploadNFTForm = (props:uploadProps) => {
+    console.log(props.ListModal , "Line 10 of UploadNFTForm.tsx")
+    props.setListModal(true)
     return (
         <div className="flex items-center justify-center mt-10 mb-20">
+            {/* {props.ListModal?<h1>successfull</h1>:""} */}
                 <form className="grid w-6/12 md:w-5/12 lg:w-4/12">
                     <div className="grid grid-cols-1  mx-7">
                     <label className="md:text-sm text-xs text-white font-body tracking-wider">Title</label>
