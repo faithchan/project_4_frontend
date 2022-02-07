@@ -89,7 +89,7 @@ const UploadNFTForm = () => {
       )
       console.log('cid: ', cid)
       const url = `https://ipfs.infura.io/ipfs/${cid}`
-      // console.log('ipfs url: ', url)
+      console.log('ipfs url: ', url)
       setMetadata({ ...metadata, image: url })
     } catch (e) {
       console.error('Error uploading file: ', e)
