@@ -8,6 +8,7 @@ import exploreImg from '../public/explore.svg'
 import homeImg from '../public/home.svg'
 import tradeImg from '../public/trade.svg'
 import uploadImg from '../public/upload.svg'
+import AccNavigation from './AccNavigation'
 
 
 const Navbar = () => {
@@ -21,15 +22,18 @@ const Navbar = () => {
             </a>
           </Link>
         </span>
+
+        <span>
         <ul className="flex items-right mt-6 h-full tracking-widest">
-          <li className="ml-10 mr-10 mt-2 ">
-            <Link href="/account">
+            
+
+            <li className="ml-10 mr-10 mt-2 ">
+            <Link href="/feed">
               <a>
-                <Image src={accountImg}></Image>
+                <Image src={homeImg}></Image>
               </a>
             </Link>
           </li>
-          {/* <li className="mx-10 mt-4"><Link href="/login"><a>LOGIN</a></Link></li> */}
           <li className="ml-10 mr-10 mt-2 ">
             <Link href="/uploadnft">
               <a>
@@ -37,22 +41,22 @@ const Navbar = () => {
               </a>
             </Link>
           </li>
-          <li className="ml-10 mr-10 mt-2 ">
+          <li className="ml-10 mr-20 mt-2 ">
             <Link href="/trades">
               <a>
                 <Image src={tradeImg}></Image>
               </a>
             </Link>
           </li>
-          <li className="ml-10 mr-20 mt-2 ">
-            <Link href="/feed">
-              <a>
-                <Image src={homeImg}></Image>
-              </a>
-            </Link>
-          </li>
+          <li className="mr-10 mt-2">
+                <AccNavigation />
+            </li>
+          
           <Search />
         </ul>
+        </span>
+       
+
       </nav>
     </div>
   )
