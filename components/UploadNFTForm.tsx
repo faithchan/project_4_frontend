@@ -20,7 +20,7 @@ const UploadNFTForm = () => {
 
   const mintToken = async () => {
     console.log('nft contract: ', nftContract)
-    if (nftContract) {
+    if (signer) {
       if (!metadata.name || !metadata.description || !metadata.image) {
         alert('Please do not leave any fields blank.')
         return

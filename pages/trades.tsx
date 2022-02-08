@@ -12,8 +12,12 @@ const Trades = () => {
   const [signer, setSigner] = useState<any>()
   const [nftContract, setNftContract] = useState<any>()
   const [marketplaceContract, setMarketplaceContract] = useState<any>()
+  const [ownerTokens, setOwnerTokens] = useState([])
 
-  const fetchNFTsOwned = async () => {}
+  const fetchNFTsOwned = async () => {
+    const totalSupply = await nftContract.totalSupply()
+    console.log('supply: ', totalSupply)
+  }
 
   const initialiseContract = async () => {
     if (signer != undefined) {
@@ -58,6 +62,12 @@ const Trades = () => {
       alert('Please install Metamask')
     }
   }
+
+  useEffect(() => {
+    if (nftContract) {
+      fetchNFTsOwned()
+    }
+  }, [nftContract])
 
   useEffect(() => {
     initialiseContract()
