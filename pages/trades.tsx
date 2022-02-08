@@ -13,6 +13,8 @@ const Trades = () => {
   const [nftContract, setNftContract] = useState<any>()
   const [marketplaceContract, setMarketplaceContract] = useState<any>()
 
+  const fetchNFTsOwned = async () => {}
+
   const initialiseContract = async () => {
     if (signer != undefined) {
       const nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
