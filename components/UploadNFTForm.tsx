@@ -100,6 +100,7 @@ const UploadNFTForm = () => {
     if (signer != undefined) {
       const nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
       setNftContract(nftContract)
+      console.log('contract: ', nftContract)
     }
   }
 

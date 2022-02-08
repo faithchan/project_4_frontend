@@ -1,5 +1,6 @@
+import { useEffect } from 'react'
 import { ethers } from 'ethers'
-import Web3Modal from 'web3modal'
+import Web3Modal, { local } from 'web3modal'
 
 interface WalletProps {
   setWalletAddress: (a: string) => void
@@ -49,6 +50,13 @@ const Wallet = (props: WalletProps) => {
       console.log('error changing network: ', err.message)
     }
   }
+
+  useEffect(() => {
+    const address = localStorage.getItem('walletAddress')
+    if (address) {
+      props.setConnected(true)
+    }
+  })
 
   return (
     <>

@@ -3,8 +3,10 @@ import 'tailwindcss/tailwind.css'
 import type { AppProps } from 'next/app'
 import Static from '../components/Static'
 import Head from 'next/head'
+import jwtDecode from 'jwt-decode'
 import userContext from '../context/context'
 import { useState, useEffect } from 'react'
+import { decode } from 'punycode'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [isLoggedIn, setLoginState] = useState(false)
@@ -17,6 +19,28 @@ function MyApp({ Component, pageProps }: AppProps) {
     walletID: walletAddress,
     setLoginState: (state: boolean) => setLoginState(state),
   }
+
+  useEffect(() => {
+    const address = localStorage.getItem('walletAddress')
+    if (address) {
+      setWalletAddress(address)
+    }
+  })
+
+  useEffect(() => {
+    let token = localStorage.getItem('token')
+    let tempToken: any = token
+    if (tempToken) {
+      let decodedToken: any = jwtDecode(tempToken)
+      setLoginState(true)
+      console.log('decoded token: ', decodedToken)
+      if (decodedToken.role === 'admin') {
+        setDesigner(true)
+      } else {
+        setDesigner(false)
+      }
+    }
+  }, [])
 
   return (
     <div>
