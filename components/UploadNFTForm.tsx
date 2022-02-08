@@ -155,14 +155,7 @@ const UploadNFTForm = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="grid grid-cols-1 mt-5 mx-7">
-          <label className="md:text-sm text-xs text-white font-body tracking-wider">Price</label>
-          <input
-            className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md mt-2"
-            type="text"
-            placeholder="0.01 Eth"
-          />
-        </div>
+      
         <div className="grid grid-cols-1 mt-5 mx-7">
           <label className="md:text-sm text-xs text-white font-body tracking-wider">
             Upload Photo
