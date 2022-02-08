@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment}from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import logo from '../public/ArkivLogo.svg'
@@ -8,6 +8,7 @@ import exploreImg from '../public/explore.svg'
 import homeImg from '../public/home.svg'
 import tradeImg from '../public/trade.svg'
 import uploadImg from '../public/upload.svg'
+
 
 const Navbar = () => {
   return (
