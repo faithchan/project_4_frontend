@@ -120,7 +120,6 @@ const UploadNFTForm = () => {
     if (tempToken) {
       let decodedToken: any = jwtDecode(tempToken)
       setLoggedIn(true)
-      console.log('decoded token: ', decodedToken)
     }
   }, [])
 

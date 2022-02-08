@@ -6,7 +6,6 @@ import Head from 'next/head'
 import jwtDecode from 'jwt-decode'
 import userContext from '../context/context'
 import { useState, useEffect } from 'react'
-import { decode } from 'punycode'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [isLoggedIn, setLoginState] = useState(false)
@@ -33,12 +32,12 @@ function MyApp({ Component, pageProps }: AppProps) {
     if (tempToken) {
       let decodedToken: any = jwtDecode(tempToken)
       setLoginState(true)
-      console.log('decoded token: ', decodedToken)
-      if (decodedToken.role === 'admin') {
-        setDesigner(true)
-      } else {
-        setDesigner(false)
-      }
+      // if (decodedToken.role === 'admin') {
+      //   console.log('decoded token: ', decodedToken)
+      //   setDesigner(true)
+      // } else {
+      //   setDesigner(false)
+      // }
     }
   }, [])
 
