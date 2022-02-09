@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { ethers } from 'ethers'
 import Web3Modal from 'web3modal'
-import { connect } from 'http2'
 
 interface WalletProps {
   setWalletAddress: (a: string) => void
@@ -57,7 +56,7 @@ const Wallet = (props: WalletProps) => {
     if (typeof window.ethereum !== 'undefined') {
       connectWallet()
     }
-  })
+  }, [])
 
   return (
     <>

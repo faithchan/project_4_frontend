@@ -21,23 +21,35 @@ const UploadNFTForm = () => {
   const mintToken = async () => {
     console.log('nft contract: ', nftContract)
     if (signer) {
-      if (!metadata.name || !metadata.description || !metadata.image) {
-        alert('Please do not leave any fields blank.')
+      if (await checkWhitelist()) {
+        if (!metadata.name || !metadata.description || !metadata.image) {
+          alert('Please do not leave any fields blank.')
+          return
+        }
+        await createNFTMetadata()
+        console.log(
+          `minting token to address: ${walletAddress} with metadata: ${JSON.stringify(metadata)}}`
+        )
+        const mintTxn = await nftContract.mint(walletAddress, metadata)
+        const txn = await mintTxn.wait()
+        console.log('txn: ', txn)
+        const id = txn.events[0].args['tokenId']
+        const idNum = id.toNumber()
+        console.log('tokenId: ', idNum)
+        addTokenToDatabase(idNum)
+      } else {
+        alert('This wallet address is not whitelisted')
         return
       }
-      await createNFTMetadata()
-      console.log(
-        `minting token to address: ${walletAddress} with metadata: ${JSON.stringify(metadata)}}`
-      )
-      const mintTxn = await nftContract.mint(walletAddress, metadata)
-      const txn = await mintTxn.wait()
-      console.log('txn: ', txn)
-      const id = txn.events[0].args['tokenId']
-      const idNum = id.toNumber()
-      console.log('tokenId: ', idNum)
-      addTokenToDatabase(idNum)
     } else {
       alert('Please connect your Metamask wallet')
+    }
+  }
+
+  const checkWhitelist = async () => {
+    if (nftContract) {
+      const whitelisted = await nftContract.isWhitelisted(walletAddress)
+      return whitelisted
     }
   }
 
@@ -100,7 +112,7 @@ const UploadNFTForm = () => {
     if (signer != undefined) {
       const nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
       setNftContract(nftContract)
-      console.log('contract: ', nftContract)
+      // console.log('contract: ', nftContract)
     }
   }
 
@@ -111,6 +123,10 @@ const UploadNFTForm = () => {
   }
 
   useEffect(() => {
+    checkWhitelist()
+  }, [nftContract])
+
+  useEffect(() => {
     initialiseContract()
   }, [walletAddress])
 
@@ -119,6 +135,7 @@ const UploadNFTForm = () => {
     let tempToken: any = token
     if (tempToken) {
       let decodedToken: any = jwtDecode(tempToken)
+      // console.log('decoded token: ', decodedToken)
       setLoggedIn(true)
     }
   }, [])
