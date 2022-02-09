@@ -52,8 +52,10 @@ const Trades = () => {
   }
 
   const fetchMarketItems = async () => {
-    const owner = await marketplaceContract.owner()
-    // console.log('marketplace owner: ', owner)
+    const ownedItems = await marketplaceContract.getItemsOwned()
+    const listedItems = await marketplaceContract.getListedItems()
+    console.log('owned items: ', ownedItems)
+    console.log('listed items: ', listedItems)
   }
 
   const initialiseContract = async () => {

@@ -15,16 +15,40 @@ const ListNFTToken = () => {
   const [signer, setSigner] = useState<any>()
   const [nftContract, setNftContract] = useState<any>()
   const [marketplaceContract, setMarketplaceContract] = useState<any>()
-  const [royaltyAmount, setRoyaltyAmount] = useState()
-  const [listPrice, setListPrice] = useState()
+  const [royaltyAmount, setRoyaltyAmount] = useState() // convert % to number between 0-10000
+  const [listPrice, setListPrice] = useState('')
+  const [tokenId, setTokenId] = useState()
 
-  const setTokenRoyalty = async () => {}
+  const listToken = async () => {
+    if (marketplaceContract) {
+      const salePrice = ethers.utils.parseUnits(listPrice, 'ether')
+      const txn = await marketplaceContract.listItem(nftaddress, tokenId, salePrice)
+    }
+  }
 
-  const listToken = async () => {}
+  const setTokenRoyalty = async () => {
+    if (nftContract) {
+      await nftContract.setTokenRoyalty(tokenId, royaltyAmount)
+    }
+  }
 
-  const handleRoyaltyChange = () => {}
+  const getRoyaltyInfo = async () => {
+    if (nftContract) {
+      const salePrice = ethers.utils.parseUnits(listPrice, 'ether')
+      const info = await nftContract.royaltyInfo(tokenId, salePrice)
+      console.log('royalty info: ', info)
+    }
+  }
 
-  const handleListPriceChange = () => {}
+  const handleRoyaltyInputChange = (event: any) => {
+    const value = event.target.value
+    setRoyaltyAmount(value)
+  }
+
+  const handlePriceInputChange = (event: any) => {
+    const value = event.target.value
+    setListPrice(value)
+  }
 
   const initialiseContract = async () => {
     if (signer != undefined) {
@@ -70,11 +94,11 @@ const ListNFTToken = () => {
     }
   }
 
-  useEffect(() => {
-    if (nftContract) {
-      setTokenRoyalty()
-    }
-  }, [nftContract])
+  // useEffect(() => {
+  //   if (nftContract) {
+  //     setTokenRoyalty()
+  //   }
+  // }, [nftContract])
 
   // useEffect(() => {
   //   if (marketplaceContract) {
