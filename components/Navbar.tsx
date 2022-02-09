@@ -35,7 +35,7 @@ const Navbar = () => {
             </Link>
           </li>
           <li className="ml-10 mr-10 mt-2 ">
-            <Link href="/">
+            <Link href="/wallet">
               <a>
                 <Image src={walletImg}></Image>
               </a>
