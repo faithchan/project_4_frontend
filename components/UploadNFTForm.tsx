@@ -16,6 +16,7 @@ const UploadNFTForm = () => {
   const [signer, setSigner] = useState<any>()
   const [nftContract, setNftContract] = useState<any>()
   const [fileName, setFileName] = useState('')
+  const [imageURL, setImageURL] = useState('')
   const [metadata, setMetadata] = useState({ name: '', description: '', image: '' })
 
   const mintToken = async () => {
@@ -26,17 +27,17 @@ const UploadNFTForm = () => {
           alert('Please do not leave any fields blank.')
           return
         }
-        await createNFTMetadata()
-        console.log(
-          `minting token to address: ${walletAddress} with metadata: ${JSON.stringify(metadata)}}`
-        )
-        const mintTxn = await nftContract.mint(walletAddress, metadata)
+
+        const { cid } = await client.add({ path: `${fileName}`, content: JSON.stringify(metadata) })
+        const uri = `https://ipfs.infura.io/ipfs/${cid}`
+        console.log('token URI: ', uri)
+        const mintTxn = await nftContract.mint(walletAddress, uri)
         const txn = await mintTxn.wait()
         console.log('txn: ', txn)
         const id = txn.events[0].args['tokenId']
         const idNum = id.toNumber()
         console.log('tokenId: ', idNum)
-        addTokenToDatabase(idNum)
+        // addTokenToDatabase(idNum)
       } else {
         alert('This wallet address is not whitelisted')
         return
@@ -50,6 +51,28 @@ const UploadNFTForm = () => {
     if (nftContract) {
       const whitelisted = await nftContract.isWhitelisted(walletAddress)
       return whitelisted
+    }
+  }
+
+  const onFileUpload = async (e: any) => {
+    const file = e.target.files[0]
+    setFileName(file.name)
+    try {
+      console.log(`adding ${file.name} to ipfs....`)
+      const { cid } = await client.add(
+        { content: file },
+        {
+          cidVersion: 1,
+          hashAlg: 'sha2-256',
+        }
+      )
+      console.log('cid: ', cid)
+      const url = `https://ipfs.infura.io/ipfs/${cid}`
+      console.log('ipfs url: ', url)
+      setImageURL(url)
+      setMetadata({ ...metadata, image: url })
+    } catch (e) {
+      console.error('Error uploading file: ', e)
     }
   }
 
@@ -74,37 +97,6 @@ const UploadNFTForm = () => {
       console.log('posted token: ', data)
     } catch (err) {
       console.error(err)
-    }
-  }
-
-  const createNFTMetadata = async () => {
-    try {
-      const { cid } = await client.add({ path: `${fileName}`, content: JSON.stringify(metadata) })
-      const url = `https://ipfs.infura.io/ipfs/${cid}`
-      console.log('token URI: ', url)
-    } catch (err) {
-      console.error('Error posting metadata to IPFS.')
-    }
-  }
-
-  const onFileUpload = async (e: any) => {
-    const file = e.target.files[0]
-    setFileName(file.name)
-    try {
-      console.log(`adding ${file.name} to ipfs....`)
-      const { cid } = await client.add(
-        { content: file },
-        {
-          cidVersion: 1,
-          hashAlg: 'sha2-256',
-        }
-      )
-      console.log('cid: ', cid)
-      const url = `https://ipfs.infura.io/ipfs/${cid}`
-      console.log('ipfs url: ', url)
-      setMetadata({ ...metadata, image: url })
-    } catch (e) {
-      console.error('Error uploading file: ', e)
     }
   }
 

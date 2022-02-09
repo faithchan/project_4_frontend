@@ -11,7 +11,7 @@ const uploadnft = () => {
         UPLOAD NFT
       </h1>
       <UploadNFTForm ListModal={ListModal} setListModal={setListModal} />
-      <ListNFTToken />
+      {/* <ListNFTToken /> */}
     </div>
   )
 }

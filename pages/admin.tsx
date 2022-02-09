@@ -36,7 +36,7 @@ const admin = () => {
           const txn = await nftContract.addToWhitelist(whitelistAddress)
           const receipt = await txn.wait()
           console.log('whitelist txn: ', receipt)
-          await updateDatabaseStatus(true)
+          // await updateDatabaseStatus(true)
           setWhitelistAddress('')
         } catch (err) {
           console.error('error adding to whitelist: ', err)
@@ -57,7 +57,7 @@ const admin = () => {
           const txn = await nftContract.removeFromWhitelist(whitelistAddress)
           const receipt = await txn.wait()
           console.log('whitelist txn: ', receipt)
-          await updateDatabaseStatus(false)
+          // await updateDatabaseStatus(false)
           setWhitelistAddress('')
         } catch (err) {
           console.error('error removing from whitelist: ', err)
@@ -142,7 +142,7 @@ const admin = () => {
 
   useEffect(() => {
     initialiseContract()
-    fetchExistingWhitelist()
+    // fetchExistingWhitelist()
   }, [walletAddress])
 
   useEffect(() => {
