@@ -54,6 +54,10 @@ const SignUpForm = () => {
   //   return re.test(String(email).toLowerCase())
   // }
 
+  const routeToLogin = () => {
+    router.push('login')
+  }
+
   return (
     <div className="flex justify-center items-center w-full  mt-4 mb-32">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -94,7 +98,10 @@ const SignUpForm = () => {
             </div>
           </div>
           <div className="flex justify-center">
-            <button className=" border-2 border-gold hover:bg-blue-450 text-gold font-semibold tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8 mr-4">
+            <button
+              className=" border-2 border-gold hover:bg-blue-450 text-gold font-semibold tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8 mr-4"
+              onClick={routeToLogin}
+            >
               LOGIN
             </button>
             <button className="bg-gold hover:bg-blue-450 text-white font-semibold tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8">

@@ -1,8 +1,15 @@
 import React from 'react'
 import Image from 'next/image'
 import aboutImg from '../public/aboutImg.png'
+import { useRouter } from 'next/router'
 
 const SignupSection = () => {
+  const router = useRouter()
+
+  const routeToSignup = () => {
+    router.push('/signup')
+  }
+
   return (
     <div>
       <div className="flex my-20 justify-center">
@@ -19,7 +26,10 @@ const SignupSection = () => {
             A platform for verified designers to showcase and sell NFTs.
             <br /> Sign up now and get connected with our growing network.{' '}
           </p>
-          <button className="bg-gold hover:bg-blue-450 text-white font-semibold tracking-widest font-header py-2 px-4 rounded-full text-xs mx-auto mt-6">
+          <button
+            className="bg-gold hover:bg-blue-450 text-white font-semibold tracking-widest font-header py-2 px-4 rounded-full text-xs mx-auto mt-6"
+            onClick={routeToSignup}
+          >
             SIGN UP
           </button>
         </span>

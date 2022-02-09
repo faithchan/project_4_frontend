@@ -16,7 +16,6 @@ const Trades = () => {
   const fetchNFTsOwned = async () => {
     const totalSupply = await nftContract.totalSupply()
     const ownerTokens = []
-    // console.log('supply: ', totalSupply)
     for (let i = 0; i < totalSupply; i++) {
       const owner = await nftContract.ownerOf(i)
       if (owner === walletAddress) {
@@ -29,7 +28,7 @@ const Trades = () => {
       const response = await fetch(uri)
       if (!response.ok) throw new Error(response.statusText)
       const data = await response.json()
-      console.log('data: ', data)
+      // console.log('data: ', data)
       setTokenURIs([...tokenURIs, data])
     }
   }
@@ -69,8 +68,8 @@ const Trades = () => {
   const fetchMarketItems = async () => {
     const ownedItems = await marketplaceContract.getItemsOwned()
     const listedItems = await marketplaceContract.getListedItems()
-    console.log('owned items: ', ownedItems)
-    console.log('listed items: ', listedItems)
+    // console.log('owned items: ', ownedItems)
+    // console.log('listed items: ', listedItems)
   }
 
   const initialiseContract = async () => {
@@ -135,12 +134,6 @@ const Trades = () => {
 
   return (
     <div className="my-20 mx-32">
-      <button
-        className=" border-2 border-gold hover:bg-blue-450 text-gold font-semibold tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8 mr-4"
-        onClick={setApproval}
-      >
-        APPROVE
-      </button>
       <div className="flex flex-wrap gap-10 justify-center">
         <TradeCard />
         <TradeCard />

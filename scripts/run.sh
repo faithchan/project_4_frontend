@@ -1,0 +1,1 @@
+echo "Attempting to start Next and Express servers..."

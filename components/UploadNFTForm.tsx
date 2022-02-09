@@ -37,7 +37,7 @@ const UploadNFTForm = () => {
         const id = txn.events[0].args['tokenId']
         const idNum = id.toNumber()
         console.log('tokenId: ', idNum)
-        // addTokenToDatabase(idNum)
+        addTokenToDatabase(idNum)
       } else {
         alert('This wallet address is not whitelisted')
         return
