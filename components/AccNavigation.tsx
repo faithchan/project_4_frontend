@@ -26,7 +26,7 @@ const AccNavigation = () => {
         leaveFrom="transform scale-100 opacity-100"
         leaveTo="transform scale-95 opacity-0"
       >
-            <Menu.Items className="origin-top-right absolute left-0 mt-2 w-24 rounded-md shadow-lg bg-opacity-20  bg-black  divide-y divide-gray-100 focus:outline-none">
+            <Menu.Items className="origin-top-right absolute left-0 mt-2 w-32 rounded-md shadow-lg bg-opacity-20  bg-black  divide-y divide-gray-100 focus:outline-none">
             <div className="py-1 ">
                 <Menu.Item>
                     <Link href="/login">

@@ -11,7 +11,7 @@ const TradesNavigation = () => {
             <Menu as="div" className="relative inline-block text-left" >
             <div>
           <Menu.Button className="inline-flex justify-center w-full  text-sm font-medium text-white  rounded-md  focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-          <Link href='/account'><a><Image src={tradeImg}></Image></a></Link>
+          <Link href='/trades'><a><Image src={tradeImg}></Image></a></Link>
             <ChevronDownIcon
               className="w-5 h-5 ml-2 -mr-1 mt-2 text-gold hover:text-violet-100"
               aria-hidden="true"
@@ -26,7 +26,7 @@ const TradesNavigation = () => {
         leaveFrom="transform scale-100 opacity-100"
         leaveTo="transform scale-95 opacity-0"
       >
-            <Menu.Items className="origin-top-right absolute left-0 mt-2 w-24 rounded-md shadow-lg bg-opacity-20  bg-black  divide-y divide-gray-100 focus:outline-none">
+            <Menu.Items className="origin-top-right absolute left-0 mt-2 w-32 rounded-md shadow-lg bg-opacity-20  bg-black  divide-y divide-gray-100 focus:outline-none">
             <div className="py-1 ">
                 <Menu.Item>
                     <Link href="/trades">

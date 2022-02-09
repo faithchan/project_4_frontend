@@ -9,6 +9,7 @@ import homeImg from '../public/home.svg'
 import tradeImg from '../public/trade.svg'
 import uploadImg from '../public/upload.svg'
 import AccNavigation from './AccNavigation'
+import TradesNavigation from './TradesNavigation'
 
 
 const Navbar = () => {
@@ -42,11 +43,7 @@ const Navbar = () => {
             </Link>
           </li>
           <li className="ml-10 mr-20 mt-2 ">
-            <Link href="/trades">
-              <a>
-                <Image src={tradeImg}></Image>
-              </a>
-            </Link>
+            <TradesNavigation />
           </li>
           <li className="mr-10 mt-2">
                 <AccNavigation />
