@@ -34,6 +34,21 @@ const Trades = () => {
     }
   }
 
+  const burnToken = async (tokenId: number) => {
+    if (nftContract) {
+      const owner = await nftContract.ownerOf(tokenId)
+      const creator = await nftContract.tokenCreator(tokenId)
+      if (owner !== walletAddress || creator !== walletAddress) {
+        alert('You do not have the permission to burn this token')
+        return
+      } else {
+        console.log(`burning token ${tokenId}...`)
+        await nftContract.burn(tokenId)
+        console.log('token burned')
+      }
+    }
+  }
+
   const checkApproval = async () => {
     if (nftContract) {
       // console.log(

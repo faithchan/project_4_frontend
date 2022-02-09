@@ -1,10 +1,6 @@
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
-// useParams to retrieve user id from url
-// query database to retrieve tokenIds owned
-// call tokenURI to get metadata
-
 const account = () => {
   const [tokensOwned, setTokensOwned] = useState([])
   const [tokensCreated, setTokensCreated] = useState([])
