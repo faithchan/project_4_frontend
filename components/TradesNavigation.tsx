@@ -5,7 +5,7 @@ import Image from 'next/image'
 import {Menu, Transition} from "@headlessui/react"
 import { ChevronDownIcon } from '@heroicons/react/solid'
 
-const TradesNavgiation = () => {
+const TradesNavigation = () => {
     return (
         <div className="text-right font-body">
             <Menu as="div" className="relative inline-block text-left" >
@@ -29,16 +29,16 @@ const TradesNavgiation = () => {
             <Menu.Items className="origin-top-right absolute left-0 mt-2 w-24 rounded-md shadow-lg bg-opacity-20  bg-black  divide-y divide-gray-100 focus:outline-none">
             <div className="py-1 ">
                 <Menu.Item>
-                    <Link href="/login">
+                    <Link href="/trades">
                     <a className="group flex items-center px-4 py-1  text-gray-300 hover:text-gold">
-                     Log In</a>
+                     History</a>
                     </Link>
                 </Menu.Item>
 
                 <Menu.Item>
-                    <Link href="/edit">
+                    <Link href="/uploadnft">
                     <a className="group flex items-center px-4 py-1 text-gray-300 hover:text-gold">
-                    Edit Profile</a>
+                    Upload NFT</a>
                     </Link>
                 </Menu.Item>
 
@@ -53,4 +53,4 @@ const TradesNavgiation = () => {
     )
 }
 
-export default TradesNavgiation
+export default TradesNavigation
