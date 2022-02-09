@@ -7,7 +7,7 @@ const Search = () => {
         type="search"
         name="search"
         placeholder="Search"
-        className="bg-white h-10 pl-5 rounded-full text-sm focus:outline-none"
+        className="bg-white h-10 pl-5 rounded-full text-sm focus:outline-none w-56"
       />
       <button type="submit" className="absolute right-0 top-0 mt-3 pr-4 ">
         ok
