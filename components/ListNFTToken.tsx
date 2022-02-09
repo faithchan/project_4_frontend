@@ -15,12 +15,16 @@ const ListNFTToken = () => {
   const [signer, setSigner] = useState<any>()
   const [nftContract, setNftContract] = useState<any>()
   const [marketplaceContract, setMarketplaceContract] = useState<any>()
-
-  // setTokenRoyalty
-  // listToken
+  const [royaltyAmount, setRoyaltyAmount] = useState()
+  const [listPrice, setListPrice] = useState()
 
   const setTokenRoyalty = async () => {}
+
   const listToken = async () => {}
+
+  const handleRoyaltyChange = () => {}
+
+  const handleListPriceChange = () => {}
 
   const initialiseContract = async () => {
     if (signer != undefined) {
@@ -65,6 +69,18 @@ const ListNFTToken = () => {
       alert('Please install Metamask')
     }
   }
+
+  useEffect(() => {
+    if (nftContract) {
+      setTokenRoyalty()
+    }
+  }, [nftContract])
+
+  // useEffect(() => {
+  //   if (marketplaceContract) {
+  //     listToken()
+  //   }
+  // }, [marketplaceContract])
 
   useEffect(() => {
     initialiseContract()
@@ -115,7 +131,7 @@ const ListNFTToken = () => {
               className="mb-2 md:mb-0 bg-white px-5 py-2 text-xs shadow-sm font-header tracking-wider border text-gold rounded-full hover:shadow-lg hover:bg-gray-100"
               onClick={(e) => {
                 e.preventDefault()
-                props.setListModal(false)
+                // props.setListModal(false)
               }}
             >
               List Later

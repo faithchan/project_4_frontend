@@ -22,7 +22,7 @@ const Wallet = (props: WalletProps) => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         const connectedAddress = await signer.getAddress()
-        console.log('Connected Wallet: ', connectedAddress)
+        console.log('Wallet component: ', connectedAddress)
         console.log('signer: ', signer)
         localStorage.setItem('walletAddress', connectedAddress)
         props.setSigner(signer)
