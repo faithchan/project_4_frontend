@@ -195,6 +195,7 @@ const UploadNFTForm = () => {
             setSigner={setSigner}
             setConnected={setConnected}
             isConnected={connected}
+            signer={signer}
           />
           <button
             className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8"

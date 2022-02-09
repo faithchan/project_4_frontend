@@ -1,22 +1,37 @@
 import { useEffect, useState } from 'react'
 import TradeCard from '../components/TradeCard'
 import { nftaddress, marketplaceaddress } from '../config'
-import { ethers } from 'ethers'
+import { ethers, Wallet } from 'ethers'
 import NFT from '../contract-abis/NFT.json'
 import Marketplace from '../contract-abis/Marketplace.json'
 import Web3Modal from 'web3modal'
 
 const Trades = () => {
   const [walletAddress, setWalletAddress] = useState('')
-  const [connected, setConnected] = useState<boolean>(false)
   const [signer, setSigner] = useState<any>()
   const [nftContract, setNftContract] = useState<any>()
   const [marketplaceContract, setMarketplaceContract] = useState<any>()
-  const [ownerTokens, setOwnerTokens] = useState([])
 
   const fetchNFTsOwned = async () => {
     const totalSupply = await nftContract.totalSupply()
+    const ownerTokens = []
     console.log('supply: ', totalSupply)
+    for (let i = 0; i < totalSupply; i++) {
+      const owner = await nftContract.ownerOf(i)
+      if (owner === walletAddress) {
+        ownerTokens.push(i)
+      }
+    }
+    console.log('ownertokens: ', ownerTokens)
+    for (let i in ownerTokens) {
+      const uri = await nftContract.tokenURI(i)
+      console.log('uri: ', uri)
+    }
+  }
+
+  const fetchMarketItems = async () => {
+    const owner = await marketplaceContract.owner()
+    console.log('owner: ', owner)
   }
 
   const initialiseContract = async () => {
@@ -25,6 +40,7 @@ const Trades = () => {
       const marketplaceContract = new ethers.Contract(marketplaceaddress, Marketplace.abi, signer)
       setNftContract(nftContract)
       setMarketplaceContract(marketplaceContract)
+      console.log('nft contract: ', nftContract)
     }
   }
 
@@ -56,7 +72,6 @@ const Trades = () => {
         localStorage.setItem('walletAddress', connectedAddress)
         setSigner(signer)
         setWalletAddress(connectedAddress)
-        setConnected(true)
       }
     } else {
       alert('Please install Metamask')
@@ -66,6 +81,7 @@ const Trades = () => {
   useEffect(() => {
     if (nftContract) {
       fetchNFTsOwned()
+      fetchMarketItems()
     }
   }, [nftContract])
 
