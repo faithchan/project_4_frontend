@@ -3,8 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import logo from '../public/ArkivLogo.svg'
 import Search from './Search'
-import accountImg from '../public/account.svg'
-import exploreImg from '../public/explore.svg'
+import walletImg from '../public/wallet.svg'
 import homeImg from '../public/home.svg'
 import tradeImg from '../public/trade.svg'
 import uploadImg from '../public/upload.svg'
@@ -36,9 +35,9 @@ const Navbar = () => {
             </Link>
           </li>
           <li className="ml-10 mr-10 mt-2 ">
-            <Link href="/uploadnft">
+            <Link href="/">
               <a>
-                <Image src={uploadImg}></Image>
+                <Image src={walletImg}></Image>
               </a>
             </Link>
           </li>
