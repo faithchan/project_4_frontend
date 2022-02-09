@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import TradeCard from '../components/TradeCard'
 import { nftaddress, marketplaceaddress } from '../config'
-import { ethers, Wallet } from 'ethers'
+import { ethers } from 'ethers'
 import NFT from '../contract-abis/NFT.json'
 import Marketplace from '../contract-abis/Marketplace.json'
 import Web3Modal from 'web3modal'
@@ -22,7 +22,7 @@ const Trades = () => {
         ownerTokens.push(i)
       }
     }
-    console.log('ownertokens: ', ownerTokens)
+    console.log('owner tokens: ', ownerTokens)
     for (let i in ownerTokens) {
       const uri = await nftContract.tokenURI(i)
       console.log('uri: ', uri)
@@ -40,7 +40,7 @@ const Trades = () => {
       const marketplaceContract = new ethers.Contract(marketplaceaddress, Marketplace.abi, signer)
       setNftContract(nftContract)
       setMarketplaceContract(marketplaceContract)
-      console.log('nft contract: ', nftContract)
+      // console.log('nft contract: ', nftContract)
     }
   }
 
@@ -68,7 +68,7 @@ const Trades = () => {
         const signer = provider.getSigner()
         const connectedAddress = await signer.getAddress()
         console.log('Connected Wallet: ', connectedAddress)
-        console.log('signer: ', signer)
+        // console.log('signer: ', signer)
         localStorage.setItem('walletAddress', connectedAddress)
         setSigner(signer)
         setWalletAddress(connectedAddress)

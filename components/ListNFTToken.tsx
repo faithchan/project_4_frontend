@@ -1,10 +1,79 @@
-import React from 'react'
-interface uploadProps {
-  ListModal: boolean
-  setListModal: (a: boolean) => void
-}
+import { useEffect, useState } from 'react'
+import { ethers } from 'ethers'
+import Web3Modal from 'web3modal'
+import { nftaddress, marketplaceaddress } from '../config'
+import NFT from '../contract-abis/NFT.json'
+import Marketplace from '../contract-abis/Marketplace.json'
 
-const ListNFTToken = (props: uploadProps) => {
+// interface uploadProps {
+//   ListModal: boolean
+//   setListModal: (a: boolean) => void
+// }
+
+const ListNFTToken = () => {
+  const [walletAddress, setWalletAddress] = useState('')
+  const [signer, setSigner] = useState<any>()
+  const [nftContract, setNftContract] = useState<any>()
+  const [marketplaceContract, setMarketplaceContract] = useState<any>()
+
+  // setTokenRoyalty
+  // listToken
+
+  const setTokenRoyalty = async () => {}
+  const listToken = async () => {}
+
+  const initialiseContract = async () => {
+    if (signer != undefined) {
+      const nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
+      const marketplaceContract = new ethers.Contract(marketplaceaddress, Marketplace.abi, signer)
+      setNftContract(nftContract)
+      setMarketplaceContract(marketplaceContract)
+      // console.log('nft contract: ', nftContract)
+    }
+  }
+
+  const changeNetwork = async () => {
+    try {
+      if (!window.ethereum) throw new Error('No crypto wallet found')
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: '0x4' }],
+      })
+    } catch (err: any) {
+      console.log('error changing network: ', err.message)
+    }
+  }
+
+  const connectWallet = async () => {
+    if (typeof window.ethereum !== 'undefined') {
+      if (window.ethereum.chainId !== '0x4') {
+        console.log('switch to rinkeby network')
+        changeNetwork()
+      } else {
+        const web3Modal = new Web3Modal()
+        const connection = await web3Modal.connect()
+        const provider = new ethers.providers.Web3Provider(connection)
+        const signer = provider.getSigner()
+        const connectedAddress = await signer.getAddress()
+        console.log('Connected Wallet in List NFT: ', connectedAddress)
+        // console.log('signer: ', signer)
+        localStorage.setItem('walletAddress', connectedAddress)
+        setSigner(signer)
+        setWalletAddress(connectedAddress)
+      }
+    } else {
+      alert('Please install Metamask')
+    }
+  }
+
+  useEffect(() => {
+    initialiseContract()
+  }, [walletAddress])
+
+  useEffect(() => {
+    connectWallet()
+  }, [])
+
   return (
     <div
       className="min-w-screen h-screen animated fadeIn faster  fixed  left-0 top-0 flex justify-center items-center inset-0 z-50 outline-none focus:outline-none bg-no-repeat bg-center bg-cover"
