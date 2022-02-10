@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { ethers } from 'ethers'
 import Web3Modal from 'web3modal'
 
@@ -6,6 +7,7 @@ interface WalletProps {
   setSigner: (a: object) => void
   setConnected: (a: boolean) => void
   isConnected: boolean
+  signer: any
 }
 
 const Wallet = (props: WalletProps) => {
@@ -20,8 +22,7 @@ const Wallet = (props: WalletProps) => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         const connectedAddress = await signer.getAddress()
-        console.log('Connected Wallet: ', connectedAddress)
-        console.log('signer: ', signer)
+        console.log('Wallet component: ', connectedAddress)
         localStorage.setItem('walletAddress', connectedAddress)
         props.setSigner(signer)
         props.setWalletAddress(connectedAddress)
@@ -49,6 +50,12 @@ const Wallet = (props: WalletProps) => {
       console.log('error changing network: ', err.message)
     }
   }
+
+  useEffect(() => {
+    if (typeof window.ethereum !== 'undefined') {
+      connectWallet()
+    }
+  }, [])
 
   return (
     <>

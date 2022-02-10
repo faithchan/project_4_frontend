@@ -11,49 +11,9 @@ const profile = () => {
   const [tokensOwned, setTokensOwned] = useState([])
   const [tokensCreated, setTokensCreated] = useState([])
 
-  const getOwnedTokens = async () => {
-    try {
-      const response = await fetch(`${process.env.API_ENDPOINT}/users/owned/${currentUser}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      const data = await response.json()
-      console.log('fetched owned tokens ', data)
-    } catch (err) {
-      console.error(err)
-    }
-  }
-  const getUser = async () => {
-    try {
-      const response = await fetch(`${process.env.API_ENDPOINT}/users/61f65bb7aea82e7faa90023f`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      const data = await response.json()
-      console.log('fetched owned tokens ', data)
-    } catch (err) {
-      console.error(err)
-    }
-  }
+  const getOwnedTokens = async () => {}
 
-  const getCreatedTokens = async () => {
-    try {
-      const response = await fetch(`${process.env.API_ENDPOINT}/users/created/${currentUser}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      const data = await response.json()
-      console.log('fetched created tokens ', data)
-    } catch (err) {
-      console.error(err)
-    }
-  }
+  const getCreatedTokens = async () => {}
 
   useEffect(() => {
     getOwnedTokens()

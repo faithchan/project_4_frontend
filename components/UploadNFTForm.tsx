@@ -16,28 +16,63 @@ const UploadNFTForm = () => {
   const [signer, setSigner] = useState<any>()
   const [nftContract, setNftContract] = useState<any>()
   const [fileName, setFileName] = useState('')
+  const [imageURL, setImageURL] = useState('')
   const [metadata, setMetadata] = useState({ name: '', description: '', image: '' })
 
   const mintToken = async () => {
     console.log('nft contract: ', nftContract)
-    if (nftContract) {
-      if (!metadata.name || !metadata.description || !metadata.image) {
-        alert('Please do not leave any fields blank.')
+    if (signer) {
+      if (await checkWhitelist()) {
+        if (!metadata.name || !metadata.description || !metadata.image) {
+          alert('Please do not leave any fields blank.')
+          return
+        }
+
+        const { cid } = await client.add({ path: `${fileName}`, content: JSON.stringify(metadata) })
+        const uri = `https://ipfs.infura.io/ipfs/${cid}`
+        console.log('token URI: ', uri)
+        const mintTxn = await nftContract.mint(walletAddress, uri)
+        const txn = await mintTxn.wait()
+        console.log('txn: ', txn)
+        const id = txn.events[0].args['tokenId']
+        const idNum = id.toNumber()
+        console.log('tokenId: ', idNum)
+        addTokenToDatabase(idNum)
+      } else {
+        alert('This wallet address is not whitelisted')
         return
       }
-      await createNFTMetadata()
-      console.log(
-        `minting token to address: ${walletAddress} with metadata: ${JSON.stringify(metadata)}}`
-      )
-      const mintTxn = await nftContract.mint(walletAddress, metadata)
-      const txn = await mintTxn.wait()
-      console.log('txn: ', txn)
-      const id = txn.events[0].args['tokenId']
-      const idNum = id.toNumber()
-      console.log('tokenId: ', idNum)
-      addTokenToDatabase(idNum)
     } else {
       alert('Please connect your Metamask wallet')
+    }
+  }
+
+  const checkWhitelist = async () => {
+    if (nftContract) {
+      const whitelisted = await nftContract.isWhitelisted(walletAddress)
+      return whitelisted
+    }
+  }
+
+  const onFileUpload = async (e: any) => {
+    const file = e.target.files[0]
+    setFileName(file.name)
+    try {
+      console.log(`adding ${file.name} to ipfs....`)
+      const { cid } = await client.add(
+        { content: file },
+        {
+          cidVersion: 1,
+          hashAlg: 'sha2-256',
+        }
+      )
+      console.log('cid: ', cid)
+      const url = `https://ipfs.infura.io/ipfs/${cid}`
+      console.log('ipfs url: ', url)
+      setImageURL(url)
+      setMetadata({ ...metadata, image: url })
+    } catch (e) {
+      console.error('Error uploading file: ', e)
     }
   }
 
@@ -65,41 +100,11 @@ const UploadNFTForm = () => {
     }
   }
 
-  const createNFTMetadata = async () => {
-    try {
-      const { cid } = await client.add({ path: `${fileName}`, content: JSON.stringify(metadata) })
-      const url = `https://ipfs.infura.io/ipfs/${cid}`
-      console.log('token URI: ', url)
-    } catch (err) {
-      console.error('Error posting metadata to IPFS.')
-    }
-  }
-
-  const onFileUpload = async (e: any) => {
-    const file = e.target.files[0]
-    setFileName(file.name)
-    try {
-      console.log(`adding ${file.name} to ipfs....`)
-      const { cid } = await client.add(
-        { content: file },
-        {
-          cidVersion: 1,
-          hashAlg: 'sha2-256',
-        }
-      )
-      console.log('cid: ', cid)
-      const url = `https://ipfs.infura.io/ipfs/${cid}`
-      console.log('ipfs url: ', url)
-      setMetadata({ ...metadata, image: url })
-    } catch (e) {
-      console.error('Error uploading file: ', e)
-    }
-  }
-
   const initialiseContract = async () => {
     if (signer != undefined) {
       const nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
       setNftContract(nftContract)
+      // console.log('contract: ', nftContract)
     }
   }
 
@@ -110,6 +115,10 @@ const UploadNFTForm = () => {
   }
 
   useEffect(() => {
+    checkWhitelist()
+  }, [nftContract])
+
+  useEffect(() => {
     initialiseContract()
   }, [walletAddress])
 
@@ -118,18 +127,18 @@ const UploadNFTForm = () => {
     let tempToken: any = token
     if (tempToken) {
       let decodedToken: any = jwtDecode(tempToken)
+      // console.log('decoded token: ', decodedToken)
       setLoggedIn(true)
-      console.log('decoded token: ', decodedToken)
     }
   }, [])
 
-//   if (!loggedIn) {
-//     return (
-//       <div className="flex items-center justify-center mt-10 mb-20">
-//         <div className="text-white">Please Log In</div>
-//       </div>
-//     )
-//   }
+  //   if (!loggedIn) {
+  //     return (
+  //       <div className="flex items-center justify-center mt-10 mb-20">
+  //         <div className="text-white">Please Log In</div>
+  //       </div>
+  //     )
+  //   }
 
   return (
     <div className="flex items-center justify-center mt-10 mb-20">
@@ -155,7 +164,6 @@ const UploadNFTForm = () => {
             onChange={handleInputChange}
           />
         </div>
-      
         <div className="grid grid-cols-1 mt-5 mx-7">
           <label className="md:text-sm text-xs text-white font-body tracking-wider">
             Upload Photo
@@ -196,6 +204,7 @@ const UploadNFTForm = () => {
             setSigner={setSigner}
             setConnected={setConnected}
             isConnected={connected}
+            signer={signer}
           />
           <button
             className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8"

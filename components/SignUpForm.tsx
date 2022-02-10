@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 type FormData = {
   username: string
@@ -9,7 +9,6 @@ type FormData = {
 }
 
 const SignUpForm = () => {
-  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -130,9 +129,11 @@ const SignUpForm = () => {
 
           </div>
           <div className="flex justify-center">
-            <button className=" border-2 border-gold hover:bg-blue-450 text-gold font-semibold tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8 mr-4">
-              LOGIN
-            </button>
+            <Link href="/login">
+              <button className=" border-2 border-gold hover:bg-blue-450 text-gold font-semibold tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8 mr-4">
+                LOGIN
+              </button>
+            </Link>
             <button className="bg-gold hover:bg-blue-450 text-white font-semibold tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8">
               CREATE ACCOUNT
             </button>
