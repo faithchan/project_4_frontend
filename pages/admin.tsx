@@ -5,13 +5,16 @@ import { ethers } from 'ethers'
 import NFT from '../contract-abis/NFT.json'
 import jwtDecode from 'jwt-decode'
 
+const dummyUser = '6203148937e32a0a9519be13'
+
 const admin = () => {
   const [whitelistAddress, setWhitelistAddress] = useState('')
   const [nftContract, setNftContract] = useState<any>()
   const [walletAddress, setWalletAddress] = useState('')
   const [connected, setConnected] = useState<boolean>(false)
   const [signer, setSigner] = useState<any>()
-  const [whitelistedUsers, setWhitelistedUsers] = useState([])
+  const [whitelistedAddrs, setWhitelistedAddrs] = useState([])
+  const [allUsers, setAllUsers] = useState([])
 
   const initialiseContract = async () => {
     if (signer != undefined) {
@@ -36,7 +39,7 @@ const admin = () => {
           const txn = await nftContract.addToWhitelist(whitelistAddress)
           const receipt = await txn.wait()
           console.log('whitelist txn: ', receipt)
-          // await updateDatabaseStatus(true)
+          await updateDatabaseStatus(true)
           setWhitelistAddress('')
         } catch (err) {
           console.error('error adding to whitelist: ', err)
@@ -57,7 +60,7 @@ const admin = () => {
           const txn = await nftContract.removeFromWhitelist(whitelistAddress)
           const receipt = await txn.wait()
           console.log('whitelist txn: ', receipt)
-          // await updateDatabaseStatus(false)
+          await updateDatabaseStatus(false)
           setWhitelistAddress('')
         } catch (err) {
           console.error('error removing from whitelist: ', err)
@@ -91,9 +94,9 @@ const admin = () => {
 
   const updateDatabaseStatus = async (status: boolean) => {
     if (walletAddress) {
-      console.log(`updating whitelist status for ${whitelistAddress}`)
+      console.log(`updating whitelist status for ${dummyUser}`)
       try {
-        const response = await fetch(`${process.env.API_ENDPOINT}/users/${whitelistAddress}`, {
+        const response = await fetch(`${process.env.API_ENDPOINT}/users/${dummyUser}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -119,30 +122,67 @@ const admin = () => {
         },
       })
       const data = await response.json()
-      setWhitelistedUsers(data)
+      setWhitelistedAddrs(data)
       console.log('updated user status: ', data)
     } catch (err) {
       console.error(err)
     }
   }
 
-  const renderWhitelist = whitelistedUsers.map((user: any) => {
+  const fetchAllUsers = async () => {
+    try {
+      const response = await fetch(`${process.env.API_ENDPOINT}/users`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const data = await response.json()
+      setAllUsers(data)
+      console.log('all users from database: ', data)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const renderWhitelist = whitelistedAddrs.map((user: any) => {
     return (
-      <h1 className="md:text-sm text-xs text-white font-body tracking-wider mb-4" key={user._id}>
+      <div className="md:text-sm text-xs text-white font-body tracking-wider mb-4" key={user._id}>
         {user.walletAddress}
-      </h1>
+      </div>
+    )
+  })
+
+  const renderUsers = allUsers.map((user: any) => {
+    return (
+      <div
+        className="md:text-sm text-xs text-white font-body tracking-wider my-4 flex items-center"
+        key={user._id}
+      >
+        <img
+          src={user.avatar}
+          alt={user.username}
+          width={50}
+          height={50}
+          className="mr-5 rounded-full"
+        />
+        {user.username}
+        <button className="border-2 border-gold hover:bg-blue-450 text-gold font-semibold font-header py-2 px-6 rounded-full text-xs ml-5">
+          Remove
+        </button>
+      </div>
     )
   })
 
   const handleInputChange = (event: any) => {
     const value = event.target.value
-    console.log('value: ', value)
     setWhitelistAddress(value)
   }
 
   useEffect(() => {
     initialiseContract()
-    // fetchExistingWhitelist()
+    fetchExistingWhitelist()
+    fetchAllUsers()
   }, [walletAddress])
 
   useEffect(() => {
@@ -160,7 +200,12 @@ const admin = () => {
         <div className="text-center my-20 font-header tracking-widest text-gold text-2xl">
           MANAGE WHITELIST
         </div>
-        <div className="mb-5">{renderWhitelist}</div>
+        <div className="mb-5">
+          <label className="md:text-sm text-lg text-white font-body tracking-wider underline underline-offset-4">
+            Whitelisted Addresses
+          </label>
+          {renderWhitelist}
+        </div>
         <div>
           <div className="grid grid-cols-1 ">
             <label className="md:text-sm text-xs text-white font-body tracking-wider">
@@ -200,6 +245,17 @@ const admin = () => {
             >
               VERIFY
             </button>
+          </div>
+        </div>
+        <div>
+          <div className="text-center my-10 font-header tracking-widest text-gold text-2xl">
+            MANAGE USERS
+          </div>
+          <div className="mb-5">
+            <label className="md:text-sm text-lg text-white font-body tracking-wider underline underline-offset-4">
+              All Users
+            </label>
+            {renderUsers}
           </div>
         </div>
       </div>
