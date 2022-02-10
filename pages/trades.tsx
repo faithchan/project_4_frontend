@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import TradeCard from '../components/TradeCard'
 import { nftaddress, marketplaceaddress } from '../config'
 import { ethers } from 'ethers'

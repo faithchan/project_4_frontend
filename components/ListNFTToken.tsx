@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { ethers } from 'ethers'
 import Web3Modal from 'web3modal'
-import { nftaddress, marketplaceaddress } from '../config'
-import NFT from '../contract-abis/NFT.json'
-import Marketplace from '../contract-abis/Marketplace.json'
+import globalContext from '../context/context'
+import { nftaddress } from '../config'
 
 interface uploadProps {
   ListNFTModal: boolean
@@ -11,46 +10,32 @@ interface uploadProps {
 }
 
 const ListNFTToken = (props: uploadProps) => {
+  const context = useContext(globalContext)
   const [showRoyalty, setShowRoyalty] = useState(true)
   const [showList, setShowList] = useState(false)
   const [showContBtn, setShowContBtn] = useState(false)
   const [showRoyaltyBtn, setShowRoyaltyBtn] = useState(true)
-
-  const royaltyHandler = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setShowRoyalty(false)
-    setShowList(true)
-  }
-  const listTokenHandler = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setShowList(false)
-    props.setListNFTModal(false)
-  }
-  const [walletAddress, setWalletAddress] = useState('')
-  const [signer, setSigner] = useState<any>()
-  const [nftContract, setNftContract] = useState<any>()
-  const [marketplaceContract, setMarketplaceContract] = useState<any>()
   const [royaltyAmount, setRoyaltyAmount] = useState() // convert % to number between 0-10000
   const [listPrice, setListPrice] = useState('')
   const [tokenId, setTokenId] = useState()
 
   const listToken = async () => {
-    if (marketplaceContract) {
+    if (context.marketplaceContract) {
       const salePrice = ethers.utils.parseUnits(listPrice, 'ether')
-      const txn = await marketplaceContract.listItem(nftaddress, tokenId, salePrice)
+      const txn = await context.marketplaceContract.listItem(nftaddress, tokenId, salePrice)
     }
   }
 
   const setTokenRoyalty = async () => {
-    if (nftContract) {
-      await nftContract.setTokenRoyalty(tokenId, royaltyAmount)
+    if (context.nftContract) {
+      await context.nftContract.setTokenRoyalty(tokenId, royaltyAmount)
     }
   }
 
   const getRoyaltyInfo = async () => {
-    if (nftContract) {
+    if (context.nftContract) {
       const salePrice = ethers.utils.parseUnits(listPrice, 'ether')
-      const info = await nftContract.royaltyInfo(tokenId, salePrice)
+      const info = await context.nftContract.royaltyInfo(tokenId, salePrice)
       console.log('royalty info: ', info)
     }
   }
@@ -64,16 +49,6 @@ const ListNFTToken = (props: uploadProps) => {
     const value = event.target.value
     setListPrice(value)
   }
-
-  // const initialiseContracts = async () => {
-  //   if (signer != undefined) {
-  //     const nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
-  //     const marketplaceContract = new ethers.Contract(marketplaceaddress, Marketplace.abi, signer)
-  //     setNftContract(nftContract)
-  //     setMarketplaceContract(marketplaceContract)
-  //     console.log('nft contract: ', nftContract)
-  //   }
-  // }
 
   const changeNetwork = async () => {
     try {
@@ -98,35 +73,30 @@ const ListNFTToken = (props: uploadProps) => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         const connectedAddress = await signer.getAddress()
-        console.log('Connected Wallet in List NFT: ', connectedAddress)
-        // console.log('signer: ', signer)
-        localStorage.setItem('walletAddress', connectedAddress)
-        setSigner(signer)
-        setWalletAddress(connectedAddress)
+        context.setSigner(signer)
+        context.setWalletAddress(connectedAddress)
       }
     } else {
       alert('Please install Metamask')
     }
   }
 
-  // useEffect(() => {
-  //   if (nftContract) {
-  //     setTokenRoyalty()
-  //   }
-  // }, [nftContract])
-
-  // useEffect(() => {
-  //   if (marketplaceContract) {
-  //     listToken()
-  //   }
-  // }, [marketplaceContract])
-
-  // useEffect(() => {
-  //   initialiseContracts()
-  // }, [walletAddress])
+  const royaltyHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setShowRoyalty(false)
+    setShowList(true)
+  }
+  const listTokenHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setShowList(false)
+    props.setListNFTModal(false)
+  }
 
   useEffect(() => {
-    connectWallet()
+    if (context.signer === null) {
+      console.log('attempting to connect wallet...')
+      connectWallet()
+    }
   }, [])
 
   return (

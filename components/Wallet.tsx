@@ -25,7 +25,6 @@ const Wallet = (props: WalletProps) => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         const connectedAddress = await signer.getAddress()
-
         context.setSigner(signer)
         context.setWalletAddress(connectedAddress)
         props.setConnected(true)

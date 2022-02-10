@@ -2,10 +2,7 @@ import { useEffect, useState, useContext } from 'react'
 import jwtDecode from 'jwt-decode'
 import globalContext from '../context/context'
 import Wallet from '../components/Wallet'
-import { nftaddress } from '../config'
-import { ethers } from 'ethers'
 import { create } from 'ipfs-http-client'
-import NFT from '../contract-abis/NFT.json'
 
 const url: string | any = 'https://ipfs.infura.io:5001/api/v0'
 const client = create(url)
@@ -25,7 +22,6 @@ const UploadNFTForm = () => {
           alert('Please do not leave any fields blank.')
           return
         }
-
         const { cid } = await client.add({ path: `${fileName}`, content: JSON.stringify(metadata) })
         const uri = `https://ipfs.infura.io/ipfs/${cid}`
         console.log('token URI: ', uri)
