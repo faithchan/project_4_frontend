@@ -26,7 +26,7 @@ const ListNFTToken = (props:uploadProps) => {
                 </div>
 
                 <div className="p-3 mt-2 text-center space-x-4 md:block">
-                    <button className="mb-2 md:mb-0 bg-white px-5 py-2 text-xs shadow-sm font-header tracking-wider border text-gold rounded-full hover:shadow-lg hover:bg-gray-100">
+                    <button className="mb-2 md:mb-0 bg-white px-5 py-2 text-xs shadow-sm font-header tracking-wider border text-gold rounded-full hover:shadow-lg hover:bg-gray-100" onClick={()=>props.setListNFTModal(false)}>
                         Cancel
                     </button>
                     <button className="mb-2 md:mb-0 bg-gold px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg ">Set Royalty</button>
