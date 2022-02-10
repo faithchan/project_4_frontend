@@ -1,9 +1,17 @@
-import React from 'react'
-import deleteButton from '../public/deleteButton.svg'
+import React, { useState } from 'react'
+import deleteImg from '../public/delete.svg'
+import Image from 'next/image'
+import ListNFTToken from './ListNFTToken'
 
 const TradeCard = () => {
+  const [ListNFTModal, setListNFTModal] = useState(false)
   return (
     <div>
+      {ListNFTModal ? (
+        <ListNFTToken ListNFTModal={ListNFTModal} setListNFTModal={setListNFTModal} />
+      ) : (
+        ''
+      )}
       <div className="w-full px-8 pt-8 pb-6 bg-purple opacity-80 rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all transform duration-500 ">
         <div className="flex justify-between space-x-14">
           <span className="font-MT font-semibold text-left leading-loose">
@@ -13,7 +21,15 @@ const TradeCard = () => {
               alt=""
             />
             <p className="text-gold mt-4 text-md font-header tracking-widest">Title of NFT</p>
-            <img src={deleteButton} className="w-8"></img>
+            <p className="text-gray-300 font-body text-xs mt-1 tracking-widest">
+              List Price: 1 eth
+            </p>
+            <p
+              className="text-gray-300 font-body text-xs mt-1 tracking-widest underline cursor-pointer"
+              onClick={() => setListNFTModal(true)}
+            >
+              List this NFT
+            </p>
           </span>
 
           <span>
@@ -38,9 +54,14 @@ const TradeCard = () => {
             <p className="text-gold text-sm font-header tracking-widest mt-2">Owned by</p>
             <p className="text-gold text-xs font-header tracking-widest mt-2">RACHEL LEE</p>
             <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">
-              You bought this on 12 Feb 2021
+              Bought on 12 Feb 2021
             </p>
-            <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">Price:0.01 Eth</p>
+            <span className="flex justify-between">
+              <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">Price:0.01 Eth</p>
+              <span className="pt-2">
+                <Image className="mt-4" src={deleteImg} alt="Logo" />
+              </span>
+            </span>
           </span>
         </div>
       </div>

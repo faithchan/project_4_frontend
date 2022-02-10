@@ -132,13 +132,13 @@ const UploadNFTForm = () => {
     }
   }, [])
 
-  if (!loggedIn) {
-    return (
-      <div className="flex items-center justify-center mt-10 mb-20">
-        <div className="text-white">Please Log In</div>
-      </div>
-    )
-  }
+  //   if (!loggedIn) {
+  //     return (
+  //       <div className="flex items-center justify-center mt-10 mb-20">
+  //         <div className="text-white">Please Log In</div>
+  //       </div>
+  //     )
+  //   }
 
   return (
     <div className="flex items-center justify-center mt-10 mb-20">

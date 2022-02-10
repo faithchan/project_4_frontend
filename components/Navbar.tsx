@@ -1,13 +1,15 @@
-import React from 'react'
+import React, {Fragment}from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import logo from '../public/ArkivLogo.svg'
 import Search from './Search'
-import accountImg from '../public/account.svg'
-import exploreImg from '../public/explore.svg'
+import walletImg from '../public/wallet.svg'
 import homeImg from '../public/home.svg'
 import tradeImg from '../public/trade.svg'
 import uploadImg from '../public/upload.svg'
+import AccNavigation from './AccNavigation'
+import TradesNavigation from './TradesNavigation'
+
 
 const Navbar = () => {
   return (
@@ -20,38 +22,37 @@ const Navbar = () => {
             </a>
           </Link>
         </span>
+
+        <span>
         <ul className="flex items-right mt-6 h-full tracking-widest">
-          <li className="ml-10 mr-10 mt-2 ">
-            <Link href="/account">
-              <a>
-                <Image src={accountImg}></Image>
-              </a>
-            </Link>
-          </li>
-          {/* <li className="mx-10 mt-4"><Link href="/login"><a>LOGIN</a></Link></li> */}
-          <li className="ml-10 mr-10 mt-2 ">
-            <Link href="/uploadnft">
-              <a>
-                <Image src={uploadImg}></Image>
-              </a>
-            </Link>
-          </li>
-          <li className="ml-10 mr-10 mt-2 ">
-            <Link href="/trades">
-              <a>
-                <Image src={tradeImg}></Image>
-              </a>
-            </Link>
-          </li>
-          <li className="ml-10 mr-20 mt-2 ">
+            
+
+            <li className="ml-10 mr-10 mt-2 ">
             <Link href="/feed">
               <a>
                 <Image src={homeImg}></Image>
               </a>
             </Link>
           </li>
+          <li className="ml-10 mr-10 mt-2 ">
+            <Link href="/wallet">
+              <a>
+                <Image src={walletImg}></Image>
+              </a>
+            </Link>
+          </li>
+          <li className="ml-10 mr-20 mt-2 ">
+            <TradesNavigation />
+          </li>
+          <li className="mr-10 mt-2">
+                <AccNavigation />
+            </li>
+          
           <Search />
         </ul>
+        </span>
+       
+
       </nav>
     </div>
   )
