@@ -4,6 +4,8 @@ import { nftaddress } from '../config'
 import { ethers } from 'ethers'
 import NFT from '../contract-abis/NFT.json'
 import jwtDecode from 'jwt-decode'
+import { useRouter } from 'next/router'
+import { resolve } from 'path/posix'
 
 const dummyUser = '6203148937e32a0a9519be13'
 
@@ -15,6 +17,7 @@ const admin = () => {
   const [signer, setSigner] = useState<any>()
   const [whitelistedAddrs, setWhitelistedAddrs] = useState([])
   const [allUsers, setAllUsers] = useState([])
+  const router = useRouter()
 
   const initialiseContract = async () => {
     if (signer != undefined) {
@@ -145,6 +148,22 @@ const admin = () => {
     }
   }
 
+  const removeUser = async (userId: string) => {
+    console.log(`trying to remove user with id ${userId}`)
+    try {
+      const response = await fetch(`${process.env.API_ENDPOINT}/users/${userId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      console.log('deleted user: ', response)
+      router.reload()
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   const renderWhitelist = whitelistedAddrs.map((user: any) => {
     return (
       <div className="md:text-sm text-xs text-white font-body tracking-wider mb-4" key={user._id}>
@@ -178,22 +197,6 @@ const admin = () => {
       </div>
     )
   })
-
-  const removeUser = async (userId: string) => {
-    console.log(`trying to remove user with id ${userId}`)
-    try {
-      const response = await fetch(`${process.env.API_ENDPOINT}/users/${userId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      const data = await response.json()
-      console.log('deleted user: ', data)
-    } catch (err) {
-      console.error(err)
-    }
-  }
 
   const handleInputChange = (event: any) => {
     const value = event.target.value
