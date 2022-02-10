@@ -54,7 +54,7 @@ const Wallet = (props: WalletProps) => {
   }
 
   const initialiseContracts = async () => {
-    if (context.signer != undefined) {
+    if (context.signer != null) {
       const nftContract = new ethers.Contract(nftaddress, NFT.abi, context.signer)
       const marketplaceContract = new ethers.Contract(
         marketplaceaddress,
@@ -69,13 +69,11 @@ const Wallet = (props: WalletProps) => {
     if (typeof window.ethereum !== 'undefined') {
       connectWallet()
     }
-    console.log('context: ', context)
-    console.log('signer: ', context.signer)
   }, [props.isConnected])
 
   useEffect(() => {
     initialiseContracts()
-  }, context.signer)
+  }, [context.signer])
 
   return (
     <>

@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import jwtDecode from 'jwt-decode'
+import globalContext from '../context/context'
 import Wallet from '../components/Wallet'
 import { nftaddress } from '../config'
 import { ethers } from 'ethers'
@@ -10,18 +11,15 @@ const url: string | any = 'https://ipfs.infura.io:5001/api/v0'
 const client = create(url)
 
 const UploadNFTForm = () => {
+  const context = useContext(globalContext)
   const [loggedIn, setLoggedIn] = useState<boolean>(false)
-  const [walletAddress, setWalletAddress] = useState('')
   const [connected, setConnected] = useState<boolean>(false)
-  const [signer, setSigner] = useState<any>()
-  const [nftContract, setNftContract] = useState<any>()
   const [fileName, setFileName] = useState('')
   const [imageURL, setImageURL] = useState('')
   const [metadata, setMetadata] = useState({ name: '', description: '', image: '' })
 
   const mintToken = async () => {
-    console.log('nft contract: ', nftContract)
-    if (signer) {
+    if (context.signer) {
       if (await checkWhitelist()) {
         if (!metadata.name || !metadata.description || !metadata.image) {
           alert('Please do not leave any fields blank.')
@@ -31,7 +29,7 @@ const UploadNFTForm = () => {
         const { cid } = await client.add({ path: `${fileName}`, content: JSON.stringify(metadata) })
         const uri = `https://ipfs.infura.io/ipfs/${cid}`
         console.log('token URI: ', uri)
-        const mintTxn = await nftContract.mint(walletAddress, uri)
+        const mintTxn = await context.nftContract.mint(context.walletAddress, uri)
         const txn = await mintTxn.wait()
         console.log('txn: ', txn)
         const id = txn.events[0].args['tokenId']
@@ -48,8 +46,8 @@ const UploadNFTForm = () => {
   }
 
   const checkWhitelist = async () => {
-    if (nftContract) {
-      const whitelisted = await nftContract.isWhitelisted(walletAddress)
+    if (context.nftContract) {
+      const whitelisted = await context.nftContract.isWhitelisted(context.walletAddress)
       return whitelisted
     }
   }
@@ -82,8 +80,8 @@ const UploadNFTForm = () => {
       description: metadata.description,
       image: metadata.image,
       tokenId: tokenId,
-      creator: walletAddress,
-      owner: walletAddress,
+      creator: context.walletAddress,
+      owner: context.walletAddress,
     }
     try {
       const response = await fetch(`${process.env.API_ENDPOINT}/tokens`, {
@@ -94,17 +92,9 @@ const UploadNFTForm = () => {
         body: JSON.stringify(tokenData),
       })
       const data = await response.json()
-      console.log('posted token: ', data)
+      console.log('adding token: ', data)
     } catch (err) {
       console.error(err)
-    }
-  }
-
-  const initialiseContract = async () => {
-    if (signer != undefined) {
-      const nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
-      setNftContract(nftContract)
-      console.log('contract: ', nftContract)
     }
   }
 
@@ -116,13 +106,6 @@ const UploadNFTForm = () => {
 
   useEffect(() => {
     checkWhitelist()
-  }, [nftContract])
-
-  useEffect(() => {
-    initialiseContract()
-  }, [walletAddress])
-
-  useEffect(() => {
     let token = localStorage.getItem('token')
     let tempToken: any = token
     if (tempToken) {
