@@ -167,12 +167,33 @@ const admin = () => {
           className="mr-5 rounded-full"
         />
         {user.username}
-        <button className="border-2 border-gold hover:bg-blue-450 text-gold font-semibold font-header py-2 px-6 rounded-full text-xs ml-5">
+        <button
+          className="border-2 border-gold hover:bg-blue-450 text-gold font-semibold font-header py-2 px-6 rounded-full text-xs ml-5"
+          onClick={() => {
+            removeUser(user._id)
+          }}
+        >
           Remove
         </button>
       </div>
     )
   })
+
+  const removeUser = async (userId: string) => {
+    console.log(`trying to remove user with id ${userId}`)
+    try {
+      const response = await fetch(`${process.env.API_ENDPOINT}/users/${userId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const data = await response.json()
+      console.log('deleted user: ', data)
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
   const handleInputChange = (event: any) => {
     const value = event.target.value
