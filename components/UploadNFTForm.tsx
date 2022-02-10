@@ -199,13 +199,7 @@ const UploadNFTForm = () => {
           </div>
         </div>
         <div className="flex items-center justify-center pt-5 pb-5">
-          <Wallet
-            setWalletAddress={setWalletAddress}
-            setSigner={setSigner}
-            setConnected={setConnected}
-            isConnected={connected}
-            signer={signer}
-          />
+          <Wallet setConnected={setConnected} isConnected={connected} />
           <button
             className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8"
             onClick={mintToken}

@@ -65,15 +65,15 @@ const ListNFTToken = (props: uploadProps) => {
     setListPrice(value)
   }
 
-  const initialiseContract = async () => {
-    if (signer != undefined) {
-      const nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
-      const marketplaceContract = new ethers.Contract(marketplaceaddress, Marketplace.abi, signer)
-      setNftContract(nftContract)
-      setMarketplaceContract(marketplaceContract)
-      console.log('nft contract: ', nftContract)
-    }
-  }
+  // const initialiseContracts = async () => {
+  //   if (signer != undefined) {
+  //     const nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
+  //     const marketplaceContract = new ethers.Contract(marketplaceaddress, Marketplace.abi, signer)
+  //     setNftContract(nftContract)
+  //     setMarketplaceContract(marketplaceContract)
+  //     console.log('nft contract: ', nftContract)
+  //   }
+  // }
 
   const changeNetwork = async () => {
     try {
@@ -121,9 +121,9 @@ const ListNFTToken = (props: uploadProps) => {
   //   }
   // }, [marketplaceContract])
 
-  useEffect(() => {
-    initialiseContract()
-  }, [walletAddress])
+  // useEffect(() => {
+  //   initialiseContracts()
+  // }, [walletAddress])
 
   useEffect(() => {
     connectWallet()

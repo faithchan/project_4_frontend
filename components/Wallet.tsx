@@ -1,14 +1,14 @@
 import { useEffect, useContext } from 'react'
 import { ethers } from 'ethers'
 import Web3Modal from 'web3modal'
+import { nftaddress, marketplaceaddress } from '../config'
+import NFT from '../contract-abis/NFT.json'
+import Marketplace from '../contract-abis/Marketplace.json'
 import globalContext from '../context/context'
 
 interface WalletProps {
-  setWalletAddress: (a: string) => void
-  setSigner: (a: any) => void
   setConnected: (a: boolean) => void
   isConnected: boolean
-  signer: any
 }
 
 const Wallet = (props: WalletProps) => {
@@ -26,7 +26,6 @@ const Wallet = (props: WalletProps) => {
         const signer = provider.getSigner()
         const connectedAddress = await signer.getAddress()
 
-        localStorage.setItem('walletAddress', connectedAddress)
         context.setSigner(signer)
         context.setWalletAddress(connectedAddress)
         props.setConnected(true)
@@ -38,6 +37,7 @@ const Wallet = (props: WalletProps) => {
 
   const disconnectWallet = async () => {
     context.setWalletAddress('')
+    context.setSigner(null)
     props.setConnected(false)
   }
 
@@ -53,6 +53,18 @@ const Wallet = (props: WalletProps) => {
     }
   }
 
+  const initialiseContracts = async () => {
+    if (context.signer != undefined) {
+      const nftContract = new ethers.Contract(nftaddress, NFT.abi, context.signer)
+      const marketplaceContract = new ethers.Contract(
+        marketplaceaddress,
+        Marketplace.abi,
+        context.signer
+      )
+      context.setNftContract(nftContract)
+      context.setMarketplaceContract(marketplaceContract)
+    }
+  }
   useEffect(() => {
     if (typeof window.ethereum !== 'undefined') {
       connectWallet()
@@ -60,6 +72,10 @@ const Wallet = (props: WalletProps) => {
     console.log('context: ', context)
     console.log('signer: ', context.signer)
   }, [props.isConnected])
+
+  useEffect(() => {
+    initialiseContracts()
+  }, context.signer)
 
   return (
     <>
