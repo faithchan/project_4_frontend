@@ -174,7 +174,7 @@ const admin = () => {
               value={whitelistAddress}
             />
           </div>
-          <div className="flex items-center justify-center py-5 grid grid-cols-4">
+          <div className="flex items-center justify-center py-5 grid-cols-4">
             <Wallet
               setWalletAddress={setWalletAddress}
               setSigner={setSigner}
