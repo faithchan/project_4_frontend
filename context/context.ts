@@ -1,17 +1,27 @@
 import { createContext } from 'react'
 
 interface userLoginStatus {
-  login: boolean
-  walletID: string
   designerState: boolean
-  setLoginState(state: boolean): void
+  walletAddress: string
+  signer: any
+  nftContract: any
+  marketplaceContract: any
+  setSigner: (signer: any) => void
+  setNftContract: (nftContract: any) => void
+  setMarketplaceContract: (marketplaceContract: any) => void
+  setWalletAddress: (address: string) => void
 }
 
 const userDefaultValue = {
-  login: false,
-  walletID: '0x0',
   designerState: false,
-  setLoginState: (state: boolean) => false,
+  walletAddress: '0x',
+  signer: null,
+  nftContract: null,
+  marketplaceContract: null,
+  setSigner: (signer: any) => null,
+  setNftContract: (nftContract: any) => null,
+  setMarketplaceContract: (marketplaceContract: any) => null,
+  setWalletAddress: (address: string) => '0x',
 }
 
 const userContext = createContext<userLoginStatus>(userDefaultValue)

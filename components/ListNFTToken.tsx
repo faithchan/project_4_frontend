@@ -71,7 +71,7 @@ const ListNFTToken = (props: uploadProps) => {
       const marketplaceContract = new ethers.Contract(marketplaceaddress, Marketplace.abi, signer)
       setNftContract(nftContract)
       setMarketplaceContract(marketplaceContract)
-      // console.log('nft contract: ', nftContract)
+      console.log('nft contract: ', nftContract)
     }
   }
 
