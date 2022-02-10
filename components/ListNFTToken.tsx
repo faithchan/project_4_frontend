@@ -150,7 +150,8 @@ const ListNFTToken = (props: uploadProps) => {
                 type="number"
                 className="bg-gray-100 px-4 py-2 border text-gray-600 border-gray-400 outline-none rounded-md w-full mt-2"
                 placeholder="2%"
-                min="1"
+                min="0"
+                step=".01"
                 max="99"
                 required
               />
@@ -215,7 +216,8 @@ const ListNFTToken = (props: uploadProps) => {
                 type="number"
                 className="bg-gray-100 px-4 py-2 border text-gray-600 border-gray-400 outline-none rounded-md w-full mt-2"
                 placeholder="1 Eth"
-                min="1"
+                min="0.01"
+                step=".01"
                 required
               />
             </div>
