@@ -22,13 +22,13 @@ const Trades = () => {
         ownerTokens.push(i)
       }
     }
-    // console.log('owner tokens: ', ownerTokens)
+    console.log('owner tokens: ', ownerTokens)
     for (let i in ownerTokens) {
       const uri = await nftContract.tokenURI(i)
       const response = await fetch(uri)
       if (!response.ok) throw new Error(response.statusText)
       const data = await response.json()
-      // console.log('data: ', data)
+      console.log('data: ', data)
       setTokenURIs([...tokenURIs, data])
     }
   }

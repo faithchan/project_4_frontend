@@ -23,7 +23,6 @@ const Wallet = (props: WalletProps) => {
         const signer = provider.getSigner()
         const connectedAddress = await signer.getAddress()
         console.log('Wallet component: ', connectedAddress)
-        console.log('signer: ', signer)
         localStorage.setItem('walletAddress', connectedAddress)
         props.setSigner(signer)
         props.setWalletAddress(connectedAddress)

@@ -5,7 +5,6 @@ import { ethers } from 'ethers'
 import NFT from '../contract-abis/NFT.json'
 import jwtDecode from 'jwt-decode'
 import { useRouter } from 'next/router'
-import { resolve } from 'path/posix'
 
 const dummyUser = '6203148937e32a0a9519be13'
 
@@ -203,10 +202,27 @@ const admin = () => {
     setWhitelistAddress(value)
   }
 
+  const checkAdmin = async (token: any) => {
+    try {
+      if (token.role !== 'Admin') {
+        console.log(token.role)
+        try {
+          router.push('/404')
+        } catch (error: any) {
+          router.push('/404')
+          console.log(error.message)
+        }
+      } else {
+        fetchExistingWhitelist()
+        fetchAllUsers()
+      }
+    } catch (err: any) {
+      console.log(err.message)
+    }
+  }
+
   useEffect(() => {
     initialiseContract()
-    fetchExistingWhitelist()
-    fetchAllUsers()
   }, [walletAddress])
 
   useEffect(() => {
@@ -215,6 +231,14 @@ const admin = () => {
     if (tempToken) {
       let decodedToken: any = jwtDecode(tempToken)
       console.log('decoded token: ', decodedToken)
+      if (decodedToken.role !== 'Admin') {
+        router.push('/404')
+      } else {
+        fetchExistingWhitelist()
+        fetchAllUsers()
+      }
+    } else {
+      router.push('/404')
     }
   }, [])
 
