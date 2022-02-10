@@ -50,18 +50,6 @@ const ListNFTToken = (props: uploadProps) => {
     setListPrice(value)
   }
 
-  const changeNetwork = async () => {
-    try {
-      if (!window.ethereum) throw new Error('No crypto wallet found')
-      await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: '0x4' }],
-      })
-    } catch (err: any) {
-      console.log('error changing network: ', err.message)
-    }
-  }
-
   const connectWallet = async () => {
     if (typeof window.ethereum !== 'undefined') {
       if (window.ethereum.chainId !== '0x4') {
@@ -81,6 +69,18 @@ const ListNFTToken = (props: uploadProps) => {
     }
   }
 
+  const changeNetwork = async () => {
+    try {
+      if (!window.ethereum) throw new Error('No crypto wallet found')
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: '0x4' }],
+      })
+    } catch (err: any) {
+      console.log('error changing network: ', err.message)
+    }
+  }
+
   const royaltyHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setShowRoyalty(false)
@@ -97,7 +97,7 @@ const ListNFTToken = (props: uploadProps) => {
       console.log('attempting to connect wallet...')
       connectWallet()
     }
-  }, [])
+  }, [context.walletAddress])
 
   return (
     <div
