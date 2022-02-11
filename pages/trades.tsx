@@ -1,9 +1,11 @@
 import { useEffect, useState, useContext } from 'react'
+import Web3Modal from 'web3modal'
 import TradeCard from '../components/TradeCard'
 import globalContext from '../context/context'
 import { nftaddress, marketplaceaddress } from '../config'
 import { ethers } from 'ethers'
-import Web3Modal from 'web3modal'
+import NFT from '../contract-abis/NFT.json'
+import Marketplace from '../contract-abis/Marketplace.json'
 
 const Trades = () => {
   const context = useContext(globalContext)
@@ -21,21 +23,25 @@ const Trades = () => {
       }
     }
     console.log('owner tokens: ', ownerTokens)
-    for (let i in ownerTokens) {
-      const uri = await context.nftContract.tokenURI(i)
-      const response = await fetch(uri)
-      if (!response.ok) throw new Error(response.statusText)
-      const data = await response.json()
-      console.log('data: ', data)
-      setTokenURIs([...tokenURIs, data])
+    try {
+      for (let i in ownerTokens) {
+        const uri = await context.nftContract.tokenURI(i)
+        const response = await fetch(uri)
+        if (!response.ok) throw new Error(response.statusText)
+        const data = await response.json()
+        console.log('data: ', data)
+        setTokenURIs([...tokenURIs, data])
+      }
+    } catch (err) {
+      console.error(err)
     }
   }
 
   const checkApproval = async () => {
     if (context.nftContract) {
-      console.log(
-        `checking approval for marketplace ${marketplaceaddress} for user ${context.walletAddress}`
-      )
+      // console.log(
+      //   `checking approval for marketplace ${marketplaceaddress} for user ${context.walletAddress}`
+      // )
       const status = await context.nftContract.isApprovedForAll(
         context.walletAddress,
         marketplaceaddress
@@ -89,19 +95,40 @@ const Trades = () => {
     }
   }
 
+  const initialiseContracts = async () => {
+    if (context.signer != null) {
+      const nftContract = new ethers.Contract(nftaddress, NFT.abi, context.signer)
+      const marketplaceContract = new ethers.Contract(
+        marketplaceaddress,
+        Marketplace.abi,
+        context.signer
+      )
+      context.setNftContract(nftContract)
+      context.setMarketplaceContract(marketplaceContract)
+    }
+  }
+
+  useEffect(() => {
+    if (context.signer !== null) {
+      initialiseContracts()
+    } else {
+      console.log('no signer')
+    }
+  }, [context.signer])
+
   useEffect(() => {
     if (context.nftContract) {
-      fetchNFTsOwned()
+      // fetchNFTsOwned()
       fetchMarketItems()
       checkApproval()
     }
-  }, [])
+  }, [context.nftContract])
 
   useEffect(() => {
     if (context.signer === null) {
       connectWallet()
     }
-  }, [context.walletAddress])
+  }, [])
 
   return (
     <div className="my-20 mx-32">
