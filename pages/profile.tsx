@@ -1,10 +1,6 @@
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
-// useParams to retrieve user id from url
-// query database to retrieve tokenIds owned
-// call tokenURI to get metadata
-
 const currentUser = '0x3eb9c5b92cb655f2769b5718d33f72e23b807d24'
 
 const profile = () => {
