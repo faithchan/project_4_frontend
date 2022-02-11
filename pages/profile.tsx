@@ -48,7 +48,7 @@ const profile = () => {
             </div>
             <div className=" text-center mx-4">
               <p className="text-gold text-sm font-header">102</p>
-              <span className="text-gray-300 font-body">Folowing</span>
+              <span className="text-gray-300 font-body">Following</span>
             </div>
           </div>
 
