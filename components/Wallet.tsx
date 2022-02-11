@@ -1,14 +1,19 @@
+import { useEffect, useContext } from 'react'
 import { ethers } from 'ethers'
 import Web3Modal from 'web3modal'
+import globalContext from '../context/context'
 
 interface WalletProps {
   setWalletAddress: (a: string) => void
-  setSigner: (a: object) => void
+  setSigner: (a: any) => void
   setConnected: (a: boolean) => void
   isConnected: boolean
+  signer: any
 }
 
 const Wallet = (props: WalletProps) => {
+  const context = useContext(globalContext)
+
   const connectWallet = async () => {
     if (typeof window.ethereum !== 'undefined') {
       if (window.ethereum.chainId !== '0x4') {
@@ -20,11 +25,10 @@ const Wallet = (props: WalletProps) => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         const connectedAddress = await signer.getAddress()
-        console.log('Connected Wallet: ', connectedAddress)
-        console.log('signer: ', signer)
+
         localStorage.setItem('walletAddress', connectedAddress)
-        props.setSigner(signer)
-        props.setWalletAddress(connectedAddress)
+        context.setSigner(signer)
+        context.setWalletAddress(connectedAddress)
         props.setConnected(true)
       }
     } else {
@@ -33,8 +37,7 @@ const Wallet = (props: WalletProps) => {
   }
 
   const disconnectWallet = async () => {
-    localStorage.removeItem('walletAddress')
-    props.setWalletAddress('')
+    context.setWalletAddress('')
     props.setConnected(false)
   }
 
@@ -49,6 +52,14 @@ const Wallet = (props: WalletProps) => {
       console.log('error changing network: ', err.message)
     }
   }
+
+  useEffect(() => {
+    if (typeof window.ethereum !== 'undefined') {
+      connectWallet()
+    }
+    console.log('context: ', context)
+    console.log('signer: ', context.signer)
+  }, [props.isConnected])
 
   return (
     <>
