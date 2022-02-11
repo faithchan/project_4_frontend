@@ -39,26 +39,6 @@ const Trades = () => {
     }
   }
 
-  const checkApproval = async () => {
-    if (context.nftContract) {
-      // console.log(
-      //   `checking approval for marketplace ${marketplaceaddress} for user ${context.walletAddress}`
-      // )
-      const status = await context.nftContract.isApprovedForAll(
-        context.walletAddress,
-        marketplaceaddress
-      )
-      console.log('approval status: ', status)
-    }
-  }
-
-  const setApproval = async () => {
-    if (context.nftContract) {
-      console.log(`setting approval for operator ${marketplaceaddress}`)
-      await context.nftContract.setApprovalForAll(marketplaceaddress, true)
-    }
-  }
-
   const fetchMarketItems = async () => {
     const ownedItems = await context.marketplaceContract.getItemsOwned()
     const listedItems = await context.marketplaceContract.getListedItems()
