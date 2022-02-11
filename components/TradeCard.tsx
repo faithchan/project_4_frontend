@@ -12,6 +12,7 @@ interface deleteProps {
   deleteModal: boolean
   setDeleteModal: (a: boolean) => void
 }
+
 const TradeCard = (props: deleteProps) => {
   const context = useContext(globalContext)
   const [ListNFTModal, setListNFTModal] = useState(false)

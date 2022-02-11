@@ -25,17 +25,18 @@ const Trades = () => {
       }
     }
     console.log('owner tokens: ', ownerTokens)
-    try {
-      for (let i in ownerTokens) {
-        const uri = await context.nftContract.tokenURI(i)
-        const response = await fetch(uri)
-        if (!response.ok) throw new Error(response.statusText)
-        const data = await response.json()
-        console.log('data: ', data)
-        setTokenURIs([...tokenURIs, data])
+    let uri
+    for (let i in ownerTokens) {
+      try {
+        uri = await context.nftContract.tokenURI(i)
+      } catch (err) {
+        console.log(err)
       }
-    } catch (err) {
-      console.error(err)
+      const response = await fetch(uri)
+      // if (!response.ok) throw new Error(response.statusText)
+      const data = await response.json()
+      console.log('data: ', data)
+      setTokenURIs([...tokenURIs, data])
     }
   }
 
@@ -120,7 +121,7 @@ const Trades = () => {
 
   useEffect(() => {
     if (context.nftContract) {
-      // fetchNFTsOwned()
+      fetchNFTsOwned()
       fetchMarketItems()
       checkApproval()
     }
