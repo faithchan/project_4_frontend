@@ -1,6 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import UserProfileCard from '../../components/UserProfileCard'
+import UserNFTCard from '../../components/UserNFTCard'
 
 const Username = () => {
     const router = useRouter()
@@ -66,12 +66,12 @@ const Username = () => {
           </div>
         </div>
         <div className="flex flex-wrap justify-center gap-10  mx-32  mb-16">
-              <UserProfileCard />
-              <UserProfileCard />
-              <UserProfileCard />
-              <UserProfileCard />
-              <UserProfileCard />
-              <UserProfileCard />
+              <UserNFTCard/>
+              <UserNFTCard/>
+              <UserNFTCard/>
+              <UserNFTCard/>
+              <UserNFTCard/>
+              <UserNFTCard/>
             </div>
       </div>
     )

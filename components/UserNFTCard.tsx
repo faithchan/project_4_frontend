@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
+import BuyNFTModal from './BuyNFTModal'
 
-const UserProfileCard = () => {
+const UserNFTCard = () => {
+  const[buyModal, setBuyModal]= useState(false)
     return (
         <div>
+          {buyModal?<BuyNFTModal buyModal={buyModal} setBuyModal={setBuyModal}/>:""}
             <div className="w-72 p-8 bg-purple opacity-80 rounded-3xl mt-2">
       <img
         className="w-56 h-56 object-cover rounded-3xl"
@@ -21,7 +24,7 @@ const UserProfileCard = () => {
           <button className="block text-sm font-body font-semibold text-gray-300 cursor-auto">
             0.01 Eth
           </button>
-          <button className="text-lg block font-semibold p-6 text-gray-300 hover:text-white bg-white rounded-full shadow hover:shadow-md transition duration-300"></button>
+          <button className="mb-2 md:mb-0 bg-green-400 px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg" onClick={()=>setBuyModal(true)}>Buy</button>
         </div>
       </div>
     </div>
@@ -29,4 +32,4 @@ const UserProfileCard = () => {
     )
 }
 
-export default UserProfileCard
+export default UserNFTCard
