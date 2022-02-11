@@ -30,7 +30,6 @@ const admin = () => {
           const txn = await context.nftContract.addToWhitelist(whitelistAddress)
           const receipt = await txn.wait()
           console.log('whitelist txn: ', receipt)
-          await updateDatabaseStatus(true)
           setWhitelistAddress('')
         } catch (err) {
           console.error('error adding to whitelist: ', err)
@@ -51,7 +50,6 @@ const admin = () => {
           const txn = await context.nftContract.removeFromWhitelist(whitelistAddress)
           const receipt = await txn.wait()
           console.log('whitelist txn: ', receipt)
-          await updateDatabaseStatus(false)
           setWhitelistAddress('')
         } catch (err) {
           console.error('error removing from whitelist: ', err)
@@ -80,43 +78,6 @@ const admin = () => {
       }
     } else {
       alert('Please connect your Metamask wallet')
-    }
-  }
-
-  const updateDatabaseStatus = async (status: boolean) => {
-    if (context.walletAddress) {
-      console.log(`updating whitelist status for ${dummyUser}`)
-      try {
-        const response = await fetch(`${process.env.API_ENDPOINT}/users/${dummyUser}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            whitelistStatus: status,
-          }),
-        })
-        const data = await response.json()
-        console.log('updated user status: ', data)
-      } catch (err) {
-        console.error(err)
-      }
-    }
-  }
-
-  const fetchExistingWhitelist = async () => {
-    try {
-      const response = await fetch(`${process.env.API_ENDPOINT}/users/whitelist`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      const data = await response.json()
-      setWhitelistedAddrs(data)
-      console.log('updated user status: ', data)
-    } catch (err) {
-      console.error(err)
     }
   }
 
@@ -168,7 +129,6 @@ const admin = () => {
           console.log(error.message)
         }
       } else {
-        fetchExistingWhitelist()
         fetchAllUsers()
       }
     } catch (err: any) {
@@ -210,10 +170,6 @@ const admin = () => {
     )
   })
 
-  // useEffect(() => {
-  //   initialiseContract()
-  // }, [walletAddress])
-
   useEffect(() => {
     let token = localStorage.getItem('token')
     let tempToken: any = token
@@ -223,7 +179,6 @@ const admin = () => {
       if (decodedToken.role !== 'Admin') {
         router.push('/404')
       } else {
-        fetchExistingWhitelist()
         fetchAllUsers()
       }
     } else {
