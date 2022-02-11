@@ -112,7 +112,6 @@ const Trades = () => {
 
   useEffect(() => {
     if (context.signer === null) {
-      console.log('attempting to connect wallet...')
       connectWallet()
     }
   }, [context.walletAddress])

@@ -34,12 +34,6 @@ const Wallet = (props: WalletProps) => {
     }
   }
 
-  const disconnectWallet = async () => {
-    context.setWalletAddress('')
-    context.setSigner(null)
-    props.setConnected(false)
-  }
-
   const changeNetwork = async () => {
     try {
       if (!window.ethereum) throw new Error('No crypto wallet found')
@@ -50,6 +44,12 @@ const Wallet = (props: WalletProps) => {
     } catch (err: any) {
       console.log('error changing network: ', err.message)
     }
+  }
+
+  const disconnectWallet = async () => {
+    context.setWalletAddress('')
+    context.setSigner(null)
+    props.setConnected(false)
   }
 
   const initialiseContracts = async () => {

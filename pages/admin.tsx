@@ -1,29 +1,18 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import Wallet from '../components/Wallet'
-import { nftaddress } from '../config'
-import { ethers } from 'ethers'
-import NFT from '../contract-abis/NFT.json'
 import jwtDecode from 'jwt-decode'
+import globalContext from '../context/context'
 import { useRouter } from 'next/router'
 
 const dummyUser = '6203148937e32a0a9519be13'
 
 const admin = () => {
+  const context = useContext(globalContext)
   const [whitelistAddress, setWhitelistAddress] = useState('')
-  const [nftContract, setNftContract] = useState<any>()
-  const [walletAddress, setWalletAddress] = useState('')
   const [connected, setConnected] = useState<boolean>(false)
-  const [signer, setSigner] = useState<any>()
   const [whitelistedAddrs, setWhitelistedAddrs] = useState([])
   const [allUsers, setAllUsers] = useState([])
   const router = useRouter()
-
-  const initialiseContract = async () => {
-    if (signer != undefined) {
-      const nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
-      setNftContract(nftContract)
-    }
-  }
 
   const validateAddress = (input: string) => {
     const prefix = input.slice(0, 2)
@@ -34,11 +23,11 @@ const admin = () => {
   }
 
   const addToWhitelist = async () => {
-    if (nftContract) {
+    if (context.nftContract) {
       if (validateAddress(whitelistAddress) === true) {
         console.log(`adding ${whitelistAddress} to whitelist`)
         try {
-          const txn = await nftContract.addToWhitelist(whitelistAddress)
+          const txn = await context.nftContract.addToWhitelist(whitelistAddress)
           const receipt = await txn.wait()
           console.log('whitelist txn: ', receipt)
           await updateDatabaseStatus(true)
@@ -55,11 +44,11 @@ const admin = () => {
   }
 
   const removeFromWhitelist = async () => {
-    if (nftContract) {
+    if (context.nftContract) {
       if (validateAddress(whitelistAddress) === true) {
         console.log(`removing ${whitelistAddress} from whitelist`)
         try {
-          const txn = await nftContract.removeFromWhitelist(whitelistAddress)
+          const txn = await context.nftContract.removeFromWhitelist(whitelistAddress)
           const receipt = await txn.wait()
           console.log('whitelist txn: ', receipt)
           await updateDatabaseStatus(false)
@@ -76,11 +65,11 @@ const admin = () => {
   }
 
   const checkWhitelistStatus = async () => {
-    if (nftContract) {
+    if (context.nftContract) {
       if (validateAddress(whitelistAddress) === true) {
         console.log(`checking ${whitelistAddress} whitelist status`)
         try {
-          const txn = await nftContract.isWhitelisted(whitelistAddress)
+          const txn = await context.nftContract.isWhitelisted(whitelistAddress)
           console.log('whitelist txn: ', txn)
           setWhitelistAddress('')
         } catch (err) {
@@ -95,7 +84,7 @@ const admin = () => {
   }
 
   const updateDatabaseStatus = async (status: boolean) => {
-    if (walletAddress) {
+    if (context.walletAddress) {
       console.log(`updating whitelist status for ${dummyUser}`)
       try {
         const response = await fetch(`${process.env.API_ENDPOINT}/users/${dummyUser}`, {
@@ -163,6 +152,30 @@ const admin = () => {
     }
   }
 
+  const handleInputChange = (event: any) => {
+    const value = event.target.value
+    setWhitelistAddress(value)
+  }
+
+  const checkAdmin = async (token: any) => {
+    try {
+      if (token.role !== 'Admin') {
+        console.log(token.role)
+        try {
+          router.push('/404')
+        } catch (error: any) {
+          router.push('/404')
+          console.log(error.message)
+        }
+      } else {
+        fetchExistingWhitelist()
+        fetchAllUsers()
+      }
+    } catch (err: any) {
+      console.log(err.message)
+    }
+  }
+
   const renderWhitelist = whitelistedAddrs.map((user: any) => {
     return (
       <div className="md:text-sm text-xs text-white font-body tracking-wider mb-4" key={user._id}>
@@ -197,33 +210,9 @@ const admin = () => {
     )
   })
 
-  const handleInputChange = (event: any) => {
-    const value = event.target.value
-    setWhitelistAddress(value)
-  }
-
-  const checkAdmin = async (token: any) => {
-    try {
-      if (token.role !== 'Admin') {
-        console.log(token.role)
-        try {
-          router.push('/404')
-        } catch (error: any) {
-          router.push('/404')
-          console.log(error.message)
-        }
-      } else {
-        fetchExistingWhitelist()
-        fetchAllUsers()
-      }
-    } catch (err: any) {
-      console.log(err.message)
-    }
-  }
-
-  useEffect(() => {
-    initialiseContract()
-  }, [walletAddress])
+  // useEffect(() => {
+  //   initialiseContract()
+  // }, [walletAddress])
 
   useEffect(() => {
     let token = localStorage.getItem('token')
@@ -268,13 +257,7 @@ const admin = () => {
             />
           </div>
           <div className="flex items-center justify-center py-5 grid-cols-4">
-            <Wallet
-              setWalletAddress={setWalletAddress}
-              setSigner={setSigner}
-              setConnected={setConnected}
-              isConnected={connected}
-              signer={signer}
-            />
+            <Wallet setConnected={setConnected} isConnected={connected} />
             <button
               className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8"
               onClick={addToWhitelist}
