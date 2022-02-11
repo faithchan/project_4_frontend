@@ -3,7 +3,12 @@ import deleteImg from "../public/delete.svg"
 import Image from 'next/image'
 import ListNFTToken from './ListNFTToken'
 
-const TradeCard = () => {
+interface deleteProps{
+  deleteModal:boolean,
+  setDeleteModal:(a:boolean)=>void
+}
+
+const TradeCard = (props:deleteProps) => {
   const[ListNFTModal, setListNFTModal]= useState(false)
     return (
         <div>
@@ -35,7 +40,7 @@ const TradeCard = () => {
                     <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">Bought on 12 Feb 2021</p>
                     <span className="flex justify-between">
                     <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">Price:0.01 Eth</p>
-                    <span className="pt-2">
+                    <span className="pt-2 cursor-pointer" onClick={()=>props.setDeleteModal(true)}>
                     <Image className="mt-4" src={deleteImg} alt="Logo" />
                     </span>
                     </span>
