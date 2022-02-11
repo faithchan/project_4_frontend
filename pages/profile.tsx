@@ -52,12 +52,6 @@ const profile = () => {
             </div>
           </div>
 
-          <div className="flex justify-center gap-2 my-5">
-            <button className="bg-gold text-sm font-header px-10 py-2 rounded-full text-white shadow-lg">
-              Follow
-            </button>
-          </div>
-
           <div className="flex justify-between items-center">
             <button className="w-full py-4">
               <svg
