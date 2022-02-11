@@ -66,12 +66,6 @@ const Wallet = (props: WalletProps) => {
   }
 
   useEffect(() => {
-    if (typeof window.ethereum !== 'undefined') {
-      connectWallet()
-    }
-  }, [props.isConnected])
-
-  useEffect(() => {
     initialiseContracts()
   }, [context.signer])
 

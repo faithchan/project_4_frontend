@@ -4,6 +4,10 @@ import Image from 'next/image'
 import ListNFTToken from './ListNFTToken'
 import globalContext from '../context/context'
 
+interface CardProps {
+  tokenId: number
+}
+
 const TradeCard = () => {
   const context = useContext(globalContext)
   const [ListNFTModal, setListNFTModal] = useState(false)
@@ -20,6 +24,8 @@ const TradeCard = () => {
         await context.nftContract.burn(tokenId)
         console.log('token burned')
       }
+    } else {
+      alert('Connect wallet')
     }
   }
 
@@ -49,7 +55,6 @@ const TradeCard = () => {
               List this NFT
             </p>
           </span>
-
           <span>
             <p className="text-gold text-sm font-header tracking-widest">Designed by</p>
             <span className="flex space-x-4 mr-6">
@@ -68,7 +73,6 @@ const TradeCard = () => {
                 </p>
               </span>
             </span>
-
             <p className="text-gold text-sm font-header tracking-widest mt-2">Owned by</p>
             <p className="text-gold text-xs font-header tracking-widest mt-2">RACHEL LEE</p>
             <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">
@@ -77,7 +81,9 @@ const TradeCard = () => {
             <span className="flex justify-between">
               <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">Price:0.01 Eth</p>
               <span className="pt-2">
-                <Image className="mt-4" src={deleteImg} alt="Logo" />
+                <div onClick={() => burnToken(0)}>
+                  <Image className="mt-4" src={deleteImg} alt="Logo" />
+                </div>
               </span>
             </span>
           </span>
