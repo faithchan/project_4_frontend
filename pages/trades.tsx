@@ -9,6 +9,8 @@ const Trades = () => {
   const context = useContext(globalContext)
   const [tokenURIs, setTokenURIs] = useState<any>([])
 
+  console.log('trades context: ', context)
+
   const fetchNFTsOwned = async () => {
     const totalSupply = await context.nftContract.totalSupply()
     const ownerTokens = []
@@ -29,26 +31,11 @@ const Trades = () => {
     }
   }
 
-  const burnToken = async (tokenId: number) => {
-    if (context.nftContract) {
-      const owner = await context.nftContract.ownerOf(tokenId)
-      const creator = await context.nftContract.tokenCreator(tokenId)
-      if (owner !== context.walletAddress || creator !== context.walletAddress) {
-        alert('You do not have the permission to burn this token')
-        return
-      } else {
-        console.log(`burning token ${tokenId}...`)
-        await context.nftContract.burn(tokenId)
-        console.log('token burned')
-      }
-    }
-  }
-
   const checkApproval = async () => {
     if (context.nftContract) {
-      // console.log(
-      //   `checking approval for marketplace ${marketplaceaddress} for user ${walletAddress}`
-      // )
+      console.log(
+        `checking approval for marketplace ${marketplaceaddress} for user ${context.walletAddress}`
+      )
       const status = await context.nftContract.isApprovedForAll(
         context.walletAddress,
         marketplaceaddress
@@ -108,7 +95,7 @@ const Trades = () => {
       fetchMarketItems()
       checkApproval()
     }
-  }, [context.nftContract])
+  }, [])
 
   useEffect(() => {
     if (context.signer === null) {

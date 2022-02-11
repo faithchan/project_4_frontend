@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useState, useContext } from 'react'
 import globalContext from '../context/context'
 import { ethers } from 'ethers'
 import Web3Modal from 'web3modal'
@@ -11,9 +11,11 @@ import homeImg from '../public/home.svg'
 import uploadImg from '../public/upload.svg'
 import AccNavigation from './AccNavigation'
 import TradesNavigation from './TradesNavigation'
+import Wallet from './Wallet'
 
 const Navbar = () => {
   const context = useContext(globalContext)
+  const [connected, setConnected] = useState<boolean>(false)
 
   const connectWallet = async () => {
     if (typeof window.ethereum !== 'undefined') {

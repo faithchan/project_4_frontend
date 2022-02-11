@@ -92,13 +92,6 @@ const ListNFTToken = (props: uploadProps) => {
     props.setListNFTModal(false)
   }
 
-  useEffect(() => {
-    if (context.signer === null) {
-      console.log('attempting to connect wallet...')
-      connectWallet()
-    }
-  }, [context.walletAddress])
-
   return (
     <div
       className="min-w-screen h-screen animated fadeIn faster  fixed  left-0 top-0 flex justify-center items-center inset-0 z-50 outline-none focus:outline-none bg-no-repeat bg-center bg-cover"
@@ -111,7 +104,6 @@ const ListNFTToken = (props: uploadProps) => {
             <div className="text-center p-5 flex-auto justify-center">
               <p className="text-2xl text-gold font-header px-8">Set Royalty</p>
             </div>
-
             <div className="px-20">
               <label className="block mb-1 md:text-sm text-xs text-gray-400 font-body">
                 *In Percent (%)
@@ -126,7 +118,6 @@ const ListNFTToken = (props: uploadProps) => {
                 required
               />
             </div>
-
             <div className="p-3 mt-2 text-center space-x-4 md:block">
               <button
                 className="mb-2 md:mb-0 bg-white px-5 py-2 text-xs shadow-sm font-header tracking-wider border text-gold rounded-full hover:shadow-lg hover:bg-gray-100"
@@ -134,7 +125,6 @@ const ListNFTToken = (props: uploadProps) => {
               >
                 Cancel
               </button>
-
               {showRoyaltyBtn ? (
                 <button
                   className="mb-2 md:mb-0 bg-gold px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg "
@@ -148,7 +138,6 @@ const ListNFTToken = (props: uploadProps) => {
               ) : (
                 ''
               )}
-
               {showContBtn ? (
                 <button
                   className="mb-2 md:mb-0 bg-gold px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg "
@@ -160,13 +149,6 @@ const ListNFTToken = (props: uploadProps) => {
                 ''
               )}
             </div>
-
-            {/* <div className="p-3 mt-2 text-center space-x-4 md:block">
-                    <button className="mb-2 md:mb-0 bg-white px-5 py-2 text-xs shadow-sm font-header tracking-wider border text-gold rounded-full hover:shadow-lg hover:bg-gray-100">
-                        List Later
-                    </button>
-                    <button className="mb-2 md:mb-0 bg-gold px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg ">Approve and List</button>
-                </div> */}
           </form>
         ) : (
           ''
@@ -206,13 +188,6 @@ const ListNFTToken = (props: uploadProps) => {
                 List Token
               </button>
             </div>
-
-            {/* <div className="p-3 mt-2 text-center space-x-4 md:block">
-                    <button className="mb-2 md:mb-0 bg-white px-5 py-2 text-xs shadow-sm font-header tracking-wider border text-gold rounded-full hover:shadow-lg hover:bg-gray-100">
-                        List Later
-                    </button>
-                    <button className="mb-2 md:mb-0 bg-gold px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg ">Approve and List</button>
-                </div> */}
           </form>
         ) : (
           ''

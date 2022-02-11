@@ -1,6 +1,6 @@
 import { useEffect, useContext } from 'react'
-import { ethers } from 'ethers'
 import Web3Modal from 'web3modal'
+import { ethers } from 'ethers'
 import { nftaddress, marketplaceaddress } from '../config'
 import NFT from '../contract-abis/NFT.json'
 import Marketplace from '../contract-abis/Marketplace.json'
@@ -64,6 +64,7 @@ const Wallet = (props: WalletProps) => {
       context.setMarketplaceContract(marketplaceContract)
     }
   }
+
   useEffect(() => {
     if (typeof window.ethereum !== 'undefined') {
       connectWallet()

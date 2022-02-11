@@ -1,10 +1,28 @@
-import React, { useState } from 'react'
+import { useState, useContext } from 'react'
 import deleteImg from '../public/delete.svg'
 import Image from 'next/image'
 import ListNFTToken from './ListNFTToken'
+import globalContext from '../context/context'
 
 const TradeCard = () => {
+  const context = useContext(globalContext)
   const [ListNFTModal, setListNFTModal] = useState(false)
+
+  const burnToken = async (tokenId: number) => {
+    if (context.nftContract) {
+      const owner = await context.nftContract.ownerOf(tokenId)
+      const creator = await context.nftContract.tokenCreator(tokenId)
+      if (owner !== context.walletAddress || creator !== context.walletAddress) {
+        alert('You do not have the permission to burn this token')
+        return
+      } else {
+        console.log(`burning token ${tokenId}...`)
+        await context.nftContract.burn(tokenId)
+        console.log('token burned')
+      }
+    }
+  }
+
   return (
     <div>
       {ListNFTModal ? (
