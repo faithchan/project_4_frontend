@@ -15,7 +15,7 @@ const Navbar = () => {
   return (
     <div className="text-gold font-header text-xs">
       <nav className="flex pt-10 px-32 place-content-between">
-        <span className="mt-10 w-28">
+        <span className="mt-9 w-28">
           <Link href="/">
             <a>
               <Image src={logo} alt="Logo" />
