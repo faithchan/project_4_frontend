@@ -27,9 +27,12 @@ const FeedCard = (props:buyProps) => {
               alt=""
             />
             <p className="text-gold mt-4 text-md font-header tracking-widest">Title of NFT</p>
+            <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">
+                Description of the NFT
+              </p>
             <span className="flex justify-between">
               <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">
-                description of the nft
+                List Price: 1 Eth || Else Blank
               </p>
               <button className="mb-2 md:mb-0 bg-green-400 px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg" onClick={()=>props.setBuyModal(true)}>Buy</button>
             </span>
