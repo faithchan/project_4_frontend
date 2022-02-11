@@ -17,8 +17,7 @@ export default function Ellipsis() {
       {circles}
     </div>
   )
-}
-
+  }
 
 Ellipsis.propTypes = {
   /** hex color */
