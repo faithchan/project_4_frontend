@@ -1,4 +1,5 @@
 import React from 'react'
+import { HeartIcon } from '@heroicons/react/solid'
 
 const FeaturedCard = () => {
   return (
@@ -12,15 +13,22 @@ const FeaturedCard = () => {
         <h1 className="text-lg font-bold text-gold font-header tracking-widest">
           SILO
         </h1>
-        <p className="text-xs mt-2 font-header text-gray-300 tracking-widest">
-          BY FAKURIAN
-        </p>
 
         <div className="flex justify-between ">
-          <button className="block text-sm font-body font-semibold text-gray-300 cursor-auto">
+          <span>
+          <p className="text-xs mt-2 font-header text-gray-300 tracking-widest">
+          BY FAKURIAN
+        </p>
+        <button className="block text-sm font-body font-semibold text-gray-300 cursor-auto mt-2">
             0.01 Eth
           </button>
-          <button className="text-lg block font-semibold p-6 text-gray-300 hover:text-white bg-white rounded-full shadow hover:shadow-md transition duration-300"></button>
+          </span>
+       
+          <span>
+          <HeartIcon className="w-8 text-gray-300 cursor-pointer"/>
+          <p className="font-body text-xs text-gray-300 text-center mt-1">122</p>
+          </span>
+          
         </div>
       </div>
     </div>

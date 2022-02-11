@@ -6,8 +6,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        body: "'Montserrat-Medium', san-serif",
-        header: "'Messapia-Bold', sans-serif",
+        body: ['Montserrat', 'san-serif'],
+        header: ['Messapia', 'sans-serif'],
       },
       colors: {
         gold: "#CA9E67",

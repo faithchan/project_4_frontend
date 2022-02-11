@@ -3,7 +3,12 @@ import deleteImg from '../public/delete.svg'
 import Image from 'next/image'
 import ListNFTToken from './ListNFTToken'
 
-const TradeCard = () => {
+
+interface deleteProps{
+  deleteModal:boolean,
+  setDeleteModal:(a:boolean)=>void
+}
+const TradeCard = (props:deleteProps) => {
   const [ListNFTModal, setListNFTModal] = useState(false)
   return (
     <div>
@@ -31,37 +36,26 @@ const TradeCard = () => {
               List this NFT
             </p>
           </span>
+              <span > 
+                <p className="text-gold text-sm font-header tracking-widest">Designed by</p>
+                  <span className="flex space-x-4 mr-6">
+                    <img className="w-16 h-16 object-cover rounded-full mr-4 mt-6 mb-4" src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe" alt="" />
+                        <span className="my-auto">
+                        <p className="text-center text-gold font-header text-xs   tracking-widest">FAKURIAN</p>
+                        <hr className="border-gold border my-2"></hr>
+                        <p className="text-center text-white font-body text-xs  tracking-widest">View Profile</p>
+                        </span> 
+                    </span>
 
-          <span>
-            <p className="text-gold text-sm font-header tracking-widest">Designed by</p>
-            <span className="flex space-x-4 mr-6">
-              <img
-                className="w-16 h-16 object-cover rounded-full mr-4 mt-6 mb-4"
-                src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"
-                alt=""
-              />
-              <span className="my-auto">
-                <p className="text-center text-gold font-header text-xs   tracking-widest">
-                  FAKURIAN
-                </p>
-                <hr className="border-gold border my-2"></hr>
-                <p className="text-center text-white font-body text-xs  tracking-widest">
-                  View Profile
-                </p>
-              </span>
-            </span>
-
-            <p className="text-gold text-sm font-header tracking-widest mt-2">Owned by</p>
-            <p className="text-gold text-xs font-header tracking-widest mt-2">RACHEL LEE</p>
-            <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">
-              Bought on 12 Feb 2021
-            </p>
-            <span className="flex justify-between">
-              <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">Price:0.01 Eth</p>
-              <span className="pt-2">
-                <Image className="mt-4" src={deleteImg} alt="Logo" />
-              </span>
-            </span>
+                    <p className="text-gold text-sm font-header tracking-widest mt-2">Owned by</p>
+                    <p className="text-gold text-xs font-header tracking-widest mt-2">RACHEL LEE</p>
+                    <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">Bought on 12 Feb 2021</p>
+                    <span className="flex justify-between">
+                    <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">Price:0.01 Eth</p>
+                    <span className="pt-2 cursor-pointer" onClick={()=>props.setDeleteModal(true)}>
+                    <Image className="mt-4" src={deleteImg} alt="Logo" />
+                    </span>
+                    </span>
           </span>
         </div>
       </div>

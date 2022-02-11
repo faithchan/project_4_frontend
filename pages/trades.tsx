@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react'
 import TradeCard from '../components/TradeCard'
 import { nftaddress, marketplaceaddress } from '../config'
@@ -5,6 +6,7 @@ import { ethers } from 'ethers'
 import NFT from '../contract-abis/NFT.json'
 import Marketplace from '../contract-abis/Marketplace.json'
 import Web3Modal from 'web3modal'
+import DeleteNFTModal from '../components/DeleteNFTModal'
 
 const Trades = () => {
   const [walletAddress, setWalletAddress] = useState('')
@@ -12,6 +14,7 @@ const Trades = () => {
   const [nftContract, setNftContract] = useState<any>()
   const [marketplaceContract, setMarketplaceContract] = useState<any>()
   const [tokenURIs, setTokenURIs] = useState<any>([])
+  const [deleteModal, setDeleteModal]= useState(false)
 
   const fetchNFTsOwned = async () => {
     const totalSupply = await nftContract.totalSupply()
@@ -133,15 +136,17 @@ const Trades = () => {
   }, [])
 
   return (
-    <div className="my-20 mx-32">
-      <div className="flex flex-wrap gap-10 justify-center">
-        <TradeCard />
-        <TradeCard />
-        <TradeCard />
-        <TradeCard />
-      </div>
+    <div className="">
+    {deleteModal?<DeleteNFTModal deleteModal={deleteModal} setDeleteModal={setDeleteModal}/>:""}
+    <div className="flex flex-wrap gap-10 justify-center my-20 mx-32">
+    <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal}/>
+    <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal}/>
+    <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal}/>
+    <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal}/>
     </div>
+</div>
   )
+
 }
 
 export default Trades
