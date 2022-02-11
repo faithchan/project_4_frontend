@@ -8,7 +8,11 @@ interface CardProps {
   tokenId: number
 }
 
-const TradeCard = () => {
+interface deleteProps {
+  deleteModal: boolean
+  setDeleteModal: (a: boolean) => void
+}
+const TradeCard = (props: deleteProps) => {
   const context = useContext(globalContext)
   const [ListNFTModal, setListNFTModal] = useState(false)
 
@@ -80,10 +84,8 @@ const TradeCard = () => {
             </p>
             <span className="flex justify-between">
               <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">Price:0.01 Eth</p>
-              <span className="pt-2">
-                <div onClick={() => burnToken(0)}>
-                  <Image className="mt-4" src={deleteImg} alt="Logo" />
-                </div>
+              <span className="pt-2 cursor-pointer" onClick={() => props.setDeleteModal(true)}>
+                <Image className="mt-4" src={deleteImg} alt="Logo" />
               </span>
             </span>
           </span>

@@ -6,10 +6,12 @@ import { nftaddress, marketplaceaddress } from '../config'
 import { ethers } from 'ethers'
 import NFT from '../contract-abis/NFT.json'
 import Marketplace from '../contract-abis/Marketplace.json'
+import DeleteNFTModal from '../components/DeleteNFTModal'
 
 const Trades = () => {
   const context = useContext(globalContext)
   const [tokenURIs, setTokenURIs] = useState<any>([])
+  const [deleteModal, setDeleteModal] = useState(false)
 
   console.log('trades context: ', context)
 
@@ -131,12 +133,17 @@ const Trades = () => {
   }, [])
 
   return (
-    <div className="my-20 mx-32">
-      <div className="flex flex-wrap gap-10 justify-center">
-        <TradeCard />
-        <TradeCard />
-        <TradeCard />
-        <TradeCard />
+    <div className="">
+      {deleteModal ? (
+        <DeleteNFTModal deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
+      ) : (
+        ''
+      )}
+      <div className="flex flex-wrap gap-10 justify-center my-20 mx-32">
+        <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
+        <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
+        <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
+        <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
       </div>
     </div>
   )
