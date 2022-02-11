@@ -12,17 +12,14 @@ const BuyNFTModal = () => {
                     </div>
     
                     <div className="px-20">
-                   <p>you are making purchase of this NFT by xx for 1 Eth</p>
+                   <p className="text-center text-sm font-body text-gray-800">You are making purchase of this NFT by Designer for 1 Eth</p>
                     </div>
     
                     <div className="p-3 mt-2 text-center space-x-4 md:block">
                         <button className="mb-2 md:mb-0 bg-white px-5 py-2 text-xs shadow-sm font-header tracking-wider border text-gold rounded-full hover:shadow-lg hover:bg-gray-100">
                             Cancel
-                        </button>
-    
-                        <button className="mb-2 md:mb-0 bg-gold px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg ">hi</button>
-                        
-                        <button className="mb-2 md:mb-0 bg-gold px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg " type="submit">Continue to List</button>
+                        </button>                    
+                        <button className="mb-2 md:mb-0 bg-gold px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg " type="submit">Confirm Purchase</button>
                     </div>
     
             
