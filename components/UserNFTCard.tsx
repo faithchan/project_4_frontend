@@ -3,6 +3,7 @@ import BuyNFTModal from './BuyNFTModal'
 
 const UserNFTCard = () => {
   const[buyModal, setBuyModal]= useState(false)
+  const[isListed, setIsListed]= useState(true)
     return (
         <div>
           {buyModal?<BuyNFTModal buyModal={buyModal} setBuyModal={setBuyModal}/>:""}
@@ -24,7 +25,7 @@ const UserNFTCard = () => {
           <button className="block text-xs font-body font-semibold text-gray-300 cursor-auto">
             List Price: 0.01 Eth
           </button>
-          <button className="mb-2 md:mb-0 bg-green-400 px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg" onClick={()=>setBuyModal(true)}>Buy</button>
+          {isListed?<button className="mb-2 md:mb-0 bg-green-400 px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg" onClick={()=>setBuyModal(true)}>Buy</button>:""}
         </div>
       </div>
     </div>
