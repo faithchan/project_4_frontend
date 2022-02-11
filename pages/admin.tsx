@@ -14,7 +14,7 @@ const admin = () => {
   const [allUsers, setAllUsers] = useState([])
   const router = useRouter()
 
-  console.log('admin context: ', context)
+  // console.log('admin context: ', context)
 
   const getAllWhitelistees = async () => {
     if (allUsers && context.nftContract) {

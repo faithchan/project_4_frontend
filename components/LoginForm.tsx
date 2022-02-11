@@ -32,7 +32,6 @@ const LoginForm = () => {
         alert('Invalid Email / Password, please try again')
       } else {
         localStorage.setItem('token', decodedResponse.token)
-        userLoginContext.setLoginState(true)
         router.push('/')
       }
     } catch (err) {

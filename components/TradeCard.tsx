@@ -16,23 +16,6 @@ const TradeCard = (props: deleteProps) => {
   const context = useContext(globalContext)
   const [ListNFTModal, setListNFTModal] = useState(false)
 
-  const burnToken = async (tokenId: number) => {
-    if (context.nftContract) {
-      const owner = await context.nftContract.ownerOf(tokenId)
-      const creator = await context.nftContract.tokenCreator(tokenId)
-      if (owner !== context.walletAddress || creator !== context.walletAddress) {
-        alert('You do not have the permission to burn this token')
-        return
-      } else {
-        console.log(`burning token ${tokenId}...`)
-        await context.nftContract.burn(tokenId)
-        console.log('token burned')
-      }
-    } else {
-      alert('Connect wallet')
-    }
-  }
-
   return (
     <div>
       {ListNFTModal ? (
