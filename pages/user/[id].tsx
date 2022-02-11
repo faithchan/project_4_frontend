@@ -7,7 +7,7 @@ const Username = () => {
   
     return (
         <div>
-            
+            <h1>UserName: {id}</h1>
         </div>
     )
 }
