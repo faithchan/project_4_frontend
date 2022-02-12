@@ -8,7 +8,7 @@ const DeleteNFTModal = (props:deleteProps) => {
     return (
         <div className="min-w-screen h-screen animated fadeIn faster  fixed  left-0 top-0 flex justify-center items-center inset-0 z-50 outline-none focus:outline-none bg-no-repeat bg-center bg-cover">
    	<div className="absolute bg-black opacity-80 inset-0 z-0"></div>
-    <div className="w-full  max-w-lg p-5 relative mx-auto my-auto rounded-xl shadow-lg  bg-white ">
+    <div className="w-full  max-w-lg p-5 relative mx-auto my-auto rounded-xl shadow-lg  bg-purple ">
       <div className="">
         <div className="text-center p-5 flex-auto justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 -m-1 flex items-center text-gold mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -22,10 +22,10 @@ const DeleteNFTModal = (props:deleteProps) => {
                 This action cannot be undone</p>    
         </div>
         <div className="p-3  mt-2 text-center space-x-4 md:block">
-            <button className="mb-2 md:mb-0 bg-white px-5 py-2 text-sm shadow-sm font-header tracking-wider border text-gold rounded-full hover:shadow-lg hover:bg-gray-100" onClick={()=>props.setDeleteModal(false)}>
+            <button className="mb-2 md:mb-0 bg-white px-5 py-2 text-xs shadow-sm font-header tracking-wider border text-gold rounded-full hover:shadow-lg hover:bg-gray-100" onClick={()=>props.setDeleteModal(false)}>
                 Cancel
             </button>
-            <button className="mb-2 md:mb-0 bg-red-500 border border-red-500 px-5 py-2 text-sm shadow-sm font-header tracking-wider text-white rounded-full hover:shadow-lg hover:bg-red-600" onClick={()=>props.setDeleteModal(false)}>Delete</button>
+            <button className="mb-2 md:mb-0 bg-red-500 border border-red-500 px-5 py-2 text-xs shadow-sm font-header tracking-wider text-white rounded-full hover:shadow-lg hover:bg-red-600" onClick={()=>props.setDeleteModal(false)}>Delete</button>
         </div>
       </div>
     </div>
