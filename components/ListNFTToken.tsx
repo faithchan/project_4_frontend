@@ -4,12 +4,12 @@ import Web3Modal from 'web3modal'
 import globalContext from '../context/context'
 import { nftaddress } from '../config'
 
-interface uploadProps {
+interface listingProps {
   ListNFTModal: boolean
   setListNFTModal: (a: boolean) => void
 }
 
-const ListNFTToken = (props: uploadProps) => {
+const ListNFTToken = (props: listingProps) => {
   const context = useContext(globalContext)
   const [showRoyalty, setShowRoyalty] = useState(true)
   const [showList, setShowList] = useState(false)
@@ -18,6 +18,8 @@ const ListNFTToken = (props: uploadProps) => {
   const [royaltyAmount, setRoyaltyAmount] = useState() // convert % to number between 0-10000
   const [listPrice, setListPrice] = useState('')
   const [tokenId, setTokenId] = useState()
+
+  console.log('list card tokenId: ', tokenId)
 
   const listToken = async () => {
     if (context.marketplaceContract) {
@@ -29,6 +31,8 @@ const ListNFTToken = (props: uploadProps) => {
   const setTokenRoyalty = async () => {
     if (context.nftContract) {
       await context.nftContract.setTokenRoyalty(tokenId, royaltyAmount)
+    } else {
+      console.log('no contract')
     }
   }
 
@@ -42,6 +46,8 @@ const ListNFTToken = (props: uploadProps) => {
 
   const handleRoyaltyInputChange = (event: any) => {
     const value = event.target.value
+    const bp = value * 100
+    console.log('royalty bp: ', bp)
     setRoyaltyAmount(value)
   }
 
@@ -116,6 +122,7 @@ const ListNFTToken = (props: uploadProps) => {
                 step=".01"
                 max="99"
                 required
+                onChange={handleRoyaltyInputChange}
               />
             </div>
             <div className="p-3 mt-2 text-center space-x-4 md:block">
@@ -128,10 +135,7 @@ const ListNFTToken = (props: uploadProps) => {
               {showRoyaltyBtn ? (
                 <button
                   className="mb-2 md:mb-0 bg-gold px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg "
-                  onClick={() => {
-                    setShowContBtn(true)
-                    setShowRoyaltyBtn(false)
-                  }}
+                  onClick={setTokenRoyalty}
                 >
                   Set Royalty
                 </button>
@@ -142,6 +146,10 @@ const ListNFTToken = (props: uploadProps) => {
                 <button
                   className="mb-2 md:mb-0 bg-gold px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg "
                   type="submit"
+                  onClick={() => {
+                    setShowContBtn(true)
+                    setShowRoyaltyBtn(false)
+                  }}
                 >
                   Continue to List
                 </button>

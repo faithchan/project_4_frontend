@@ -64,7 +64,10 @@ const LoginForm = () => {
             </div>
           </div>
           <div className="flex justify-center">
-            <button className="bg-gold hover:bg-blue-450 text-white font-semibold tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8" type="submit">
+            <button
+              className="bg-gold hover:bg-blue-450 text-white font-semibold tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8"
+              type="submit"
+            >
               LOGIN
             </button>
           </div>

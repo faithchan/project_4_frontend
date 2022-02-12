@@ -40,7 +40,7 @@ const TradesNavigation = () => {
                 </Link>
               </Menu.Item>
               <Menu.Item>
-                <Link href="/uploadnft">
+                <Link href="/mint">
                   <a className="group flex items-center px-4 py-1 text-gray-300 hover:text-gold">
                     Upload NFT
                   </a>

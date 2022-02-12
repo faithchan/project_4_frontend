@@ -10,16 +10,26 @@ const admin = () => {
   const context = useContext(globalContext)
   const [whitelistAddress, setWhitelistAddress] = useState('')
   const [connected, setConnected] = useState<boolean>(false)
-  const [whitelistedAddrs, setWhitelistedAddrs] = useState([])
+  const [whitelistedAddrs, setWhitelistedAddrs] = useState<any>([])
   const [allUsers, setAllUsers] = useState([])
   const router = useRouter()
 
-  const validateAddress = (input: string) => {
-    const prefix = input.slice(0, 2)
-    if (input.length === 42 && prefix === '0x') {
-      return true
+  // console.log('admin context: ', context)
+
+  const getAllWhitelistees = async () => {
+    if (allUsers && context.nftContract) {
+      for (let user of allUsers) {
+        const txn = await context.nftContract.isWhitelisted(user.walletAddress)
+        if (txn) {
+          console.log(`${user.username} is whitelisted`)
+          setWhitelistedAddrs([...whitelistedAddrs, user.walletAddress])
+        } else {
+          console.log(`${user.username} is not whitelisted`)
+        }
+      }
+    } else {
+      console.log('no users in database')
     }
-    return false
   }
 
   const addToWhitelist = async () => {
@@ -30,7 +40,6 @@ const admin = () => {
           const txn = await context.nftContract.addToWhitelist(whitelistAddress)
           const receipt = await txn.wait()
           console.log('whitelist txn: ', receipt)
-          await updateDatabaseStatus(true)
           setWhitelistAddress('')
         } catch (err) {
           console.error('error adding to whitelist: ', err)
@@ -51,7 +60,6 @@ const admin = () => {
           const txn = await context.nftContract.removeFromWhitelist(whitelistAddress)
           const receipt = await txn.wait()
           console.log('whitelist txn: ', receipt)
-          await updateDatabaseStatus(false)
           setWhitelistAddress('')
         } catch (err) {
           console.error('error removing from whitelist: ', err)
@@ -83,43 +91,6 @@ const admin = () => {
     }
   }
 
-  const updateDatabaseStatus = async (status: boolean) => {
-    if (context.walletAddress) {
-      console.log(`updating whitelist status for ${dummyUser}`)
-      try {
-        const response = await fetch(`${process.env.API_ENDPOINT}/users/${dummyUser}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            whitelistStatus: status,
-          }),
-        })
-        const data = await response.json()
-        console.log('updated user status: ', data)
-      } catch (err) {
-        console.error(err)
-      }
-    }
-  }
-
-  const fetchExistingWhitelist = async () => {
-    try {
-      const response = await fetch(`${process.env.API_ENDPOINT}/users/whitelist`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      const data = await response.json()
-      setWhitelistedAddrs(data)
-      console.log('updated user status: ', data)
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
   const fetchAllUsers = async () => {
     try {
       const response = await fetch(`${process.env.API_ENDPOINT}/users`, {
@@ -130,7 +101,6 @@ const admin = () => {
       })
       const data = await response.json()
       setAllUsers(data)
-      console.log('all users from database: ', data)
     } catch (err) {
       console.error(err)
     }
@@ -157,29 +127,38 @@ const admin = () => {
     setWhitelistAddress(value)
   }
 
-  const checkAdmin = async (token: any) => {
-    try {
-      if (token.role !== 'Admin') {
-        console.log(token.role)
-        try {
-          router.push('/404')
-        } catch (error: any) {
-          router.push('/404')
-          console.log(error.message)
-        }
-      } else {
-        fetchExistingWhitelist()
-        fetchAllUsers()
-      }
-    } catch (err: any) {
-      console.log(err.message)
+  const validateAddress = (input: string) => {
+    const prefix = input.slice(0, 2)
+    if (input.length === 42 && prefix === '0x') {
+      return true
     }
+    return false
   }
 
-  const renderWhitelist = whitelistedAddrs.map((user: any) => {
+  useEffect(() => {
+    getAllWhitelistees()
+  }, [context.nftContract])
+
+  useEffect(() => {
+    let token = localStorage.getItem('token')
+    let tempToken: any = token
+    if (tempToken) {
+      let decodedToken: any = jwtDecode(tempToken)
+      console.log('decoded token: ', decodedToken)
+      if (decodedToken.role !== 'Admin') {
+        router.push('/404')
+      } else {
+        fetchAllUsers()
+      }
+    } else {
+      router.push('/404')
+    }
+  }, [])
+
+  const renderWhitelist = whitelistedAddrs.map((address: any) => {
     return (
-      <div className="md:text-sm text-xs text-white font-body tracking-wider mb-4" key={user._id}>
-        {user.walletAddress}
+      <div className="md:text-sm text-xs text-white font-body tracking-wider mb-4" key={address}>
+        {address}
       </div>
     )
   })
@@ -210,27 +189,6 @@ const admin = () => {
     )
   })
 
-  // useEffect(() => {
-  //   initialiseContract()
-  // }, [walletAddress])
-
-  useEffect(() => {
-    let token = localStorage.getItem('token')
-    let tempToken: any = token
-    if (tempToken) {
-      let decodedToken: any = jwtDecode(tempToken)
-      console.log('decoded token: ', decodedToken)
-      if (decodedToken.role !== 'Admin') {
-        router.push('/404')
-      } else {
-        fetchExistingWhitelist()
-        fetchAllUsers()
-      }
-    } else {
-      router.push('/404')
-    }
-  }, [])
-
   return (
     <div className="flex items-center justify-center mt-10 mb-20">
       <div className="grid w-6/12 md:w-5/12 lg:w-4/12">
@@ -259,19 +217,19 @@ const admin = () => {
           <div className="flex items-center justify-center py-5 grid-cols-4">
             <Wallet setConnected={setConnected} isConnected={connected} />
             <button
-              className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8"
+              className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto"
               onClick={addToWhitelist}
             >
               ADD
             </button>
             <button
-              className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8"
+              className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto"
               onClick={removeFromWhitelist}
             >
               REMOVE
             </button>
             <button
-              className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8"
+              className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto"
               onClick={checkWhitelistStatus}
             >
               VERIFY

@@ -1,3 +1,5 @@
+// variables required: itemId, nft contract address
+
 interface buyProps {
   buyModal: boolean
   setBuyModal: (a: boolean) => void
