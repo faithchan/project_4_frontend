@@ -1,10 +1,12 @@
 import {useState} from "react"
+import { useRouter } from 'next/router'
 interface buyProps {
   buyModal: boolean
   setBuyModal: (a: boolean) => void
 }
 
 const BuyNFTModal = (props: buyProps) => {
+  const router= useRouter()
   const [showPurchase, setShowPurchase] =useState(true)
   const [success, setSuccess]= useState(false) 
   const purchaseHandler = (e: React.FormEvent<HTMLFormElement>) => {
@@ -70,7 +72,7 @@ const BuyNFTModal = (props: buyProps) => {
           <div className="p-3 mt-2 text-center space-x-4 md:block">
           <button
               className="mb-2 md:mb-0 bg-gold px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg "
-             
+             onClick={()=>router.push('/profile')}
             >
               Back to Home
             </button></div></div>:""
