@@ -11,18 +11,21 @@ import DeleteNFTModal from '../components/DeleteNFTModal'
 const Trades = () => {
   const context = useContext(globalContext)
   const [tokenURIs, setTokenURIs] = useState<any>([])
+  const [ownerTokens, setOwnerTokens] = useState<any>([])
   const [deleteModal, setDeleteModal] = useState(false)
+  const [ownedItems, setOwnedItems] = useState()
+  const [listedItems, setListedItems] = useState()
+  const [finalItems, setFinalItems] = useState()
 
   // console.log('trades context: ', context)
 
   const fetchNFTsOwned = async () => {
     const totalSupply = await context.nftContract.totalSupply()
     console.log('total supply', totalSupply)
-    const ownerTokens = []
     for (let i = 0; i < totalSupply; i++) {
       const owner = await context.nftContract.ownerOf(i)
       if (owner === context.walletAddress) {
-        ownerTokens.push(i)
+        setOwnerTokens([...ownerTokens, i])
       }
     }
     console.log('owner tokens: ', ownerTokens)
@@ -42,10 +45,10 @@ const Trades = () => {
   }
 
   const fetchMarketItems = async () => {
-    const ownedItems = await context.marketplaceContract.getItemsOwned()
-    const listedItems = await context.marketplaceContract.getListedItems()
-    // console.log('owned items: ', ownedItems)
-    // console.log('listed items: ', listedItems)
+    const owned = await context.marketplaceContract.getItemsOwned()
+    const listed = await context.marketplaceContract.getListedItems()
+    setOwnedItems(owned)
+    setListedItems(listed)
   }
 
   const connectWallet = async () => {

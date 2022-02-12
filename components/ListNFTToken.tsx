@@ -19,6 +19,8 @@ const ListNFTToken = (props: listingProps) => {
   const [listPrice, setListPrice] = useState('')
   const [tokenId, setTokenId] = useState()
 
+  console.log('list card tokenId: ', tokenId)
+
   const listToken = async () => {
     if (context.marketplaceContract) {
       const salePrice = ethers.utils.parseUnits(listPrice, 'ether')
