@@ -13,11 +13,30 @@ const Trades = () => {
   const [tokenURIs, setTokenURIs] = useState<any>([])
   const [ownerTokens, setOwnerTokens] = useState<any>([])
   const [deleteModal, setDeleteModal] = useState(false)
-  const [ownedItems, setOwnedItems] = useState()
-  const [listedItems, setListedItems] = useState()
-  const [finalItems, setFinalItems] = useState()
+  const [ownedItems, setOwnedItems] = useState<any>()
+  const [listedItems, setListedItems] = useState<any>()
+  const [finalItems, setFinalItems] = useState<any>()
+  const [notRegistered, setNotRegistered] = useState<any>()
 
   // console.log('trades context: ', context)
+
+  const getFinalItems = () => {
+    if (ownedItems.length === 0) {
+      console.log('no items registered on marketplace')
+      setFinalItems(ownerTokens)
+    } else {
+      for (let token in ownerTokens) {
+        console.log('iterating: ', token)
+        for (let item in ownedItems) {
+          if (item.tokenId !== token) {
+            console.log(item)
+            setNotRegistered([...notRegistered, item])
+          } else {
+          }
+        }
+      }
+    }
+  }
 
   const fetchNFTsOwned = async () => {
     const totalSupply = await context.nftContract.totalSupply()
@@ -28,16 +47,18 @@ const Trades = () => {
         setOwnerTokens([...ownerTokens, i])
       }
     }
-    console.log('owner tokens: ', ownerTokens)
+  }
+
+  const fetchNFTData = async () => {
     let uri
-    for (let i in ownerTokens) {
+    for (let i in finalItems) {
       try {
         uri = await context.nftContract.tokenURI(i)
       } catch (err) {
         console.log(err)
       }
       const response = await fetch(uri)
-      // if (!response.ok) throw new Error(response.statusText)
+      if (!response.ok) throw new Error(response.statusText)
       const data = await response.json()
       console.log('data: ', data)
       setTokenURIs([...tokenURIs, data])
@@ -95,13 +116,9 @@ const Trades = () => {
     }
   }
 
-  useEffect(() => {
-    if (context.signer !== null) {
-      initialiseContracts()
-    } else {
-      console.log('no signer')
-    }
-  }, [context.signer])
+  // useEffect(() => {
+  //   getFinalItems()
+  // }, [ownerTokens])
 
   useEffect(() => {
     if (context.nftContract) {
@@ -109,6 +126,14 @@ const Trades = () => {
       fetchMarketItems()
     }
   }, [context.nftContract])
+
+  useEffect(() => {
+    if (context.signer !== null) {
+      initialiseContracts()
+    } else {
+      console.log('no signer')
+    }
+  }, [context.signer])
 
   useEffect(() => {
     if (context.signer === null) {

@@ -5,6 +5,7 @@ import { nftaddress, marketplaceaddress } from '../config'
 import NFT from '../contract-abis/NFT.json'
 import Marketplace from '../contract-abis/Marketplace.json'
 import globalContext from '../context/context'
+import { useForm } from 'react-hook-form'
 
 interface WalletProps {
   setConnected: (a: boolean) => void
@@ -28,6 +29,8 @@ const Wallet = (props: WalletProps) => {
         context.setSigner(signer)
         context.setWalletAddress(connectedAddress)
         props.setConnected(true)
+        localStorage.setItem('signer', provider)
+        console.log('signer ', provider)
       }
     } else {
       alert('Please install Metamask')
@@ -44,6 +47,11 @@ const Wallet = (props: WalletProps) => {
     } catch (err: any) {
       console.log('error changing network: ', err.message)
     }
+  }
+
+  const retrieveSigner = () => {
+    const provider: any = localStorage.getItem('signer')
+    console.log('retrieved: ', JSON.stringify(provider))
   }
 
   const disconnectWallet = async () => {
@@ -67,6 +75,10 @@ const Wallet = (props: WalletProps) => {
 
   useEffect(() => {
     initialiseContracts()
+  }, [context.signer])
+
+  useEffect(() => {
+    retrieveSigner()
   }, [context.signer])
 
   return (
