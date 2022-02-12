@@ -1,9 +1,10 @@
 import { useForm } from 'react-hook-form'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { create } from 'ipfs-http-client'
-
 const url: string | any = 'https://ipfs.infura.io:5001/api/v0'
 const client = create(url)
+
 
 type FormData = {
   username: string
@@ -14,6 +15,8 @@ type FormData = {
 }
 
 const SignUpForm = () => {
+  const router= useRouter()
+
   const {
     register,
     handleSubmit,
@@ -32,17 +35,7 @@ const SignUpForm = () => {
         body: JSON.stringify(data),
       })
       const res = await response.json()
-      const { email, username } = res.keyValue
-      if (email) {
-        console.log('duplicate email')
-        alert('This email address has already been used. Please try another.')
-        return
-      }
-      if (username) {
-        console.log('duplicate username')
-        alert('This username has already been used. Please try another.')
-        return
-      }
+      router.push('/login')
     } catch (err) {
       console.log(err)
     }

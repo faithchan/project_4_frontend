@@ -32,13 +32,14 @@ const LoginForm = () => {
         alert('Invalid Email / Password, please try again')
       } else {
         localStorage.setItem('token', decodedResponse.token)
-        userLoginContext.setLoginState(true)
         router.push('/')
       }
     } catch (err) {
       console.error(err)
     }
   }
+
+  console.log(process.env.API_ENDPOINT)
 
   return (
     <div className="flex justify-center items-center w-full  mt-4">
@@ -63,7 +64,7 @@ const LoginForm = () => {
             </div>
           </div>
           <div className="flex justify-center">
-            <button className="bg-gold hover:bg-blue-450 text-white font-semibold tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8">
+            <button className="bg-gold hover:bg-blue-450 text-white font-semibold tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8" type="submit">
               LOGIN
             </button>
           </div>
