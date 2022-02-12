@@ -4,12 +4,12 @@ import Web3Modal from 'web3modal'
 import globalContext from '../context/context'
 import { nftaddress } from '../config'
 
-interface uploadProps {
+interface listingProps {
   ListNFTModal: boolean
   setListNFTModal: (a: boolean) => void
 }
 
-const ListNFTToken = (props: uploadProps) => {
+const ListNFTToken = (props: listingProps) => {
   const context = useContext(globalContext)
   const [showRoyalty, setShowRoyalty] = useState(true)
   const [showList, setShowList] = useState(false)

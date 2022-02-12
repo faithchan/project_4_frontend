@@ -4,10 +4,6 @@ import Image from 'next/image'
 import ListNFTToken from './ListNFTToken'
 import globalContext from '../context/context'
 
-interface CardProps {
-  tokenId: number
-}
-
 interface deleteProps {
   deleteModal: boolean
   setDeleteModal: (a: boolean) => void

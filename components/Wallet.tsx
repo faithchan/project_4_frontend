@@ -75,7 +75,7 @@ const Wallet = (props: WalletProps) => {
         <>
           <button
             onClick={disconnectWallet}
-            className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8"
+            className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto"
           >
             DISCONNECT
           </button>
@@ -83,7 +83,7 @@ const Wallet = (props: WalletProps) => {
       ) : (
         <button
           onClick={connectWallet}
-          className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8"
+          className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto"
         >
           CONNECT
         </button>

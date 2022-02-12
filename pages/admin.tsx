@@ -217,19 +217,19 @@ const admin = () => {
           <div className="flex items-center justify-center py-5 grid-cols-4">
             <Wallet setConnected={setConnected} isConnected={connected} />
             <button
-              className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8"
+              className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto"
               onClick={addToWhitelist}
             >
               ADD
             </button>
             <button
-              className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8"
+              className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto"
               onClick={removeFromWhitelist}
             >
               REMOVE
             </button>
             <button
-              className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8"
+              className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto"
               onClick={checkWhitelistStatus}
             >
               VERIFY
