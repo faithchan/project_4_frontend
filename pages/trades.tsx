@@ -20,22 +20,25 @@ const Trades = () => {
     console.log('total supply', totalSupply)
     const ownerTokens = []
     for (let i = 0; i < totalSupply; i++) {
-      console.log(i)
-      // const owner = await context.nftContract.ownerOf(i)
-      // if (owner === context.walletAddress) {
-      //   ownerTokens.push(i)
-      // }
+      const owner = await context.nftContract.ownerOf(i)
+      if (owner === context.walletAddress) {
+        ownerTokens.push(i)
+      }
     }
-    // console.log('owner tokens: ', ownerTokens)
-    // for (let i in ownerTokens) {
-    //   console.log(i)
-    //   const uri = await context.nftContract.tokenURI(i)
-    //   const response = await fetch(uri)
-    //   if (!response.ok) throw new Error(response.statusText)
-    //   const data = await response.json()
-    //   console.log('data: ', data)
-    //   setTokenURIs([...tokenURIs, data])
-    // }
+    console.log('owner tokens: ', ownerTokens)
+    let uri
+    for (let i in ownerTokens) {
+      try {
+        uri = await context.nftContract.tokenURI(i)
+      } catch (err) {
+        console.log(err)
+      }
+      const response = await fetch(uri)
+      // if (!response.ok) throw new Error(response.statusText)
+      const data = await response.json()
+      console.log('data: ', data)
+      setTokenURIs([...tokenURIs, data])
+    }
   }
 
   const fetchMarketItems = async () => {

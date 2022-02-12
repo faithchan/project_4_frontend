@@ -39,6 +39,8 @@ const LoginForm = () => {
     }
   }
 
+  console.log(process.env.API_ENDPOINT)
+
   return (
     <div className="flex justify-center items-center w-full  mt-4">
       <form onSubmit={handleSubmit(onSubmit)}>
