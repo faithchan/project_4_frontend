@@ -5,7 +5,6 @@ import { nftaddress, marketplaceaddress } from '../config'
 import NFT from '../contract-abis/NFT.json'
 import Marketplace from '../contract-abis/Marketplace.json'
 import globalContext from '../context/context'
-import { useForm } from 'react-hook-form'
 
 interface WalletProps {
   setConnected: (a: boolean) => void
@@ -17,19 +16,21 @@ const Wallet = (props: WalletProps) => {
 
   const connectWallet = async () => {
     if (typeof window.ethereum !== 'undefined') {
+      console.log('ethereum: ', window.ethereum)
       if (window.ethereum.chainId !== '0x4') {
         console.log('switch to rinkeby network')
         changeNetwork()
       } else {
         const web3Modal = new Web3Modal()
         const connection = await web3Modal.connect()
+        console.log('connection: ', connection)
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         const connectedAddress = await signer.getAddress()
         context.setSigner(signer)
         context.setWalletAddress(connectedAddress)
         props.setConnected(true)
-        localStorage.setItem('signer', provider)
+        localStorage.setItem('signer', signer)
         console.log('signer ', provider)
       }
     } else {

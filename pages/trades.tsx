@@ -13,26 +13,34 @@ const Trades = () => {
   const [tokenURIs, setTokenURIs] = useState<any>([])
   const [ownerTokens, setOwnerTokens] = useState<any>([])
   const [deleteModal, setDeleteModal] = useState(false)
-  const [ownedItems, setOwnedItems] = useState<any>()
-  const [listedItems, setListedItems] = useState<any>()
-  const [finalItems, setFinalItems] = useState<any>()
-  const [notRegistered, setNotRegistered] = useState<any>()
+  const [ownedItems, setOwnedItems] = useState<any>([])
+  const [listedItems, setListedItems] = useState<any>([]) // items
+  const [notListed, setNotListed] = useState<any>([]) // items
+  const [notRegistered, setNotRegistered] = useState<any>([2]) // tokenIds
 
   // console.log('trades context: ', context)
 
   const getFinalItems = () => {
+    if (ownerTokens.length === 0) {
+      console.log('no tokens in wallet')
+      return
+    }
     if (ownedItems.length === 0) {
-      console.log('no items registered on marketplace')
-      setFinalItems(ownerTokens)
-    } else {
-      for (let token in ownerTokens) {
-        console.log('iterating: ', token)
-        for (let item in ownedItems) {
-          if (item.tokenId !== token) {
-            console.log(item)
-            setNotRegistered([...notRegistered, item])
-          } else {
-          }
+      setNotRegistered(ownerTokens)
+      return
+    }
+    console.log('ownerTokens: ', ownerTokens)
+    for (let id in ownerTokens) {
+      console.log('id: ', id)
+      for (let item in ownedItems) {
+        if (item.tokenId === id && item.isListed === true) {
+          setListedItems([...listedItems, item])
+        } else if (item.tokenId === id && item.isListed === false) {
+          setNotListed([...notListed, item])
+        } else if (item.tokenId !== id) {
+          setNotRegistered([...notRegistered, id])
+        } else {
+          console.log('not handled')
         }
       }
     }
@@ -44,14 +52,18 @@ const Trades = () => {
     for (let i = 0; i < totalSupply; i++) {
       const owner = await context.nftContract.ownerOf(i)
       if (owner === context.walletAddress) {
-        setOwnerTokens([...ownerTokens, i])
+        // ownerTokens.push(i)
+        ownerTokens.push(i)
+        // setOwnerTokens(array)
+      } else {
+        console.log('item not owned: ', i)
       }
     }
   }
 
   const fetchNFTData = async () => {
     let uri
-    for (let i in finalItems) {
+    for (let i in ownerTokens) {
       try {
         uri = await context.nftContract.tokenURI(i)
       } catch (err) {
@@ -67,9 +79,7 @@ const Trades = () => {
 
   const fetchMarketItems = async () => {
     const owned = await context.marketplaceContract.getItemsOwned()
-    const listed = await context.marketplaceContract.getListedItems()
     setOwnedItems(owned)
-    setListedItems(listed)
   }
 
   const connectWallet = async () => {
@@ -115,14 +125,18 @@ const Trades = () => {
       context.setMarketplaceContract(marketplaceContract)
     }
   }
+  // console.log('total tokens: ', notRegistered)
 
   // useEffect(() => {
   //   getFinalItems()
   // }, [ownerTokens])
 
+  // useEffect(() => {
+  //   fetchNFTData()
+  // }, [ownerTokens])
+
   useEffect(() => {
     if (context.nftContract) {
-      fetchNFTsOwned()
       fetchMarketItems()
     }
   }, [context.nftContract])
@@ -143,6 +157,12 @@ const Trades = () => {
 
   return (
     <div className="">
+      <button onClick={getFinalItems} className="text-white">
+        Get Final Items
+      </button>
+      <button onClick={fetchNFTsOwned} className="text-white">
+        Get token
+      </button>
       {deleteModal ? (
         <DeleteNFTModal deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
       ) : (

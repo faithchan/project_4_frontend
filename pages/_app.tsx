@@ -32,22 +32,22 @@ function MyApp({ Component, pageProps }: AppProps) {
     setWalletAddress: (address: string) => setWalletAddress(address),
   }
 
-  // const initialiseContracts = async () => {
-  //   if (context.signer != null) {
-  //     const nftContract = new ethers.Contract(nftaddress, NFT.abi, context.signer)
-  //     const marketplaceContract = new ethers.Contract(
-  //       marketplaceaddress,
-  //       Marketplace.abi,
-  //       context.signer
-  //     )
-  //     context.setNftContract(nftContract)
-  //     context.setMarketplaceContract(marketplaceContract)
-  //   }
-  // }
+  const initialiseContracts = async () => {
+    if (context.signer != null) {
+      const nftContract = new ethers.Contract(nftaddress, NFT.abi, context.signer)
+      const marketplaceContract = new ethers.Contract(
+        marketplaceaddress,
+        Marketplace.abi,
+        context.signer
+      )
+      context.setNftContract(nftContract)
+      context.setMarketplaceContract(marketplaceContract)
+    }
+  }
 
-  // useEffect(() => {
-  //   initialiseContracts()
-  // }, [context.signer])
+  useEffect(() => {
+    initialiseContracts()
+  }, [context.signer])
 
   useEffect(() => {
     let token = localStorage.getItem('token')
