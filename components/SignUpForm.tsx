@@ -5,7 +5,6 @@ import { create } from 'ipfs-http-client'
 const url: string | any = 'https://ipfs.infura.io:5001/api/v0'
 const client = create(url)
 
-
 type FormData = {
   username: string
   email: string
@@ -15,7 +14,7 @@ type FormData = {
 }
 
 const SignUpForm = () => {
-  const router= useRouter()
+  const router = useRouter()
 
   const {
     register,
@@ -35,6 +34,7 @@ const SignUpForm = () => {
         body: JSON.stringify(data),
       })
       const res = await response.json()
+      console.log('response:', res)
       router.push('/login')
     } catch (err) {
       console.log(err)

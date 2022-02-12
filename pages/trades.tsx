@@ -13,7 +13,7 @@ const Trades = () => {
   const [tokenURIs, setTokenURIs] = useState<any>([])
   const [deleteModal, setDeleteModal] = useState(false)
 
-  console.log('trades context: ', context)
+  // console.log('trades context: ', context)
 
   const fetchNFTsOwned = async () => {
     const totalSupply = await context.nftContract.totalSupply()
