@@ -4,8 +4,6 @@ import jwtDecode from 'jwt-decode'
 import globalContext from '../context/context'
 import { useRouter } from 'next/router'
 
-const dummyUser = '6203148937e32a0a9519be13'
-
 const admin = () => {
   const context = useContext(globalContext)
   const [whitelistAddress, setWhitelistAddress] = useState('')

@@ -31,10 +31,10 @@ const Trades = () => {
       return
     }
     for (let id of ownerTokens) {
-      console.log('current token id: ', id)
+      // console.log('current token id: ', id)
       for (let item of ownedItems) {
         const tokenId = item.tokenId.toString()
-        console.log('current item: ', tokenId === id.toString())
+        // console.log('current item: ', tokenId === id.toString())
         if (tokenId === id.toString() && item.isListed === true) {
           setListedItems((prevArray: any) => [...prevArray, item])
         } else if (tokenId === id.toString() && item.isListed === false) {
@@ -64,19 +64,18 @@ const Trades = () => {
 
   const fetchAllMetadata = async () => {
     let uri
-    for (let i in ownerTokens) {
-      // console.log('set id: ', i)
+    for (let i of ownerTokens) {
+      console.log('set id: ', i)
       try {
         uri = await context.nftContract.tokenURI(i)
       } catch (err) {
         console.log(err)
       }
       const response = await fetch(uri)
-      if (!response.ok) throw new Error(response.statusText)
       const data = await response.json()
       data.tokenId = i
       data.listPrice = 0
-      setTokenURIs((prevArray: any) => [...prevArray, data])
+      setTokenURIs((prev: any) => [...prev, data])
     }
     setLoaded(true)
   }
@@ -108,6 +107,16 @@ const Trades = () => {
     console.log('market items: ', owned[0])
     setOwnedItems(owned)
   }
+
+  useEffect(() => {
+    console.log('trades context: ', context)
+    if (context.nftContract && context.marketplaceContract) {
+      fetchNFTsOwned()
+      fetchMarketItems()
+    }
+  }, [context.nftContract, context.marketplaceContract])
+
+  //----------------Initialising Wallet----------------//
 
   const connectWallet = async () => {
     if (typeof window.ethereum !== 'undefined') {
@@ -154,14 +163,6 @@ const Trades = () => {
   }
 
   useEffect(() => {
-    console.log('trades context: ', context)
-    if (context.nftContract && context.marketplaceContract) {
-      fetchNFTsOwned()
-      fetchMarketItems()
-    }
-  }, [context.nftContract, context.marketplaceContract])
-
-  useEffect(() => {
     if (context.signer !== null) {
       initialiseContracts()
     }
@@ -178,13 +179,9 @@ const Trades = () => {
       <button onClick={filterItems} className="text-white mr-4">
         Filter Items
       </button>
-      <button onClick={() => console.log(listedItems)} className="text-white mr-4">
-        Print listed items
-      </button>
       <button onClick={fetchAllMetadata} className="text-white mr-4">
         Fetch Metadata
       </button>
-
       {deleteModal ? (
         <DeleteNFTModal deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
       ) : (

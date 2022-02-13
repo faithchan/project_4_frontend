@@ -49,10 +49,6 @@ const ListNFTToken = (props: listingProps) => {
     }
   }
 
-  // useEffect(() => {
-  //   getRoyaltyInfo()
-  // }, [])
-
   //----------------Listing Token----------------//
 
   const listToken = async () => {

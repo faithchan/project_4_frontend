@@ -71,11 +71,11 @@ const TradeCard = (props: CardProps) => {
             </span>
             <p className="text-gold text-sm font-header tracking-widest mt-2">Owned by</p>
             <p className="text-gold text-xs font-header tracking-widest mt-2">RACHEL LEE</p>
-            <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">
+            {/* <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">
               Bought on 12 Feb 2021
-            </p>
+            </p> */}
             <span className="flex justify-between">
-              <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">Price:0.01 Eth</p>
+              {/* <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">Price:0.01 Eth</p> */}
               <span className="pt-2 cursor-pointer" onClick={() => props.setDeleteModal(true)}>
                 <Image className="mt-4" src={deleteImg} alt="Logo" />
               </span>
