@@ -35,9 +35,9 @@ const Trades = () => {
       for (let item in ownedItems) {
         console.log('iterating through item: ', item)
         if (item.tokenId === id && item.isListed === true) {
-          setListedItems([...listedItems, item])
+          setListedItems((prevArray: any) => [...prevArray, item])
         } else if (item.tokenId === id && item.isListed === false) {
-          setNotListed([...notListed, item])
+          setNotListed((prevArray: any) => [...prevArray, item])
         } else if (item.tokenId !== id) {
           setUnregistered((prevArray: any) => [...prevArray, id])
         } else {
@@ -87,7 +87,15 @@ const Trades = () => {
 
   const renderCards = tokenURIs.map((uri: any) => {
     console.log('render uri: ', uri)
-    return <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal} key={uri.image} />
+    return (
+      <TradeCard
+        name={uri.name}
+        image={uri.image}
+        deleteModal={deleteModal}
+        setDeleteModal={setDeleteModal}
+        key={uri.image}
+      />
+    )
   })
 
   const fetchMarketItems = async () => {
