@@ -16,23 +16,25 @@ const Trades = () => {
   const [ownedItems, setOwnedItems] = useState<any>([])
   const [listedItems, setListedItems] = useState<any>([]) // items
   const [notListed, setNotListed] = useState<any>([]) // items
-  const [notRegistered, setNotRegistered] = useState<any>([2]) // tokenIds
+  const [notRegistered, setNotRegistered] = useState<any>([]) // tokenIds
 
   // console.log('trades context: ', context)
 
-  const getFinalItems = () => {
+  const filterItems = () => {
+    console.log('owner tokens: ', ownerTokens)
     if (ownerTokens.length === 0) {
       console.log('no tokens in wallet')
       return
     }
     if (ownedItems.length === 0) {
       setNotRegistered(ownerTokens)
+      console.log('no items owned in marketplace')
       return
     }
-    console.log('ownerTokens: ', ownerTokens)
     for (let id in ownerTokens) {
-      console.log('id: ', id)
+      console.log('iterating through token: ', id)
       for (let item in ownedItems) {
+        console.log('iterating through item: ', item)
         if (item.tokenId === id && item.isListed === true) {
           setListedItems([...listedItems, item])
         } else if (item.tokenId === id && item.isListed === false) {
@@ -53,28 +55,20 @@ const Trades = () => {
       const owner = await context.nftContract.ownerOf(i)
       if (owner === context.walletAddress) {
         // ownerTokens.push(i)
-        ownerTokens.push(i)
-        // setOwnerTokens(array)
+        setOwnerTokens((prevArray: any) => [...prevArray, i])
       } else {
         console.log('item not owned: ', i)
       }
     }
   }
 
-  const fetchNFTData = async () => {
-    let uri
-    for (let i in ownerTokens) {
-      try {
-        uri = await context.nftContract.tokenURI(i)
-      } catch (err) {
-        console.log(err)
-      }
-      const response = await fetch(uri)
-      if (!response.ok) throw new Error(response.statusText)
-      const data = await response.json()
-      console.log('data: ', data)
-      setTokenURIs([...tokenURIs, data])
-    }
+  const fetchNFTData = async (id: number) => {
+    const uri = await context.nftContract.tokenURI(id)
+    const response = await fetch(uri)
+    if (!response.ok) throw new Error(response.statusText)
+    const data = await response.json()
+    console.log('data: ', data)
+    setTokenURIs((prevArray: any) => [...prevArray, data])
   }
 
   const fetchMarketItems = async () => {
@@ -128,7 +122,7 @@ const Trades = () => {
   // console.log('total tokens: ', notRegistered)
 
   // useEffect(() => {
-  //   getFinalItems()
+  //   filterItems()
   // }, [ownerTokens])
 
   // useEffect(() => {
@@ -157,11 +151,11 @@ const Trades = () => {
 
   return (
     <div className="">
-      <button onClick={getFinalItems} className="text-white">
-        Get Final Items
+      <button onClick={filterItems} className="text-white">
+        Filter Items
       </button>
       <button onClick={fetchNFTsOwned} className="text-white">
-        Get token
+        Fetch tokens
       </button>
       {deleteModal ? (
         <DeleteNFTModal deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
