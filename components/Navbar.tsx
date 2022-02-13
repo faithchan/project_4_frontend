@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import globalContext from '../context/context'
 import { ethers } from 'ethers'
 import Web3Modal from 'web3modal'
@@ -8,14 +8,14 @@ import logo from '../public/ArkivLogo.svg'
 import Search from './Search'
 import walletImg from '../public/wallet.svg'
 import homeImg from '../public/home.svg'
-import uploadImg from '../public/upload.svg'
 import AccNavigation from './AccNavigation'
 import TradesNavigation from './TradesNavigation'
-import Wallet from './Wallet'
+import { nftaddress, marketplaceaddress } from '../config'
+import NFT from '../contract-abis/NFT.json'
+import Marketplace from '../contract-abis/Marketplace.json'
 
 const Navbar = () => {
   const context = useContext(globalContext)
-  const [connected, setConnected] = useState<boolean>(false)
 
   const connectWallet = async () => {
     if (typeof window.ethereum !== 'undefined') {
@@ -36,6 +36,19 @@ const Navbar = () => {
     }
   }
 
+  const initialiseContracts = async () => {
+    if (context.signer != null) {
+      const nftContract = new ethers.Contract(nftaddress, NFT.abi, context.signer)
+      const marketplaceContract = new ethers.Contract(
+        marketplaceaddress,
+        Marketplace.abi,
+        context.signer
+      )
+      context.setNftContract(nftContract)
+      context.setMarketplaceContract(marketplaceContract)
+    }
+  }
+
   const changeNetwork = async () => {
     try {
       if (!window.ethereum) throw new Error('No crypto wallet found')
@@ -47,6 +60,10 @@ const Navbar = () => {
       console.log('error changing network: ', err.message)
     }
   }
+
+  useEffect(() => {
+    initialiseContracts()
+  }, [context.signer])
 
   return (
     <div className="text-gold font-header text-xs">

@@ -149,20 +149,6 @@ const Trades = () => {
     }
   }
 
-  // const loadInitialData = async () => {
-  //   console.log('loading initial data')
-  //   await fetchNFTsOwned()
-  //   await fetchMarketItems()
-  //   await filterItems()
-  //   await fetchAllMetadata()
-  // }
-
-  // useEffect(() => {
-  //   if ((context.nftContract, context.marketplaceContract)) {
-  //     loadInitialData()
-  //   }
-  // }, [context.nftContract, context.marketplaceContract])
-
   useEffect(() => {
     console.log('trades context: ', context)
     if (context.nftContract && context.marketplaceContract) {
@@ -185,12 +171,6 @@ const Trades = () => {
 
   return (
     <div>
-      {/* <button onClick={fetchNFTsOwned} className="text-white mr-4">
-        Fetch tokens
-      </button>
-      <button onClick={fetchMarketItems} className="text-white mr-4">
-        Fetch market items
-      </button> */}
       <button onClick={filterItems} className="text-white mr-4">
         Filter Items
       </button>
