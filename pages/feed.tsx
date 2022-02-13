@@ -25,15 +25,25 @@ const feed = () => {
   }
 
   const fetchAllMetadata = async () => {
-    let uri
-    for (let i of listedItems) {
-      console.log('set id: ', i)
-      uri = await context.nftContract.tokenURI(i)
+    for (let item of listedItems) {
+      console.log('original item: ', item)
+      const details = {
+        isListed: item.isListed,
+        owner: item.owner,
+        price: item.price,
+        tokenId: item.tokenId.toString(),
+        name: null,
+        description: null,
+        image: null,
+      }
+      const uri = await context.nftContract.tokenURI(details.tokenId)
       const response = await fetch(uri)
       const data = await response.json()
-      data.tokenId = i
-      data.listPrice = 0
-      setTokenData((prev: any) => [...prev, data])
+      details.name = data.name
+      details.description = data.description
+      details.image = data.image
+      console.log('details: ', details)
+      setTokenData((prev: any) => [...prev, details])
     }
     setLoaded(true)
   }
@@ -43,6 +53,10 @@ const feed = () => {
       fetchMarketItems()
     }
   }, [context.marketplaceContract])
+
+  useEffect(() => {
+    fetchAllMetadata()
+  }, [listedItems])
 
   const renderItems = listedItems.map((item: any) => {
     return <FeedCard buyModal={buyModal} setBuyModal={setBuyModal} />
