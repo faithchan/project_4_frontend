@@ -10,7 +10,7 @@ import DeleteNFTModal from '../components/DeleteNFTModal'
 
 const Trades = () => {
   const context = useContext(globalContext)
-  // const [tokenURIs, setTokenURIs] = useState<any>([])
+  const [tokenURIs, setTokenURIs] = useState<any>([])
   const [ownerTokens, setOwnerTokens] = useState<any>([])
   const [deleteModal, setDeleteModal] = useState(false)
   const [ownedItems, setOwnedItems] = useState<any>([])
@@ -23,13 +23,11 @@ const Trades = () => {
     console.log('owner tokens: ', ownerTokens)
     if (ownerTokens.length === 0) {
       console.log('no tokens in wallet')
-      setLoaded(true)
       return
     }
     if (ownedItems.length === 0) {
       setUnregistered(ownerTokens)
       console.log('no items owned in marketplace')
-      setLoaded(true)
       return
     }
     for (let id in ownerTokens) {
@@ -47,37 +45,49 @@ const Trades = () => {
         }
       }
     }
-    setLoaded(true)
     return
   }
 
   const fetchNFTsOwned = async () => {
     const totalSupply = await context.nftContract.totalSupply()
-    console.log('total supply', totalSupply)
     for (let i = 0; i < totalSupply; i++) {
       const owner = await context.nftContract.ownerOf(i)
       if (owner === context.walletAddress) {
-        // ownerTokens.push(i)
         setOwnerTokens((prevArray: any) => [...prevArray, i])
       } else {
         console.log('item not owned: ', i)
       }
     }
+    console.log('total supply', totalSupply)
   }
 
-  const fetchMetadata = async (id: number) => {
+  const fetchAllMetadata = async () => {
+    let uri
+    for (let i in ownerTokens) {
+      try {
+        uri = await context.nftContract.tokenURI(i)
+      } catch (err) {
+        console.log(err)
+      }
+      const response = await fetch(uri)
+      if (!response.ok) throw new Error(response.statusText)
+      const data = await response.json()
+      setTokenURIs((prevArray: any) => [...prevArray, data])
+    }
+    setLoaded(true)
+  }
+
+  const fetchTokenMetadata = async (id: number) => {
     const uri = await context.nftContract.tokenURI(id)
     const response = await fetch(uri)
     if (!response.ok) throw new Error(response.statusText)
     const data = await response.json()
-    console.log('data: ', data)
     return data
   }
 
-  const renderCards = unregistered.map(async (id: number) => {
-    const data = await fetchMetadata(id)
-    console.log('token data: ', data)
-    return <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
+  const renderCards = tokenURIs.map((uri: any) => {
+    console.log('render uri: ', uri)
+    return <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal} key={uri.image} />
   })
 
   const fetchMarketItems = async () => {
@@ -129,25 +139,23 @@ const Trades = () => {
     }
   }
 
+  // const loadInitialData = async () => {
+  //   console.log('loading initial data')
+  //   await fetchNFTsOwned()
+  //   await fetchMarketItems()
+  //   await filterItems()
+  //   await fetchAllMetadata()
+  // }
+
+  // useEffect(() => {
+  //   if ((context.nftContract, context.marketplaceContract)) {
+  //     loadInitialData()
+  //   }
+  // }, [context.nftContract, context.marketplaceContract])
+
   useEffect(() => {
     console.log('trades context: ', context)
   }, [context.nftContract])
-
-  useEffect(() => {
-    filterItems()
-  }, [ownerTokens])
-
-  useEffect(() => {
-    if (context.nftContract) {
-      fetchNFTsOwned()
-    }
-  }, [context.nftContract])
-
-  useEffect(() => {
-    if (context.marketplaceContract) {
-      fetchMarketItems()
-    }
-  }, [context.marketplaceContract])
 
   useEffect(() => {
     if (context.signer !== null) {
@@ -162,13 +170,17 @@ const Trades = () => {
   }, [])
 
   return (
-    <div className="">
-      <button onClick={filterItems} className="text-white">
-        Filter Items
-      </button>
-      <button onClick={fetchNFTsOwned} className="text-white">
+    <div>
+      <button onClick={fetchNFTsOwned} className="text-white mr-4">
         Fetch tokens
       </button>
+      <button onClick={filterItems} className="text-white mr-4">
+        Filter Items
+      </button>
+      <button onClick={fetchAllMetadata} className="text-white mr-4">
+        Fetch Metadata
+      </button>
+
       {deleteModal ? (
         <DeleteNFTModal deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
       ) : (
