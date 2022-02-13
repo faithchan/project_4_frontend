@@ -1,16 +1,18 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 
 interface FeedProps {
   name: string
   description: string
   image: string
-  price: number
+  price: string
   itemId: number
   isListed: boolean
+  owner: string
+  tokenId: number
   buyModal: boolean
   setBuyModal: (a: boolean) => void
   setCurrentItemId: (a: number) => void
-  setCurrentPrice: (a: number) => void
+  setCurrentPrice: (a: string) => void
 }
 
 const FeedCard = (props: FeedProps) => {

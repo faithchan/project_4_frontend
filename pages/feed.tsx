@@ -18,11 +18,11 @@ const feed = () => {
   const [tokenData, setTokenData] = useState<any>([])
   const [loaded, setLoaded] = useState(false)
   const [currentItemId, setCurrentItemId] = useState<number>()
-  const [currentPrice, setCurrentPrice] = useState<number>()
+  const [currentPrice, setCurrentPrice] = useState<string>()
 
   const fetchMarketItems = async () => {
     const listed = await context.marketplaceContract.getListedItems()
-    console.log('market items: ', listed)
+    // console.log('market items: ', listed)
     setListedItems(listed)
   }
 
@@ -38,8 +38,6 @@ const feed = () => {
         description: null,
         image: null,
       }
-      const wei = ethers.utils.parseEther(details.price)
-      console.log('price in wei: ', wei.toString())
       const uri = await context.nftContract.tokenURI(details.tokenId)
       const response = await fetch(uri)
       const data = await response.json()
@@ -72,6 +70,8 @@ const feed = () => {
         price={item.price}
         itemId={item.itemId}
         isListed={item.isListed}
+        owner={item.owner}
+        tokenId={item.tokenId}
         buyModal={buyModal}
         setBuyModal={setBuyModal}
         setCurrentItemId={setCurrentItemId}

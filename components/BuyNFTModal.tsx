@@ -1,17 +1,35 @@
+import { useContext } from 'react'
+import globalContext from '../context/context'
+import { nftaddress } from '../config'
+import { ethers } from 'ethers'
+
 interface buyProps {
   itemId: number | undefined
-  price: number | undefined
+  price: string
   buyModal: boolean
   setBuyModal: (a: boolean) => void
 }
 
 const BuyNFTModal = (props: buyProps) => {
+  const context = useContext(globalContext)
+
+  // console.log('buy modal props ', props)
+  // console.log('buy modal context: ', context)
+
+  const buyItem = async () => {
+    const priceInWei = ethers.utils.parseUnits(props.price, 'ether')
+    console.log('price in wei: ', priceInWei.toString())
+    const txn = await context.marketplaceContract.purchaseItem(nftaddress, props.itemId, {
+      value: priceInWei,
+    })
+    const receipt = await txn.wait()
+    console.log('item purchased: ', receipt)
+  }
+
   const purchaseHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     props.setBuyModal(false)
   }
-
-  console.log('buy modal props ', props)
 
   return (
     <div
@@ -47,6 +65,7 @@ const BuyNFTModal = (props: buyProps) => {
             <button
               className="mb-2 md:mb-0 bg-gold px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg "
               type="submit"
+              onClick={buyItem}
             >
               Confirm Purchase
             </button>
