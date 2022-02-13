@@ -1,6 +1,8 @@
 // variables required: itemId, nft contract address
 
 interface buyProps {
+  itemId: number
+  price: number
   buyModal: boolean
   setBuyModal: (a: boolean) => void
 }
@@ -34,7 +36,6 @@ const BuyNFTModal = (props: buyProps) => {
               <p className="text-left text-sm font-body text-gray-300 mt-2">List Price 0.01 Eth</p>
             </span>
           </div>
-
           <div className="p-3 mt-2 text-center space-x-4 md:block">
             <button
               className="mb-2 md:mb-0 bg-white px-5 py-2 text-xs shadow-sm font-header tracking-wider border text-gold rounded-full hover:shadow-lg hover:bg-gray-100"

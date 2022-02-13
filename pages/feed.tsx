@@ -26,23 +26,24 @@ const feed = () => {
 
   const fetchAllMetadata = async () => {
     for (let item of listedItems) {
-      console.log('original item: ', item)
       const details = {
         isListed: item.isListed,
         owner: item.owner,
-        price: item.price,
-        tokenId: item.tokenId.toString(),
+        price: ethers.utils.formatUnits(item.price.toString(), 'ether'),
+        tokenId: item.tokenId.toNumber(),
+        itemId: item.itemId.toNumber(),
         name: null,
         description: null,
         image: null,
       }
+      const wei = ethers.utils.parseEther(details.price)
+      console.log('price in wei: ', wei.toString())
       const uri = await context.nftContract.tokenURI(details.tokenId)
       const response = await fetch(uri)
       const data = await response.json()
       details.name = data.name
       details.description = data.description
       details.image = data.image
-      console.log('details: ', details)
       setTokenData((prev: any) => [...prev, details])
     }
     setLoaded(true)
@@ -58,8 +59,21 @@ const feed = () => {
     fetchAllMetadata()
   }, [listedItems])
 
-  const renderItems = listedItems.map((item: any) => {
-    return <FeedCard buyModal={buyModal} setBuyModal={setBuyModal} />
+  const renderCards = tokenData.map((item: any) => {
+    console.log('item details: ', item)
+    return (
+      <FeedCard
+        name={item.name}
+        description={item.description}
+        image={item.image}
+        price={item.price}
+        itemId={item.itemId}
+        isListed={item.isListed}
+        buyModal={buyModal}
+        setBuyModal={setBuyModal}
+        key={item.image}
+      />
+    )
   })
   //----------------Initialising Wallet----------------//
 
@@ -122,7 +136,7 @@ const feed = () => {
   return (
     <div>
       {buyModal ? <BuyNFTModal buyModal={buyModal} setBuyModal={setBuyModal} /> : ''}
-      <FeedCard buyModal={buyModal} setBuyModal={setBuyModal} />
+      {loaded ? renderCards : ''}
     </div>
   )
 }
