@@ -31,9 +31,9 @@ const Trades = () => {
       return
     }
     for (let id in ownerTokens) {
-      console.log('iterating through token: ', id)
+      console.log('token id: ', id)
       for (let item in ownedItems) {
-        console.log('iterating through item: ', item)
+        console.log('current item: ', item)
         if (item.tokenId === id && item.isListed === true) {
           setListedItems((prevArray: any) => [...prevArray, item])
         } else if (item.tokenId === id && item.isListed === false) {
@@ -73,7 +73,6 @@ const Trades = () => {
       if (!response.ok) throw new Error(response.statusText)
       const data = await response.json()
       data.tokenId = i
-      console.log('data: ', data)
       setTokenURIs((prevArray: any) => [...prevArray, data])
     }
     setLoaded(true)
@@ -88,7 +87,6 @@ const Trades = () => {
   }
 
   const renderCards = tokenURIs.map((uri: any) => {
-    console.log('render uri: ', uri)
     return (
       <TradeCard
         tokenId={uri.tokenId}
@@ -103,6 +101,7 @@ const Trades = () => {
 
   const fetchMarketItems = async () => {
     const owned = await context.marketplaceContract.getItemsOwned()
+    console.log('market items: ', owned[0])
     setOwnedItems(owned)
   }
 
@@ -185,8 +184,14 @@ const Trades = () => {
       <button onClick={fetchNFTsOwned} className="text-white mr-4">
         Fetch tokens
       </button>
+      <button onClick={fetchMarketItems} className="text-white mr-4">
+        Fetch market items
+      </button>
       <button onClick={filterItems} className="text-white mr-4">
         Filter Items
+      </button>
+      <button onClick={() => console.log(listedItems)} className="text-white mr-4">
+        Print listed items
       </button>
       <button onClick={fetchAllMetadata} className="text-white mr-4">
         Fetch Metadata

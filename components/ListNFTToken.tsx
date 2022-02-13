@@ -16,31 +16,20 @@ const ListNFTToken = (props: listingProps) => {
   const [showList, setShowList] = useState(false)
   const [showContBtn, setShowContBtn] = useState(false)
   const [showRoyaltyBtn, setShowRoyaltyBtn] = useState(true)
-  const [royaltyAmount, setRoyaltyAmount] = useState() // convert % to number between 0-10000
+  const [royaltyAmount, setRoyaltyAmount] = useState<any>() // convert % to number between 0-10000
   const [listPrice, setListPrice] = useState('')
 
-  console.log('list card tokenId: ', props.tokenId)
+  // console.log('list card tokenId: ', props.tokenId)
 
-  const listToken = async () => {
-    if (context.marketplaceContract) {
-      const salePrice = ethers.utils.parseUnits(listPrice, 'ether')
-      const txn = await context.marketplaceContract.listItem(nftaddress, props.tokenId, salePrice)
-    }
-  }
+  //----------------Setting Royalties----------------//
 
   const setTokenRoyalty = async () => {
+    console.log(`setting royalties of ${royaltyAmount} for token id ${props.tokenId}`)
     if (context.nftContract) {
-      await context.nftContract.setTokenRoyalty(props.tokenId, royaltyAmount)
+      const txn = await context.nftContract.setTokenRoyalty(props.tokenId, royaltyAmount)
+      console.log('royalty txn: ', txn)
     } else {
       console.log('no contract')
-    }
-  }
-
-  const getRoyaltyInfo = async () => {
-    if (context.nftContract) {
-      const salePrice = ethers.utils.parseUnits(listPrice, 'ether')
-      const info = await context.nftContract.royaltyInfo(props.tokenId, salePrice)
-      console.log('royalty info: ', info)
     }
   }
 
@@ -48,11 +37,35 @@ const ListNFTToken = (props: listingProps) => {
     const value = event.target.value
     const bp = value * 100
     console.log('royalty bp: ', bp)
-    setRoyaltyAmount(value)
+    setRoyaltyAmount(bp)
+  }
+
+  const getRoyaltyInfo = async () => {
+    // const price =
+    if (context.nftContract) {
+      const salePrice = ethers.utils.parseUnits(listPrice, 'ether')
+      const info = await context.nftContract.royaltyInfo(props.tokenId, salePrice)
+      console.log('royalty info: ', info)
+    }
+  }
+
+  // useEffect(() => {
+  //   getRoyaltyInfo()
+  // }, [])
+
+  //----------------Listing Token----------------//
+
+  const listToken = async () => {
+    if (context.marketplaceContract) {
+      const salePrice = ethers.utils.parseUnits(listPrice, 'ether')
+      console.log(`setting price of ${salePrice} for token ${props.tokenId}`)
+      const txn = await context.marketplaceContract.listItem(nftaddress, props.tokenId, salePrice)
+    }
   }
 
   const handlePriceInputChange = (event: any) => {
     const value = event.target.value
+    console.log('price: ', value)
     setListPrice(value)
   }
 
@@ -146,10 +159,6 @@ const ListNFTToken = (props: listingProps) => {
                 <button
                   className="mb-2 md:mb-0 bg-gold px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg "
                   type="submit"
-                  onClick={() => {
-                    setShowContBtn(true)
-                    setShowRoyaltyBtn(false)
-                  }}
                 >
                   Continue to List
                 </button>
@@ -179,6 +188,7 @@ const ListNFTToken = (props: listingProps) => {
                 min="0.01"
                 step=".01"
                 required
+                onChange={handlePriceInputChange}
               />
             </div>
 
@@ -192,6 +202,7 @@ const ListNFTToken = (props: listingProps) => {
               <button
                 className="mb-2 md:mb-0 bg-gold px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg"
                 type="submit"
+                onClick={listToken}
               >
                 List Token
               </button>
