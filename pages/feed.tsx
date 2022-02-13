@@ -17,6 +17,8 @@ const feed = () => {
   const [listedItems, setListedItems] = useState<any>([])
   const [tokenData, setTokenData] = useState<any>([])
   const [loaded, setLoaded] = useState(false)
+  const [currentItemId, setCurrentItemId] = useState<number>()
+  const [currentPrice, setCurrentPrice] = useState<number>()
 
   const fetchMarketItems = async () => {
     const listed = await context.marketplaceContract.getListedItems()
@@ -63,6 +65,7 @@ const feed = () => {
     console.log('item details: ', item)
     return (
       <FeedCard
+        key={item.image}
         name={item.name}
         description={item.description}
         image={item.image}
@@ -71,7 +74,8 @@ const feed = () => {
         isListed={item.isListed}
         buyModal={buyModal}
         setBuyModal={setBuyModal}
-        key={item.image}
+        setCurrentItemId={setCurrentItemId}
+        setCurrentPrice={setCurrentPrice}
       />
     )
   })
@@ -135,7 +139,16 @@ const feed = () => {
 
   return (
     <div>
-      {buyModal ? <BuyNFTModal buyModal={buyModal} setBuyModal={setBuyModal} /> : ''}
+      {buyModal ? (
+        <BuyNFTModal
+          itemId={currentItemId}
+          price={currentPrice}
+          buyModal={buyModal}
+          setBuyModal={setBuyModal}
+        />
+      ) : (
+        ''
+      )}
       {loaded ? renderCards : ''}
     </div>
   )

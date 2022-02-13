@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react'
+
 interface FeedProps {
   name: string
   description: string
@@ -7,9 +9,16 @@ interface FeedProps {
   isListed: boolean
   buyModal: boolean
   setBuyModal: (a: boolean) => void
+  setCurrentItemId: (a: number) => void
+  setCurrentPrice: (a: number) => void
 }
 
 const FeedCard = (props: FeedProps) => {
+  useEffect(() => {
+    props.setCurrentItemId(props.itemId)
+    props.setCurrentPrice(props.price)
+  }, [])
+
   return (
     <div className="flex justify-center mt-20 mb-10">
       <div className=" px-8 pt-6 pb-6 bg-purple opacity-80 rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all transform duration-500">
