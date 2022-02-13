@@ -11,7 +11,7 @@ import DeleteNFTModal from '../components/DeleteNFTModal'
 const Trades = () => {
   const context = useContext(globalContext)
   const [tokenURIs, setTokenURIs] = useState<any>([])
-  const [ownerTokens, setOwnerTokens] = useState<any>([])
+  const [ownerTokens, setOwnerTokens] = useState<any>(new Set())
   const [deleteModal, setDeleteModal] = useState(false)
   const [ownedItems, setOwnedItems] = useState<any>([])
   const [listedItems, setListedItems] = useState<any>([]) // items
@@ -30,15 +30,16 @@ const Trades = () => {
       console.log('no items owned in marketplace')
       return
     }
-    for (let id in ownerTokens) {
-      // console.log('current token id: ', id)
+    for (let id of ownerTokens) {
+      console.log('current token id: ', id)
       for (let item of ownedItems) {
-        // console.log('current item: ', item)
-        if (item.tokenId.toString() === id && item.isListed === true) {
+        const tokenId = item.tokenId.toString()
+        console.log('current item: ', tokenId === id.toString())
+        if (tokenId === id.toString() && item.isListed === true) {
           setListedItems((prevArray: any) => [...prevArray, item])
-        } else if (item.tokenId.toString() === id && item.isListed === false) {
+        } else if (tokenId === id.toString() && item.isListed === false) {
           setNotListed((prevArray: any) => [...prevArray, item])
-        } else if (item.tokenId.toString() !== id) {
+        } else if (tokenId !== id.toString()) {
           setUnregistered((prevArray: any) => [...prevArray, id])
         } else {
           console.log('not handled')
@@ -53,7 +54,7 @@ const Trades = () => {
     for (let i = 0; i < totalSupply; i++) {
       const owner = await context.nftContract.ownerOf(i)
       if (owner === context.walletAddress) {
-        setOwnerTokens((prevArray: any) => [...prevArray, i])
+        setOwnerTokens((prev: any) => new Set(prev.add(i)))
       } else {
         console.log('item not owned: ', i)
       }
@@ -64,6 +65,7 @@ const Trades = () => {
   const fetchAllMetadata = async () => {
     let uri
     for (let i in ownerTokens) {
+      // console.log('set id: ', i)
       try {
         uri = await context.nftContract.tokenURI(i)
       } catch (err) {
@@ -73,17 +75,10 @@ const Trades = () => {
       if (!response.ok) throw new Error(response.statusText)
       const data = await response.json()
       data.tokenId = i
+      data.listPrice = 0
       setTokenURIs((prevArray: any) => [...prevArray, data])
     }
     setLoaded(true)
-  }
-
-  const fetchTokenMetadata = async (id: number) => {
-    const uri = await context.nftContract.tokenURI(id)
-    const response = await fetch(uri)
-    if (!response.ok) throw new Error(response.statusText)
-    const data = await response.json()
-    return data
   }
 
   const renderCards = tokenURIs.map((uri: any) => {
@@ -92,12 +87,21 @@ const Trades = () => {
         tokenId={uri.tokenId}
         name={uri.name}
         image={uri.image}
+        listPrice={uri.listPrice}
         deleteModal={deleteModal}
         setDeleteModal={setDeleteModal}
         key={uri.image}
       />
     )
   })
+
+  const fetchTokenMetadata = async (id: number) => {
+    const uri = await context.nftContract.tokenURI(id)
+    const response = await fetch(uri)
+    if (!response.ok) throw new Error(response.statusText)
+    const data = await response.json()
+    return data
+  }
 
   const fetchMarketItems = async () => {
     const owned = await context.marketplaceContract.getItemsOwned()

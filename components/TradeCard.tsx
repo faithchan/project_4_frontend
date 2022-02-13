@@ -5,6 +5,7 @@ import ListNFTToken from './ListNFTToken'
 import globalContext from '../context/context'
 
 interface CardProps {
+  listPrice: number
   tokenId: number
   name: string
   image: string
@@ -30,17 +31,25 @@ const TradeCard = (props: CardProps) => {
       <div className="w-full px-8 pt-8 pb-6 bg-purple opacity-80 rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all transform duration-500 ">
         <div className="flex justify-between space-x-14">
           <span className="font-MT font-semibold text-left leading-loose">
-            <img className="w-44 h-44 object-cover rounded-3xl" src={props.image} alt="" />
+            <img
+              className="w-44 h-44 object-cover rounded-3xl"
+              src={props.image}
+              alt={props.name}
+            />
             <p className="text-gold mt-4 text-md font-header tracking-widest">{props.name}</p>
             <p className="text-gray-300 font-body text-xs mt-1 tracking-widest">
-              List Price: 1 eth
+              List Price: {props.listPrice === 0 ? '-' : props.listPrice + 'ETH'}
             </p>
-            <p
-              className="text-gray-300 font-body text-xs mt-1 tracking-widest underline cursor-pointer"
-              onClick={() => setListNFTModal(true)}
-            >
-              List this NFT
-            </p>
+            {props.listPrice === 0 ? (
+              <p
+                className="text-gray-300 font-body text-xs mt-1 tracking-widest underline cursor-pointer"
+                onClick={() => setListNFTModal(true)}
+              >
+                List this NFT
+              </p>
+            ) : (
+              ''
+            )}
           </span>
           <span>
             <p className="text-gold text-sm font-header tracking-widest">Designed by</p>
