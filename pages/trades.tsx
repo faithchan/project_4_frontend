@@ -10,25 +10,26 @@ import DeleteNFTModal from '../components/DeleteNFTModal'
 
 const Trades = () => {
   const context = useContext(globalContext)
-  const [tokenURIs, setTokenURIs] = useState<any>([])
+  // const [tokenURIs, setTokenURIs] = useState<any>([])
   const [ownerTokens, setOwnerTokens] = useState<any>([])
   const [deleteModal, setDeleteModal] = useState(false)
   const [ownedItems, setOwnedItems] = useState<any>([])
   const [listedItems, setListedItems] = useState<any>([]) // items
   const [notListed, setNotListed] = useState<any>([]) // items
-  const [notRegistered, setNotRegistered] = useState<any>([]) // tokenIds
-
-  // console.log('trades context: ', context)
+  const [unregistered, setUnregistered] = useState<any>([]) // tokenIds
+  const [loaded, setLoaded] = useState(false)
 
   const filterItems = () => {
     console.log('owner tokens: ', ownerTokens)
     if (ownerTokens.length === 0) {
       console.log('no tokens in wallet')
+      setLoaded(true)
       return
     }
     if (ownedItems.length === 0) {
-      setNotRegistered(ownerTokens)
+      setUnregistered(ownerTokens)
       console.log('no items owned in marketplace')
+      setLoaded(true)
       return
     }
     for (let id in ownerTokens) {
@@ -40,12 +41,14 @@ const Trades = () => {
         } else if (item.tokenId === id && item.isListed === false) {
           setNotListed([...notListed, item])
         } else if (item.tokenId !== id) {
-          setNotRegistered([...notRegistered, id])
+          setUnregistered((prevArray: any) => [...prevArray, id])
         } else {
           console.log('not handled')
         }
       }
     }
+    setLoaded(true)
+    return
   }
 
   const fetchNFTsOwned = async () => {
@@ -62,14 +65,20 @@ const Trades = () => {
     }
   }
 
-  const fetchNFTData = async (id: number) => {
+  const fetchMetadata = async (id: number) => {
     const uri = await context.nftContract.tokenURI(id)
     const response = await fetch(uri)
     if (!response.ok) throw new Error(response.statusText)
     const data = await response.json()
     console.log('data: ', data)
-    setTokenURIs((prevArray: any) => [...prevArray, data])
+    return data
   }
+
+  const renderCards = unregistered.map(async (id: number) => {
+    const data = await fetchMetadata(id)
+    console.log('token data: ', data)
+    return <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
+  })
 
   const fetchMarketItems = async () => {
     const owned = await context.marketplaceContract.getItemsOwned()
@@ -119,27 +128,30 @@ const Trades = () => {
       context.setMarketplaceContract(marketplaceContract)
     }
   }
-  // console.log('total tokens: ', notRegistered)
 
-  // useEffect(() => {
-  //   filterItems()
-  // }, [ownerTokens])
+  useEffect(() => {
+    console.log('trades context: ', context)
+  }, [context.nftContract])
 
-  // useEffect(() => {
-  //   fetchNFTData()
-  // }, [ownerTokens])
+  useEffect(() => {
+    filterItems()
+  }, [ownerTokens])
 
   useEffect(() => {
     if (context.nftContract) {
-      fetchMarketItems()
+      fetchNFTsOwned()
     }
   }, [context.nftContract])
 
   useEffect(() => {
+    if (context.marketplaceContract) {
+      fetchMarketItems()
+    }
+  }, [context.marketplaceContract])
+
+  useEffect(() => {
     if (context.signer !== null) {
       initialiseContracts()
-    } else {
-      console.log('no signer')
     }
   }, [context.signer])
 
@@ -163,10 +175,11 @@ const Trades = () => {
         ''
       )}
       <div className="flex flex-wrap gap-10 justify-center my-20 mx-32">
+        {loaded ? renderCards : ''}
+        {/* <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
         <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
         <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
-        <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
-        <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
+        <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal} /> */}
       </div>
     </div>
   )
