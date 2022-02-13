@@ -10,7 +10,7 @@ import DeleteNFTModal from '../components/DeleteNFTModal'
 
 const Trades = () => {
   const context = useContext(globalContext)
-  const [tokenURIs, setTokenURIs] = useState<any>([])
+  const [tokenData, setTokenData] = useState<any>([])
   const [ownerTokens, setOwnerTokens] = useState<any>(new Set())
   const [deleteModal, setDeleteModal] = useState(false)
   const [ownedItems, setOwnedItems] = useState<any>([])
@@ -66,21 +66,17 @@ const Trades = () => {
     let uri
     for (let i of ownerTokens) {
       console.log('set id: ', i)
-      try {
-        uri = await context.nftContract.tokenURI(i)
-      } catch (err) {
-        console.log(err)
-      }
+      uri = await context.nftContract.tokenURI(i)
       const response = await fetch(uri)
       const data = await response.json()
       data.tokenId = i
       data.listPrice = 0
-      setTokenURIs((prev: any) => [...prev, data])
+      setTokenData((prev: any) => [...prev, data])
     }
     setLoaded(true)
   }
 
-  const renderCards = tokenURIs.map((uri: any) => {
+  const renderCards = tokenData.map((uri: any) => {
     return (
       <TradeCard
         tokenId={uri.tokenId}
@@ -93,14 +89,6 @@ const Trades = () => {
       />
     )
   })
-
-  const fetchTokenMetadata = async (id: number) => {
-    const uri = await context.nftContract.tokenURI(id)
-    const response = await fetch(uri)
-    if (!response.ok) throw new Error(response.statusText)
-    const data = await response.json()
-    return data
-  }
 
   const fetchMarketItems = async () => {
     const owned = await context.marketplaceContract.getItemsOwned()

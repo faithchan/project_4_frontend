@@ -8,53 +8,45 @@ import { ethers } from 'ethers'
 import NFT from '../contract-abis/NFT.json'
 import Marketplace from '../contract-abis/Marketplace.json'
 
-// SHOULD be user's following artists items but rendering all listed items atm for testing
+// SHOULD be user's following artists tokens
+// but rendering all listed items first for testing
 
 const feed = () => {
   const context = useContext(globalContext)
   const [buyModal, setBuyModal] = useState(false)
-  const [whitelistedAddrs, setWhitelistedAddrs] = useState<any>([])
-  const [allUsers, setAllUsers] = useState([])
+  const [listedItems, setListedItems] = useState<any>([])
+  const [tokenData, setTokenData] = useState<any>([])
+  const [loaded, setLoaded] = useState(false)
 
-  const getAllWhitelistees = async () => {
-    if (allUsers && context.nftContract) {
-      for (let user of allUsers) {
-        const txn = await context.nftContract.isWhitelisted(user.walletAddress)
-        if (txn) {
-          console.log(`${user.username} is whitelisted`)
-          setWhitelistedAddrs([...whitelistedAddrs, user.walletAddress])
-        } else {
-          console.log(`${user.username} is not whitelisted`)
-        }
-      }
-    } else {
-      console.log('no users in database')
-    }
+  const fetchMarketItems = async () => {
+    const listed = await context.marketplaceContract.getListedItems()
+    console.log('market items: ', listed)
+    setListedItems(listed)
   }
 
-  const fetchAllUsers = async () => {
-    try {
-      const response = await fetch(`${process.env.API_ENDPOINT}/users`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+  const fetchAllMetadata = async () => {
+    let uri
+    for (let i of listedItems) {
+      console.log('set id: ', i)
+      uri = await context.nftContract.tokenURI(i)
+      const response = await fetch(uri)
       const data = await response.json()
-      setAllUsers(data)
-    } catch (err) {
-      console.error(err)
+      data.tokenId = i
+      data.listPrice = 0
+      setTokenData((prev: any) => [...prev, data])
     }
+    setLoaded(true)
   }
 
   useEffect(() => {
-    fetchAllUsers()
-    if (context.nftContract) {
-      fetchAllUsers()
-      getAllWhitelistees()
+    if (context.marketplaceContract) {
+      fetchMarketItems()
     }
-  }, [context.nftContract])
+  }, [context.marketplaceContract])
 
+  const renderItems = listedItems.map((item: any) => {
+    return <FeedCard buyModal={buyModal} setBuyModal={setBuyModal} />
+  })
   //----------------Initialising Wallet----------------//
 
   const connectWallet = async () => {
@@ -115,22 +107,6 @@ const feed = () => {
 
   return (
     <div>
-      <button
-        className="text-white mr-4"
-        onClick={() => {
-          console.log('users: ', allUsers)
-        }}
-      >
-        print all users
-      </button>
-      <button
-        className="text-white mr-4"
-        onClick={() => {
-          console.log('whitelist: ', whitelistedAddrs)
-        }}
-      >
-        print whitelistees
-      </button>
       {buyModal ? <BuyNFTModal buyModal={buyModal} setBuyModal={setBuyModal} /> : ''}
       <FeedCard buyModal={buyModal} setBuyModal={setBuyModal} />
     </div>
