@@ -31,14 +31,14 @@ const Trades = () => {
       return
     }
     for (let id in ownerTokens) {
-      console.log('token id: ', id)
-      for (let item in ownedItems) {
-        console.log('current item: ', item)
-        if (item.tokenId === id && item.isListed === true) {
+      // console.log('current token id: ', id)
+      for (let item of ownedItems) {
+        // console.log('current item: ', item)
+        if (item.tokenId.toString() === id && item.isListed === true) {
           setListedItems((prevArray: any) => [...prevArray, item])
-        } else if (item.tokenId === id && item.isListed === false) {
+        } else if (item.tokenId.toString() === id && item.isListed === false) {
           setNotListed((prevArray: any) => [...prevArray, item])
-        } else if (item.tokenId !== id) {
+        } else if (item.tokenId.toString() !== id) {
           setUnregistered((prevArray: any) => [...prevArray, id])
         } else {
           console.log('not handled')
@@ -165,7 +165,11 @@ const Trades = () => {
 
   useEffect(() => {
     console.log('trades context: ', context)
-  }, [context.nftContract])
+    if (context.nftContract && context.marketplaceContract) {
+      fetchNFTsOwned()
+      fetchMarketItems()
+    }
+  }, [context.nftContract, context.marketplaceContract])
 
   useEffect(() => {
     if (context.signer !== null) {
@@ -181,12 +185,12 @@ const Trades = () => {
 
   return (
     <div>
-      <button onClick={fetchNFTsOwned} className="text-white mr-4">
+      {/* <button onClick={fetchNFTsOwned} className="text-white mr-4">
         Fetch tokens
       </button>
       <button onClick={fetchMarketItems} className="text-white mr-4">
         Fetch market items
-      </button>
+      </button> */}
       <button onClick={filterItems} className="text-white mr-4">
         Filter Items
       </button>
@@ -204,10 +208,6 @@ const Trades = () => {
       )}
       <div className="flex flex-wrap gap-10 justify-center my-20 mx-32">
         {loaded ? renderCards : ''}
-        {/* <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
-        <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
-        <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
-        <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal} /> */}
       </div>
     </div>
   )
