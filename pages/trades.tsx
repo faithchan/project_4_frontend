@@ -72,6 +72,8 @@ const Trades = () => {
       const response = await fetch(uri)
       if (!response.ok) throw new Error(response.statusText)
       const data = await response.json()
+      data.tokenId = i
+      console.log('data: ', data)
       setTokenURIs((prevArray: any) => [...prevArray, data])
     }
     setLoaded(true)
@@ -89,6 +91,7 @@ const Trades = () => {
     console.log('render uri: ', uri)
     return (
       <TradeCard
+        tokenId={uri.tokenId}
         name={uri.name}
         image={uri.image}
         deleteModal={deleteModal}

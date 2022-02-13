@@ -5,6 +5,7 @@ import ListNFTToken from './ListNFTToken'
 import globalContext from '../context/context'
 
 interface CardProps {
+  tokenId: number
   name: string
   image: string
   deleteModal: boolean
@@ -18,7 +19,11 @@ const TradeCard = (props: CardProps) => {
   return (
     <div>
       {ListNFTModal ? (
-        <ListNFTToken ListNFTModal={ListNFTModal} setListNFTModal={setListNFTModal} />
+        <ListNFTToken
+          tokenId={props.tokenId}
+          ListNFTModal={ListNFTModal}
+          setListNFTModal={setListNFTModal}
+        />
       ) : (
         ''
       )}

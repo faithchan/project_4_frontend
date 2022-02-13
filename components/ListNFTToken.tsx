@@ -5,6 +5,7 @@ import globalContext from '../context/context'
 import { nftaddress } from '../config'
 
 interface listingProps {
+  tokenId: number
   ListNFTModal: boolean
   setListNFTModal: (a: boolean) => void
 }
@@ -17,20 +18,19 @@ const ListNFTToken = (props: listingProps) => {
   const [showRoyaltyBtn, setShowRoyaltyBtn] = useState(true)
   const [royaltyAmount, setRoyaltyAmount] = useState() // convert % to number between 0-10000
   const [listPrice, setListPrice] = useState('')
-  const [tokenId, setTokenId] = useState()
 
-  console.log('list card tokenId: ', tokenId)
+  console.log('list card tokenId: ', props.tokenId)
 
   const listToken = async () => {
     if (context.marketplaceContract) {
       const salePrice = ethers.utils.parseUnits(listPrice, 'ether')
-      const txn = await context.marketplaceContract.listItem(nftaddress, tokenId, salePrice)
+      const txn = await context.marketplaceContract.listItem(nftaddress, props.tokenId, salePrice)
     }
   }
 
   const setTokenRoyalty = async () => {
     if (context.nftContract) {
-      await context.nftContract.setTokenRoyalty(tokenId, royaltyAmount)
+      await context.nftContract.setTokenRoyalty(props.tokenId, royaltyAmount)
     } else {
       console.log('no contract')
     }
@@ -39,7 +39,7 @@ const ListNFTToken = (props: listingProps) => {
   const getRoyaltyInfo = async () => {
     if (context.nftContract) {
       const salePrice = ethers.utils.parseUnits(listPrice, 'ether')
-      const info = await context.nftContract.royaltyInfo(tokenId, salePrice)
+      const info = await context.nftContract.royaltyInfo(props.tokenId, salePrice)
       console.log('royalty info: ', info)
     }
   }
