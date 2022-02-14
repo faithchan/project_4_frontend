@@ -10,12 +10,13 @@ const Trades = () => {
   const [tokenData, setTokenData] = useState<any>([])
   const [itemData, setItemData] = useState<any>([])
   const [ownerTokens, setOwnerTokens] = useState<any>(new Set())
-  const [deleteModal, setDeleteModal] = useState(false)
+  const [burnModal, setBurnModal] = useState(false)
   const [ownedItems, setOwnedItems] = useState<any>([])
   const [listedItems, setListedItems] = useState<any>(new Set()) // itemIds
   const [notListed, setNotListed] = useState<any>(new Set()) // itemsIds
   const [unregistered, setUnregistered] = useState<any>(new Set()) // tokenIds
   const [loaded, setLoaded] = useState(false)
+  const [currentTokenId, setCurrentTokenId] = useState<any>()
 
   const filterItems = () => {
     // console.log('owner tokens: ', ownerTokens)
@@ -107,13 +108,13 @@ const Trades = () => {
   const renderTokens = tokenData.map((uri: any) => {
     return (
       <TradeCard
+        key={uri.image}
         tokenId={uri.tokenId}
         name={uri.name}
         image={uri.image}
         listPrice={uri.listPrice}
-        deleteModal={deleteModal}
-        setDeleteModal={setDeleteModal}
-        key={uri.image}
+        burnModal={burnModal}
+        setBurnModal={setBurnModal}
       />
     )
   })
@@ -122,13 +123,13 @@ const Trades = () => {
     // console.log('item: ', item)
     return (
       <TradeCard
+        key={item.image}
         tokenId={item.tokenId}
         name={item.name}
         image={item.image}
         listPrice={item.price}
-        deleteModal={deleteModal}
-        setDeleteModal={setDeleteModal}
-        key={item.image}
+        burnModal={burnModal}
+        setBurnModal={setBurnModal}
       />
     )
   })
@@ -216,8 +217,8 @@ const Trades = () => {
       >
         Print item data
       </button>
-      {deleteModal ? (
-        <BurnNFTModal deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
+      {burnModal ? (
+        <BurnNFTModal tokenId={currentTokenId} burnModal={burnModal} setBurnModal={setBurnModal} />
       ) : (
         ''
       )}

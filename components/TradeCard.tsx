@@ -9,8 +9,8 @@ interface CardProps {
   tokenId: number
   name: string
   image: string
-  deleteModal: boolean
-  setDeleteModal: (a: boolean) => void
+  burnModal: boolean
+  setBurnModal: (a: boolean) => void
 }
 
 const TradeCard = (props: CardProps) => {
@@ -77,7 +77,7 @@ const TradeCard = (props: CardProps) => {
             </p> */}
             <span className="flex justify-between">
               {/* <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">Price:0.01 Eth</p> */}
-              <span className="pt-2 cursor-pointer" onClick={() => props.setDeleteModal(true)}>
+              <span className="pt-2 cursor-pointer" onClick={() => props.setBurnModal(true)}>
                 <Image className="mt-4" src={deleteImg} alt="Logo" />
               </span>
             </span>
