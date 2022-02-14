@@ -3,7 +3,6 @@ import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
 import jwtDecode from 'jwt-decode'
 import globalContext from '../context/context'
-import Wallet from '../components/Wallet'
 import { create } from 'ipfs-http-client'
 import { useRouter } from 'next/router'
 

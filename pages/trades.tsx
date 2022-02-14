@@ -1,8 +1,8 @@
 import { useEffect, useState, useContext } from 'react'
 import Web3Modal from 'web3modal'
+import { ethers } from 'ethers'
 import TradeCard from '../components/TradeCard'
 import globalContext from '../context/context'
-import { ethers } from 'ethers'
 import DeleteNFTModal from '../components/DeleteNFTModal'
 
 const Trades = () => {

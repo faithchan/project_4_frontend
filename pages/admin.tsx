@@ -1,5 +1,6 @@
 import { useEffect, useState, useContext } from 'react'
-import Wallet from '../components/Wallet'
+import Web3Modal from 'web3modal'
+import { ethers } from 'ethers'
 import jwtDecode from 'jwt-decode'
 import globalContext from '../context/context'
 import { useRouter } from 'next/router'
@@ -187,6 +188,41 @@ const admin = () => {
     )
   })
 
+  //----------------Initialising Wallet----------------//
+
+  const connectWallet = async () => {
+    if (typeof window.ethereum !== 'undefined') {
+      if (window.ethereum.chainId !== '0x4') {
+        console.log('switch to rinkeby network')
+        changeNetwork()
+      } else {
+        const web3Modal = new Web3Modal()
+        const connection = await web3Modal.connect()
+        const provider = new ethers.providers.Web3Provider(connection)
+        const signer = provider.getSigner()
+        const connectedAddress = await signer.getAddress()
+        context.setSigner(signer)
+        context.setWalletAddress(connectedAddress)
+      }
+    } else {
+      alert('Please install Metamask')
+    }
+  }
+
+  const changeNetwork = async () => {
+    if (!window.ethereum) throw new Error('No crypto wallet found')
+    await window.ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: '0x4' }],
+    })
+  }
+
+  useEffect(() => {
+    if (context.signer === null) {
+      connectWallet()
+    }
+  }, [])
+
   return (
     <div className="flex items-center justify-center mt-10 mb-20">
       <div className="grid w-6/12 md:w-5/12 lg:w-4/12">
@@ -213,7 +249,6 @@ const admin = () => {
             />
           </div>
           <div className="flex items-center justify-center py-5 grid-cols-4">
-            <Wallet setConnected={setConnected} isConnected={connected} />
             <button
               className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto"
               onClick={addToWhitelist}
