@@ -56,7 +56,6 @@ const Layout = ({ children }: { children: any }) => {
   useEffect(() => {
     if (context.signer === null) {
       connectWallet()
-      console.log('wallet connected')
     }
   }, [])
 

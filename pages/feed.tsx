@@ -3,10 +3,7 @@ import FeedCard from '../components/FeedCard'
 import BuyNFTModal from '../components/BuyNFTModal'
 import globalContext from '../context/context'
 import Web3Modal from 'web3modal'
-import { nftaddress, marketplaceaddress } from '../config'
 import { ethers } from 'ethers'
-import NFT from '../contract-abis/NFT.json'
-import Marketplace from '../contract-abis/Marketplace.json'
 
 // should show user's following artists tokens
 // but rendering all listed items first for testing
@@ -26,7 +23,7 @@ const feed = () => {
     setListedItems(listed)
   }
 
-  const fetchAllMetadata = async () => {
+  const fetchItemsMetadata = async () => {
     for (let item of listedItems) {
       const details = {
         isListed: item.isListed,
@@ -56,7 +53,7 @@ const feed = () => {
   }, [context.marketplaceContract])
 
   useEffect(() => {
-    fetchAllMetadata()
+    fetchItemsMetadata()
   }, [listedItems])
 
   const renderCards = tokenData.map((item: any) => {
@@ -111,25 +108,6 @@ const feed = () => {
       console.log('error changing network: ', err.message)
     }
   }
-
-  const initialiseContracts = async () => {
-    if (context.signer != null) {
-      const nftContract = new ethers.Contract(nftaddress, NFT.abi, context.signer)
-      const marketplaceContract = new ethers.Contract(
-        marketplaceaddress,
-        Marketplace.abi,
-        context.signer
-      )
-      context.setNftContract(nftContract)
-      context.setMarketplaceContract(marketplaceContract)
-    }
-  }
-
-  useEffect(() => {
-    if (context.signer !== null) {
-      initialiseContracts()
-    }
-  }, [context.signer])
 
   useEffect(() => {
     if (context.signer === null) {

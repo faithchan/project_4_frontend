@@ -8,6 +8,7 @@ import DeleteNFTModal from '../components/DeleteNFTModal'
 const Trades = () => {
   const context = useContext(globalContext)
   const [tokenData, setTokenData] = useState<any>([])
+  const [itemData, setItemData] = useState<any>([])
   const [ownerTokens, setOwnerTokens] = useState<any>(new Set())
   const [deleteModal, setDeleteModal] = useState(false)
   const [ownedItems, setOwnedItems] = useState<any>([])
@@ -17,7 +18,7 @@ const Trades = () => {
   const [loaded, setLoaded] = useState(false)
 
   const filterItems = () => {
-    console.log('owner tokens: ', ownerTokens)
+    // console.log('owner tokens: ', ownerTokens)
     if (ownerTokens.length === 0) {
       console.log('no tokens in wallet')
       return
@@ -41,7 +42,7 @@ const Trades = () => {
         //   setUnregistered((prev: any) => new Set(prev.add(id)))
         // }
         else {
-          console.log('not handled')
+          // console.log('not handled')
         }
       }
     }
@@ -55,17 +56,22 @@ const Trades = () => {
       if (owner === context.walletAddress) {
         setOwnerTokens((prev: any) => new Set(prev.add(i)))
       } else {
-        console.log('item not owned: ', i)
+        // console.log('item not owned: ', i)
       }
     }
     console.log('total supply', totalSupply)
   }
 
-  const fetchAllMetadata = async () => {
-    let uri
+  const fetchMarketItems = async () => {
+    const owned = await context.marketplaceContract.getItemsOwned()
+    // console.log('items owned: ', owned)
+    setOwnedItems(owned)
+  }
+
+  const fetchTokensMetadata = async () => {
     for (let i of ownerTokens) {
       console.log('set id: ', i)
-      uri = await context.nftContract.tokenURI(i)
+      const uri = await context.nftContract.tokenURI(i)
       const response = await fetch(uri)
       const data = await response.json()
       data.tokenId = i
@@ -73,6 +79,30 @@ const Trades = () => {
       setTokenData((prev: any) => [...prev, data])
     }
     setLoaded(true)
+  }
+
+  const fetchItemsMetadata = async () => {
+    for (let i of listedItems) {
+      const item = await context.marketplaceContract.getItemById(i)
+      console.log('item data: ', item)
+      const details = {
+        isListed: item.isListed,
+        owner: item.owner,
+        price: ethers.utils.formatUnits(item.price.toString(), 'ether'),
+        tokenId: item.tokenId.toNumber(),
+        itemId: item.itemId.toNumber(),
+        name: null,
+        description: null,
+        image: null,
+      }
+      const uri = await context.nftContract.tokenURI(details.tokenId)
+      const response = await fetch(uri)
+      const data = await response.json()
+      details.name = data.name
+      details.description = data.description
+      details.image = data.image
+      setItemData((prev: any) => [...prev, details])
+    }
   }
 
   const renderTokens = tokenData.map((uri: any) => {
@@ -89,12 +119,6 @@ const Trades = () => {
     )
   })
 
-  const fetchMarketItems = async () => {
-    const owned = await context.marketplaceContract.getItemsOwned()
-    console.log('market items: ', owned)
-    setOwnedItems(owned)
-  }
-
   useEffect(() => {
     console.log('trades context: ', context)
     if (context.nftContract && context.marketplaceContract) {
@@ -102,6 +126,10 @@ const Trades = () => {
       fetchMarketItems()
     }
   }, [context.nftContract, context.marketplaceContract])
+
+  useEffect(() => {
+    filterItems()
+  }, [ownerTokens, ownedItems])
 
   //----------------Initialising Wallet----------------//
 
@@ -140,9 +168,9 @@ const Trades = () => {
 
   return (
     <div>
-      <button onClick={filterItems} className="text-white mr-4">
+      {/* <button onClick={filterItems} className="text-white mr-4">
         Filter Items
-      </button>
+      </button> */}
       <button
         onClick={() => {
           console.log('listed items:', listedItems)
@@ -159,16 +187,23 @@ const Trades = () => {
       >
         Print unlisted items
       </button>
+
       <button
         onClick={() => {
-          console.log('unregistered items: ', unregistered)
+          fetchTokensMetadata()
+          fetchItemsMetadata()
         }}
         className="text-white mr-4"
       >
-        Print unregistered items
-      </button>
-      <button onClick={fetchAllMetadata} className="text-white mr-4">
         Fetch Metadata
+      </button>
+      <button
+        onClick={() => {
+          console.log('items data: ', itemData)
+        }}
+        className="text-white mr-4"
+      >
+        Print item data
       </button>
       {deleteModal ? (
         <DeleteNFTModal deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
