@@ -70,7 +70,6 @@ const Trades = () => {
 
   const fetchTokensMetadata = async () => {
     for (let i of ownerTokens) {
-      console.log('set id: ', i)
       const uri = await context.nftContract.tokenURI(i)
       const response = await fetch(uri)
       const data = await response.json()
@@ -115,6 +114,21 @@ const Trades = () => {
         deleteModal={deleteModal}
         setDeleteModal={setDeleteModal}
         key={uri.image}
+      />
+    )
+  })
+
+  const renderItems = itemData.map((item: any) => {
+    // console.log('item: ', item)
+    return (
+      <TradeCard
+        tokenId={item.tokenId}
+        name={item.name}
+        image={item.image}
+        listPrice={item.price}
+        deleteModal={deleteModal}
+        setDeleteModal={setDeleteModal}
+        key={item.image}
       />
     )
   })
@@ -168,9 +182,6 @@ const Trades = () => {
 
   return (
     <div>
-      {/* <button onClick={filterItems} className="text-white mr-4">
-        Filter Items
-      </button> */}
       <button
         onClick={() => {
           console.log('listed items:', listedItems)
@@ -211,7 +222,7 @@ const Trades = () => {
         ''
       )}
       <div className="flex flex-wrap gap-10 justify-center my-20 mx-32">
-        {loaded ? renderTokens : ''}
+        {loaded ? renderItems : ''}
       </div>
     </div>
   )
