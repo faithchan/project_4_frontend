@@ -8,7 +8,7 @@ import { ethers } from 'ethers'
 import NFT from '../contract-abis/NFT.json'
 import Marketplace from '../contract-abis/Marketplace.json'
 
-// SHOULD be user's following artists tokens
+// should show user's following artists tokens
 // but rendering all listed items first for testing
 
 const feed = () => {
@@ -18,7 +18,7 @@ const feed = () => {
   const [tokenData, setTokenData] = useState<any>([])
   const [loaded, setLoaded] = useState(false)
   const [currentItemId, setCurrentItemId] = useState<number>()
-  const [currentPrice, setCurrentPrice] = useState<string>()
+  const [currentPrice, setCurrentPrice] = useState<any>()
 
   const fetchMarketItems = async () => {
     const listed = await context.marketplaceContract.getListedItems()

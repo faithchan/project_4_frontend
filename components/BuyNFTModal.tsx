@@ -33,16 +33,15 @@ const BuyNFTModal = (props: buyProps) => {
 
   return (
     <div
-      className="min-w-screen h-screen animated fadeIn faster  fixed  left-0 top-0 flex justify-center items-center inset-0 z-50 outline-none focus:outline-none bg-no-repeat bg-center bg-cover"
+      className="min-w-screen h-screen animated fadeIn faster fixed left-0 top-0 flex justify-center items-center inset-0 z-50 outline-none focus:outline-none bg-no-repeat bg-center bg-cover"
       id="modal-id"
     >
       <div className="absolute bg-black opacity-80 inset-0 z-0"></div>
-      <div className="w-full  max-w-lg p-5 relative mx-auto my-auto rounded-xl shadow-lg  bg-purple">
+      <div className="w-full max-w-lg p-5 relative mx-auto my-auto rounded-xl shadow-lg bg-purple">
         <form className="" onSubmit={purchaseHandler}>
           <div className="text-center p-5 flex-auto justify-center">
             <p className="text-2xl text-gold font-header px-8">Purchase NFT</p>
           </div>
-
           <div className="flex justify-center px-6 pt-2 pb-4">
             <img
               className="w-56 h-56 object-cover rounded-3xl"

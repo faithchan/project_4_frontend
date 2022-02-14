@@ -3,12 +3,14 @@ import jwtDecode from 'jwt-decode'
 import globalContext from '../context/context'
 import Wallet from '../components/Wallet'
 import { create } from 'ipfs-http-client'
+import { useRouter } from 'next/router'
 
 const url: string | any = 'https://ipfs.infura.io:5001/api/v0'
 const client = create(url)
 
 const UploadNFTForm = () => {
   const context = useContext(globalContext)
+  const router = useRouter()
   const [loggedIn, setLoggedIn] = useState<boolean>(false)
   const [connected, setConnected] = useState<boolean>(false)
   const [fileName, setFileName] = useState('')
@@ -32,6 +34,7 @@ const UploadNFTForm = () => {
         const idNum = id.toNumber()
         console.log('tokenId: ', idNum)
         addTokenToDatabase(idNum)
+        router.push('/trades')
       } else {
         alert('This wallet address is not whitelisted')
         return

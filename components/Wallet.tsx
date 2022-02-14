@@ -16,7 +16,6 @@ const Wallet = (props: WalletProps) => {
 
   const connectWallet = async () => {
     if (typeof window.ethereum !== 'undefined') {
-      console.log('ethereum: ', window.ethereum)
       if (window.ethereum.chainId !== '0x4') {
         console.log('switch to rinkeby network')
         changeNetwork()
@@ -30,7 +29,6 @@ const Wallet = (props: WalletProps) => {
         context.setSigner(signer)
         context.setWalletAddress(connectedAddress)
         props.setConnected(true)
-        localStorage.setItem('signer', signer)
         console.log('signer ', provider)
       }
     } else {
@@ -48,11 +46,6 @@ const Wallet = (props: WalletProps) => {
     } catch (err: any) {
       console.log('error changing network: ', err.message)
     }
-  }
-
-  const retrieveSigner = () => {
-    const provider: any = localStorage.getItem('signer')
-    console.log('retrieved: ', JSON.stringify(provider))
   }
 
   const disconnectWallet = async () => {
@@ -76,10 +69,6 @@ const Wallet = (props: WalletProps) => {
 
   useEffect(() => {
     initialiseContracts()
-  }, [context.signer])
-
-  useEffect(() => {
-    retrieveSigner()
   }, [context.signer])
 
   return (

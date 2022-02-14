@@ -3,6 +3,7 @@ import { ethers } from 'ethers'
 import Web3Modal from 'web3modal'
 import globalContext from '../context/context'
 import { nftaddress } from '../config'
+import { useRouter } from 'next/router'
 
 interface listingProps {
   tokenId: number
@@ -12,6 +13,7 @@ interface listingProps {
 
 const ListNFTToken = (props: listingProps) => {
   const context = useContext(globalContext)
+  const router = useRouter()
   const [showRoyalty, setShowRoyalty] = useState(true)
   const [showList, setShowList] = useState(false)
   const [showContBtn, setShowContBtn] = useState(false)
@@ -28,6 +30,8 @@ const ListNFTToken = (props: listingProps) => {
     if (context.nftContract) {
       const txn = await context.nftContract.setTokenRoyalty(props.tokenId, royaltyAmount)
       console.log('royalty txn: ', txn)
+      setShowRoyalty(false)
+      setShowList(true)
     } else {
       console.log('no contract')
     }
@@ -40,14 +44,13 @@ const ListNFTToken = (props: listingProps) => {
     setRoyaltyAmount(bp)
   }
 
-  const getRoyaltyInfo = async () => {
-    // const price =
-    if (context.nftContract) {
-      const salePrice = ethers.utils.parseUnits(listPrice, 'ether')
-      const info = await context.nftContract.royaltyInfo(props.tokenId, salePrice)
-      console.log('royalty info: ', info)
-    }
-  }
+  // const getRoyaltyInfo = async () => {
+  //   if (context.nftContract) {
+  //     const salePrice = ethers.utils.parseUnits(listPrice, 'ether')
+  //     const info = await context.nftContract.royaltyInfo(props.tokenId, salePrice)
+  //     console.log('royalty info: ', info)
+  //   }
+  // }
 
   //----------------Listing Token----------------//
 
@@ -56,6 +59,12 @@ const ListNFTToken = (props: listingProps) => {
       const salePrice = ethers.utils.parseUnits(listPrice, 'ether')
       console.log(`setting price of ${salePrice} for token ${props.tokenId}`)
       const txn = await context.marketplaceContract.listItem(nftaddress, props.tokenId, salePrice)
+      await txn.wait()
+      setShowList(false)
+      props.setListNFTModal(false)
+      setTimeout(() => {
+        router.push('/feed')
+      }, 1000)
     }
   }
 
@@ -98,18 +107,14 @@ const ListNFTToken = (props: listingProps) => {
 
   const royaltyHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setShowRoyalty(false)
-    setShowList(true)
   }
   const listTokenHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setShowList(false)
-    props.setListNFTModal(false)
   }
 
   return (
     <div
-      className="min-w-screen h-screen animated fadeIn faster  fixed  left-0 top-0 flex justify-center items-center inset-0 z-50 outline-none focus:outline-none bg-no-repeat bg-center bg-cover"
+      className="min-w-screen h-screen animated fadeIn faster fixed  left-0 top-0 flex justify-center items-center inset-0 z-50 outline-none focus:outline-none bg-no-repeat bg-center bg-cover"
       id="modal-id"
     >
       <div className="absolute bg-black opacity-80 inset-0 z-0"></div>
@@ -172,7 +177,6 @@ const ListNFTToken = (props: listingProps) => {
             <div className="text-center p-5 flex-auto justify-center">
               <p className="text-2xl text-gold font-header px-8">Enter Price</p>
             </div>
-
             <div className="px-20">
               <label className="block mb-1 md:text-sm text-xs text-gray-400 font-body">
                 *In Eth
@@ -187,7 +191,6 @@ const ListNFTToken = (props: listingProps) => {
                 onChange={handlePriceInputChange}
               />
             </div>
-
             <div className="p-3 mt-2 text-center space-x-4 md:block">
               <button
                 className="mb-2 md:mb-0 bg-white px-5 py-2 text-xs shadow-sm font-header tracking-wider border text-gold rounded-full hover:shadow-lg hover:bg-gray-100"
