@@ -5,20 +5,21 @@ import Web3Modal from 'web3modal'
 import Static from '../components/Static'
 import Head from 'next/head'
 import jwtDecode from 'jwt-decode'
-import userContext from '../context/context'
+import GlobalContext from '../context/context'
 import { useState, useEffect, useContext } from 'react'
-import ethers from 'ethers'
+import { ethers } from 'ethers'
 import { nftaddress, marketplaceaddress } from '../config'
 import NFT from '../contract-abis/NFT.json'
 import Marketplace from '../contract-abis/Marketplace.json'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const context = useContext(userContext)
+  const context = useContext(GlobalContext)
   const [isDesigner, setDesigner] = useState(false)
   const [walletAddress, setWalletAddress] = useState('0x')
   const [signer, setSigner] = useState(null)
   const [nftContract, setNftContract] = useState()
   const [marketplaceContract, setMarketplaceContract] = useState()
+  const [connected, setConnected] = useState(false)
 
   // console.log('app context: ', context)
 
@@ -44,6 +45,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     )
     context.setNftContract(nftContract)
     context.setMarketplaceContract(marketplaceContract)
+    console.log('nftcontract: ', nftContract)
   }
 
   const connectWallet = async () => {
@@ -59,6 +61,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         const connectedAddress = await signer.getAddress()
         context.setSigner(signer)
         context.setWalletAddress(connectedAddress)
+        setConnected(true)
       }
     } else {
       alert('Please install Metamask')
@@ -78,41 +81,37 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   // useEffect(() => {
   //   if (context.signer === null) {
-  //     console.log('connecting wallet')
   //     connectWallet()
-  //   } else {
-  //     console.log('nil')
+  //     console.log('wallet connected')
+  //     console.log('conected: ', connected)
+  //   }
+  // }, [connected])
+
+  // useEffect(() => {
+  //   if (connected) {
+  //     console.log('initialising contracts')
+  //     initialiseContracts()
+  //   }
+  // }, [connected])
+
+  // useEffect(() => {
+  //   let token = localStorage.getItem('token')
+  //   let tempToken: any = token
+  //   if (tempToken) {
+  //     let decodedToken: any = jwtDecode(tempToken)
   //   }
   // }, [])
 
-  // useEffect(() => {
-  //   if (context.signer !== null) {
-  //     console.log('initialising contracts')
-  //     initialiseContracts()
-  //   } else {
-  //     console.log('app.tsx: no signer')
-  //   }
-  // }, [context])
-
-  useEffect(() => {
-    let token = localStorage.getItem('token')
-    let tempToken: any = token
-    if (tempToken) {
-      let decodedToken: any = jwtDecode(tempToken)
-    }
-  }, [])
-
   return (
     <div>
-      <userContext.Provider value={userLoginData}>
+      <GlobalContext.Provider value={userLoginData}>
         <Head>
           <title>ARKIV</title>
         </Head>
         <Static>
           <Component {...pageProps} />
         </Static>
-        {}
-      </userContext.Provider>
+      </GlobalContext.Provider>
     </div>
   )
 }
