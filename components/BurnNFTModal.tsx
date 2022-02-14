@@ -10,16 +10,18 @@ const BurnNFTModal = (props: deleteProps) => {
   const context = useContext(globalContext)
   console.log('burn modal props: ', props)
 
-  const burnToken = async (tokenId: number) => {
+  const burnToken = async () => {
     if (context.nftContract) {
-      const owner = await context.nftContract.ownerOf(tokenId)
-      const creator = await context.nftContract.tokenCreator(tokenId)
+      const owner = await context.nftContract.ownerOf(props.tokenId)
+      const creator = await context.nftContract.tokenCreator(props.tokenId)
       if (owner !== context.walletAddress || creator !== context.walletAddress) {
         alert('You do not have the permission to burn this token')
         return
       } else {
-        console.log(`burning token ${tokenId}...`)
-        await context.nftContract.burn(tokenId)
+        console.log(`burning token ${props.tokenId}...`)
+        const txn = await context.nftContract.burn(props.tokenId)
+        await txn.wait()
+        props.setBurnModal(false)
         console.log('token burned')
       }
     } else {
@@ -73,7 +75,7 @@ const BurnNFTModal = (props: deleteProps) => {
             </button>
             <button
               className="mb-2 md:mb-0 bg-red-500 border border-red-500 px-5 py-2 text-sm shadow-sm font-header tracking-wider text-white rounded-full hover:shadow-lg hover:bg-red-600"
-              onClick={() => props.setBurnModal(false)}
+              onClick={burnToken}
             >
               Delete
             </button>

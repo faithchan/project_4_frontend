@@ -115,6 +115,7 @@ const Trades = () => {
         listPrice={uri.listPrice}
         burnModal={burnModal}
         setBurnModal={setBurnModal}
+        setCurrentTokenId={setCurrentTokenId}
       />
     )
   })
@@ -130,6 +131,7 @@ const Trades = () => {
         listPrice={item.price}
         burnModal={burnModal}
         setBurnModal={setBurnModal}
+        setCurrentTokenId={setCurrentTokenId}
       />
     )
   })

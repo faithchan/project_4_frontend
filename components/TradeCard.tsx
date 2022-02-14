@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import deleteImg from '../public/delete.svg'
 import Image from 'next/image'
 import ListNFTToken from './ListNFTToken'
@@ -11,12 +11,17 @@ interface CardProps {
   image: string
   burnModal: boolean
   setBurnModal: (a: boolean) => void
+  setCurrentTokenId: (a: number) => void
 }
 
 const TradeCard = (props: CardProps) => {
   const context = useContext(globalContext)
   const [ListNFTModal, setListNFTModal] = useState(false)
   console.log('trade cards props:', props)
+
+  useEffect(() => {
+    props.setCurrentTokenId(props.tokenId)
+  })
 
   return (
     <div>
