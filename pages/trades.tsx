@@ -2,10 +2,7 @@ import { useEffect, useState, useContext } from 'react'
 import Web3Modal from 'web3modal'
 import TradeCard from '../components/TradeCard'
 import globalContext from '../context/context'
-import { nftaddress, marketplaceaddress } from '../config'
 import { ethers } from 'ethers'
-import NFT from '../contract-abis/NFT.json'
-import Marketplace from '../contract-abis/Marketplace.json'
 import DeleteNFTModal from '../components/DeleteNFTModal'
 
 const Trades = () => {
@@ -14,9 +11,9 @@ const Trades = () => {
   const [ownerTokens, setOwnerTokens] = useState<any>(new Set())
   const [deleteModal, setDeleteModal] = useState(false)
   const [ownedItems, setOwnedItems] = useState<any>([])
-  const [listedItems, setListedItems] = useState<any>([]) // items
-  const [notListed, setNotListed] = useState<any>([]) // items
-  const [unregistered, setUnregistered] = useState<any>([]) // tokenIds
+  const [listedItems, setListedItems] = useState<any>(new Set()) // itemIds
+  const [notListed, setNotListed] = useState<any>(new Set()) // itemsIds
+  const [unregistered, setUnregistered] = useState<any>(new Set()) // tokenIds
   const [loaded, setLoaded] = useState(false)
 
   const filterItems = () => {
@@ -36,12 +33,14 @@ const Trades = () => {
         const tokenId = item.tokenId.toString()
         // console.log('current item: ', tokenId === id.toString())
         if (tokenId === id.toString() && item.isListed === true) {
-          setListedItems((prevArray: any) => [...prevArray, item])
+          setListedItems((prev: any) => new Set(prev.add(item.itemId)))
         } else if (tokenId === id.toString() && item.isListed === false) {
-          setNotListed((prevArray: any) => [...prevArray, item])
-        } else if (tokenId !== id.toString()) {
-          setUnregistered((prevArray: any) => [...prevArray, id])
-        } else {
+          setNotListed((prev: any) => new Set(prev.add(item.itemId)))
+        }
+        //  else if (tokenId !== id.toString()) {
+        //   setUnregistered((prev: any) => new Set(prev.add(id)))
+        // }
+        else {
           console.log('not handled')
         }
       }
@@ -76,7 +75,7 @@ const Trades = () => {
     setLoaded(true)
   }
 
-  const renderCards = tokenData.map((uri: any) => {
+  const renderTokens = tokenData.map((uri: any) => {
     return (
       <TradeCard
         tokenId={uri.tokenId}
@@ -92,7 +91,7 @@ const Trades = () => {
 
   const fetchMarketItems = async () => {
     const owned = await context.marketplaceContract.getItemsOwned()
-    console.log('market items: ', owned[0])
+    console.log('market items: ', owned)
     setOwnedItems(owned)
   }
 
@@ -126,35 +125,12 @@ const Trades = () => {
   }
 
   const changeNetwork = async () => {
-    try {
-      if (!window.ethereum) throw new Error('No crypto wallet found')
-      await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: '0x4' }],
-      })
-    } catch (err: any) {
-      console.log('error changing network: ', err.message)
-    }
+    if (!window.ethereum) throw new Error('No crypto wallet found')
+    await window.ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: '0x4' }],
+    })
   }
-
-  const initialiseContracts = async () => {
-    if (context.signer != null) {
-      const nftContract = new ethers.Contract(nftaddress, NFT.abi, context.signer)
-      const marketplaceContract = new ethers.Contract(
-        marketplaceaddress,
-        Marketplace.abi,
-        context.signer
-      )
-      context.setNftContract(nftContract)
-      context.setMarketplaceContract(marketplaceContract)
-    }
-  }
-
-  useEffect(() => {
-    if (context.signer !== null) {
-      initialiseContracts()
-    }
-  }, [context.signer])
 
   useEffect(() => {
     if (context.signer === null) {
@@ -167,6 +143,30 @@ const Trades = () => {
       <button onClick={filterItems} className="text-white mr-4">
         Filter Items
       </button>
+      <button
+        onClick={() => {
+          console.log('listed items:', listedItems)
+        }}
+        className="text-white mr-4"
+      >
+        Print listed items
+      </button>
+      <button
+        onClick={() => {
+          console.log('unlisted items: ', notListed)
+        }}
+        className="text-white mr-4"
+      >
+        Print unlisted items
+      </button>
+      <button
+        onClick={() => {
+          console.log('unregistered items: ', unregistered)
+        }}
+        className="text-white mr-4"
+      >
+        Print unregistered items
+      </button>
       <button onClick={fetchAllMetadata} className="text-white mr-4">
         Fetch Metadata
       </button>
@@ -176,7 +176,7 @@ const Trades = () => {
         ''
       )}
       <div className="flex flex-wrap gap-10 justify-center my-20 mx-32">
-        {loaded ? renderCards : ''}
+        {loaded ? renderTokens : ''}
       </div>
     </div>
   )

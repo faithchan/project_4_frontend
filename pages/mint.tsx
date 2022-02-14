@@ -17,9 +17,7 @@ const uploadnft = () => {
 
   return (
     <div>
-      <h1 className="text-center mt-28 font-header tracking-widest text-gold text-2xl">
-        UPLOAD NFT
-      </h1>
+      <h1 className="text-center mt-28 font-header tracking-widest text-gold text-2xl">Mint NFT</h1>
       <MintNFTForm />
     </div>
   )
