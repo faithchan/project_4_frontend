@@ -3,7 +3,7 @@ import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
 import TradeCard from '../components/TradeCard'
 import globalContext from '../context/context'
-import DeleteNFTModal from '../components/DeleteNFTModal'
+import BurnNFTModal from '../components/BurnNFTModal'
 
 const Trades = () => {
   const context = useContext(globalContext)
@@ -217,7 +217,7 @@ const Trades = () => {
         Print item data
       </button>
       {deleteModal ? (
-        <DeleteNFTModal deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
+        <BurnNFTModal deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
       ) : (
         ''
       )}

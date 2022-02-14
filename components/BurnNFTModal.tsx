@@ -5,7 +5,7 @@ interface deleteProps {
   deleteModal: boolean
   setDeleteModal: (a: boolean) => void
 }
-const DeleteNFTModal = (props: deleteProps) => {
+const BurnNFTModal = (props: deleteProps) => {
   const context = useContext(globalContext)
 
   const burnToken = async (tokenId: number) => {
@@ -82,4 +82,4 @@ const DeleteNFTModal = (props: deleteProps) => {
   )
 }
 
-export default DeleteNFTModal
+export default BurnNFTModal
