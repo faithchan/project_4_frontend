@@ -36,6 +36,10 @@ const TradeCard = (props: CardProps) => {
     console.log('delisted item: ', receipt)
   }
 
+  const shortenAddress = (str: any) => {
+    return str.substring(0, 4) + '...' + str.substring(str.length - 2)
+  }
+
   useEffect(() => {
     if (context.nftContract) {
       checkIfHolderIsCreator()
@@ -99,7 +103,9 @@ const TradeCard = (props: CardProps) => {
               </span>
             </span>
             <p className="text-gold text-sm font-header tracking-widest mt-2">Owned by</p>
-            <p className="text-gold text-xs font-header tracking-widest mt-2">RACHEL LEE</p>
+            <p className="text-gold text-xs font-header tracking-widest mt-2">
+              {shortenAddress(context.walletAddress)}
+            </p>
             {/* <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">
               Bought on 12 Feb 2021
             </p> */}
