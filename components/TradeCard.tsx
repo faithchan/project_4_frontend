@@ -3,6 +3,7 @@ import deleteImg from '../public/delete.svg'
 import Image from 'next/image'
 import ListNFTToken from './ListNFTToken'
 import globalContext from '../context/context'
+import { useRouter } from 'next/router'
 
 interface CardProps {
   listPrice: number
@@ -18,10 +19,12 @@ interface CardProps {
 
 const TradeCard = (props: CardProps) => {
   const context = useContext(globalContext)
+  const router = useRouter()
   const [ListNFTModal, setListNFTModal] = useState(false)
   const [creator, setCreator] = useState() // creator's wallet address
   const [isCreator, setIsCreater] = useState<boolean>(false) // checks if current token holder is creator
   const [creatorProfile, setCreatorProfile] = useState<any>()
+  const [profileLoaded, setProfileLoaded] = useState<boolean>(false)
 
   const defaultAvatar =
     'https://bafkreigj5xab3lrgu7nty4r2sqwbfqkudeed7pz2w7fvajnflgphyw6nlu.ipfs.infura-ipfs.io/'
@@ -67,8 +70,9 @@ const TradeCard = (props: CardProps) => {
   //   console.log('creator profile: ', creatorProfile)
   // }, [creatorProfile])
 
-  useEffect(() => {
-    fetchCreatorInfo()
+  useEffect(async () => {
+    await fetchCreatorInfo()
+    setProfileLoaded(true)
   }, [creator])
 
   useEffect(() => {
@@ -116,17 +120,17 @@ const TradeCard = (props: CardProps) => {
             <span className="flex space-x-4 mr-6">
               <img
                 className="w-16 h-16 object-cover rounded-full mr-4 mt-6 mb-4"
-                // src={creatorProfile ? creatorProfile[0].avatar : defaultAvatar}
+                // src={profileLoaded ? creatorProfile[0].avatar : defaultAvatar}
                 alt=""
               />
               <span className="my-auto">
                 <p className="text-center text-gold font-header text-xs tracking-widest">
-                  {/* {creatorProfile ? creatorProfile[0].username : '-'} */}
+                  {/* {profileLoaded ? creatorProfile[0].username : '-'} */}
                 </p>
                 <hr className="border-gold border my-2"></hr>
                 <p
                   className="text-center text-white font-body text-xs tracking-widest"
-                  onClick={fetchCreatorInfo}
+                  onClick={() => router.push(`/${creatorProfile.username}`)}
                 >
                   View Profile
                 </p>
