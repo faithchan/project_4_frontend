@@ -20,13 +20,8 @@ const SignUpForm = () => {
     register,
     handleSubmit,
     setValue,
-    getFieldState,
     formState: { errors },
   } = useForm<FormData>()
-
-  const viewAddress = async () => {
-    console.log(getFieldState('walletAddress'))
-  }
 
   const onSubmit = async (data: any) => {
     console.log('data: ', data)
@@ -42,6 +37,8 @@ const SignUpForm = () => {
       console.log('response:', res)
       if (res.status === 200) {
         router.push('/login')
+      } else {
+        alert('error signing up')
       }
     } catch (err) {
       console.log(err)
@@ -76,6 +73,12 @@ const SignUpForm = () => {
     return false
   }
 
+  function validateEmail(email: any) {
+    const re =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    return re.test(String(email).toLowerCase())
+  }
+
   return (
     <div className="flex justify-center items-center w-full  mt-4 mb-32">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -98,8 +101,11 @@ const SignUpForm = () => {
                 <input
                   type="text"
                   className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
-                  {...register('email', { required: true })}
+                  {...register('email', { required: true, validate: validateEmail })}
                 />
+                {errors.email && errors.email.type === 'validate' && (
+                  <div className="text-white">Please enter a valid email address</div>
+                )}
               </div>
               <div>
                 <label className="block mb-1 md:text-sm text-xs text-white font-body">
@@ -122,7 +128,7 @@ const SignUpForm = () => {
                   {...register('walletAddress', { required: true, validate: validateAddress })}
                 />
                 {errors.walletAddress && errors.walletAddress.type === 'validate' && (
-                  <div className="text-white">Please enter a valid address</div>
+                  <div className="text-white">Please enter a valid wallet address</div>
                 )}
               </div>
               <div className="">
