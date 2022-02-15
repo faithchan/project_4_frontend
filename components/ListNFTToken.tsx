@@ -118,7 +118,7 @@ const ListNFTToken = (props: listingProps) => {
       id="modal-id"
     >
       <div className="absolute bg-black opacity-80 inset-0 z-0"></div>
-      <div className="w-full  max-w-lg p-5 relative mx-auto my-auto rounded-xl shadow-lg  bg-white">
+      <div className="w-full  max-w-lg p-5 relative mx-auto my-auto rounded-xl shadow-lg  bg-purple">
         {showRoyalty ? (
           <form className="" onSubmit={royaltyHandler}>
             <div className="text-center p-5 flex-auto justify-center">

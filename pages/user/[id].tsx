@@ -1,8 +1,12 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { useRouter } from 'next/router'
 import UserNFTCard from '../../components/UserNFTCard'
+import Image from 'next/image'
+
 
 const Username = () => {
+      //NEED TO REFACTOR VERIFIED - Need to check if user is verified designer by jwt or global context!!
+    const [verified, setVerified]=useState(true)
     const router = useRouter()
     const { id } = router.query
   
@@ -18,7 +22,7 @@ const Username = () => {
                   src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"
                 ></img>
               </div>
-              <p className="text-gold text-2xl font-header mt-8">{id}</p>
+              <p className="text-gold text-2xl font-header mt-8">{id}{verified?<Image src="/verified.svg" width={38} height={38}alt="Logo"></Image>:""}</p>
               <span className="text-sm text-gray-300 mt-2 font-body">
                 New York, NY - Los Angeles, CA
               </span>

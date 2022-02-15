@@ -1,10 +1,17 @@
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
+import verifiedImg from "../public/verified.svg"
+import ViewNFTCard from '../components/ViewNFTCard'
 
 // fetch tokens from currently logged in and connected wallet addresses
 
 const profile = () => {
+  //NEED TO REFACTOR VERIFIED - Need to check if user is verified designer by jwt or global context!!
+  const [verified, setVerified]=useState(true)
   const [tokensOwned, setTokensOwned] = useState([])
+  const [tokensCreated, setTokensCreated] = useState([])
+  const [viewNFTModal, setViewNFTModal]=useState(false)
+
 
   const getOwnedTokens = async () => {}
 
@@ -14,6 +21,7 @@ const profile = () => {
 
   return (
     <div>
+      <ViewNFTCard viewNFTModal={viewNFTModal} setViewNFTModal={setViewNFTModal}/>
       <div className="max-w-2xl mx-auto mt-10">
         <div className="px-3 py-2">
           <div className="flex flex-col gap-1 text-center">
@@ -23,7 +31,7 @@ const profile = () => {
                 src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"
               ></img>
             </div>
-            <p className="text-gold text-2xl font-header mt-8">Marina Davinchi</p>
+            <p className="text-gold text-2xl font-header mt-8">Marina Davinchi{verified?<Image src={verifiedImg} alt="Logo"></Image>:""}</p>
             <span className="text-sm text-gray-300 mt-2 font-body">
               New York, NY - Los Angeles, CA
             </span>
@@ -63,29 +71,10 @@ const profile = () => {
           </div>
           <div className="grid grid-cols-3 gap-6 mt-3 mb-6">
             <img
-              className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg"
-              src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"
+              className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg cursor-pointer"
+              src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe" onClick={()=>setViewNFTModal(true)}
             ></img>
-            <img
-              className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg"
-              src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"
-            ></img>
-            <img
-              className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg"
-              src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"
-            ></img>
-            <img
-              className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg"
-              src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"
-            ></img>
-            <img
-              className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg"
-              src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"
-            ></img>
-            <img
-              className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg"
-              src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"
-            ></img>
+           
           </div>
         </div>
       </div>
