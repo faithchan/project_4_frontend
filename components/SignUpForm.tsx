@@ -21,7 +21,12 @@ const SignUpForm = () => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<FormData>()
+  } = useForm<FormData>({
+    defaultValues: {
+      avatar:
+        'https://bafkreigj5xab3lrgu7nty4r2sqwbfqkudeed7pz2w7fvajnflgphyw6nlu.ipfs.infura-ipfs.io/',
+    },
+  })
 
   const onSubmit = async (data: any) => {
     console.log('data: ', data)
@@ -35,10 +40,15 @@ const SignUpForm = () => {
       })
       const res = await response.json()
       console.log('response:', res)
-      if (res.status === 200) {
-        router.push('/login')
-      } else {
-        alert('error signing up')
+      const { username, email, walletAddress } = res.keyValue
+      if (username) {
+        alert('Username already registered')
+      }
+      if (email) {
+        alert('Email already registered')
+      }
+      if (walletAddress) {
+        alert('Wallet address already registered')
       }
     } catch (err) {
       console.log(err)
@@ -56,7 +66,6 @@ const SignUpForm = () => {
           hashAlg: 'sha2-256',
         }
       )
-      console.log('cid: ', cid)
       const url = `https://ipfs.infura.io/ipfs/${cid}`
       console.log('ipfs url: ', url)
       setValue('avatar', url)
