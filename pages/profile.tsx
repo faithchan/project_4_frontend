@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import verifiedImg from "../public/verified.svg"
+import ViewNFTCard from '../components/ViewNFTCard'
 
 const currentUser = '0x3eb9c5b92cb655f2769b5718d33f72e23b807d24'
 
@@ -9,6 +10,7 @@ const profile = () => {
   const [verified, setVerified]=useState(true)
   const [tokensOwned, setTokensOwned] = useState([])
   const [tokensCreated, setTokensCreated] = useState([])
+  const [viewNFTModal, setViewNFTModal]=useState(false)
 
   const getOwnedTokens = async () => {}
 
@@ -21,6 +23,7 @@ const profile = () => {
 
   return (
     <div>
+      <ViewNFTCard viewNFTModal={viewNFTModal} setViewNFTModal={setViewNFTModal}/>
       <div className="max-w-2xl mx-auto mt-10">
         <div className="px-3 py-2">
           <div className="flex flex-col gap-1 text-center">
@@ -72,29 +75,10 @@ const profile = () => {
 
           <div className="grid grid-cols-3 gap-6 mt-3 mb-6">
             <img
-              className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg"
-              src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"
+              className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg cursor-pointer"
+              src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe" onClick={()=>setViewNFTModal(true)}
             ></img>
-            <img
-              className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg"
-              src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"
-            ></img>
-            <img
-              className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg"
-              src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"
-            ></img>
-            <img
-              className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg"
-              src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"
-            ></img>
-            <img
-              className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg"
-              src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"
-            ></img>
-            <img
-              className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg"
-              src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"
-            ></img>
+           
           </div>
         </div>
       </div>
