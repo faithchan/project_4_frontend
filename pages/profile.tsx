@@ -1,9 +1,12 @@
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
+import verifiedImg from "../public/verified.svg"
 
 const currentUser = '0x3eb9c5b92cb655f2769b5718d33f72e23b807d24'
 
 const profile = () => {
+  //NEED TO REFACTOR VERIFIED - Need to check if user is verified designer by jwt or global context!!
+  const [verified, setVerified]=useState(true)
   const [tokensOwned, setTokensOwned] = useState([])
   const [tokensCreated, setTokensCreated] = useState([])
 
@@ -27,7 +30,7 @@ const profile = () => {
                 src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"
               ></img>
             </div>
-            <p className="text-gold text-2xl font-header mt-8">Marina Davinchi</p>
+            <p className="text-gold text-2xl font-header mt-8">Marina Davinchi{verified?<Image src={verifiedImg} alt="Logo"></Image>:""}</p>
             <span className="text-sm text-gray-300 mt-2 font-body">
               New York, NY - Los Angeles, CA
             </span>
