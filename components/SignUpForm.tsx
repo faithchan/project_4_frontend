@@ -117,9 +117,13 @@ const SignUpForm = () => {
                 </label>
                 <input
                   type="text"
+                  id="walletAddress"
                   className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
-                  {...register('walletAddress', { required: true })}
+                  {...register('walletAddress', { required: true, validate: validateAddress })}
                 />
+                {errors.walletAddress && errors.walletAddress.type === 'validate' && (
+                  <div className="text-white">Please enter a valid address</div>
+                )}
               </div>
               <div className="">
                 <label className="md:text-sm text-xs text-white font-body tracking-wider">
