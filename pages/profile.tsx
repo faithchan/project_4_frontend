@@ -1,19 +1,15 @@
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
-const currentUser = '0x3eb9c5b92cb655f2769b5718d33f72e23b807d24'
+// fetch tokens from currently logged in and connected wallet addresses
 
 const profile = () => {
   const [tokensOwned, setTokensOwned] = useState([])
-  const [tokensCreated, setTokensCreated] = useState([])
 
   const getOwnedTokens = async () => {}
 
-  const getCreatedTokens = async () => {}
-
   useEffect(() => {
     getOwnedTokens()
-    // getCreatedTokens()
   }, [])
 
   return (
@@ -47,7 +43,6 @@ const profile = () => {
               <span className="text-gray-300 font-body">Following</span>
             </div>
           </div>
-
           <div className="flex justify-between items-center">
             <button className="w-full py-4">
               <svg
@@ -66,7 +61,6 @@ const profile = () => {
               </svg>
             </button>
           </div>
-
           <div className="grid grid-cols-3 gap-6 mt-3 mb-6">
             <img
               className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg"

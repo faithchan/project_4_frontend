@@ -1,76 +1,190 @@
 import { useEffect, useState, useContext } from 'react'
 import Web3Modal from 'web3modal'
+import { ethers } from 'ethers'
 import TradeCard from '../components/TradeCard'
 import globalContext from '../context/context'
-import { nftaddress, marketplaceaddress } from '../config'
-import { ethers } from 'ethers'
-import NFT from '../contract-abis/NFT.json'
-import Marketplace from '../contract-abis/Marketplace.json'
-import DeleteNFTModal from '../components/DeleteNFTModal'
+import BurnNFTModal from '../components/BurnNFTModal'
 
 const Trades = () => {
   const context = useContext(globalContext)
-  const [tokenURIs, setTokenURIs] = useState<any>([])
-  const [ownerTokens, setOwnerTokens] = useState<any>([])
-  const [deleteModal, setDeleteModal] = useState(false)
-  const [ownedItems, setOwnedItems] = useState<any>()
-  const [listedItems, setListedItems] = useState<any>()
-  const [finalItems, setFinalItems] = useState<any>()
-  const [notRegistered, setNotRegistered] = useState<any>()
+  const [tokenData, setTokenData] = useState<any>([])
+  const [listedItemData, setListedItemData] = useState<any>([])
+  const [unlistedItemData, setUnlistedItemData] = useState<any>([])
+  const [ownerTokens, setOwnerTokens] = useState<any>(new Set())
+  const [burnModal, setBurnModal] = useState(false)
+  const [ownedItems, setOwnedItems] = useState<any>([])
+  const [listedItems, setListedItems] = useState<any>(new Set()) // itemIds
+  const [notListed, setNotListed] = useState<any>(new Set()) // itemsIds
+  const [unregistered, setUnregistered] = useState<any>(new Set()) // tokenIds
+  const [loaded, setLoaded] = useState(false)
+  const [currentTokenId, setCurrentTokenId] = useState<any>()
 
-  // console.log('trades context: ', context)
-
-  const getFinalItems = () => {
+  const filterItems = () => {
+    // console.log('owner tokens: ', ownerTokens)
+    if (ownerTokens.length === 0) {
+      console.log('no tokens in wallet')
+      return
+    }
     if (ownedItems.length === 0) {
-      console.log('no items registered on marketplace')
-      setFinalItems(ownerTokens)
-    } else {
-      for (let token in ownerTokens) {
-        console.log('iterating: ', token)
-        for (let item in ownedItems) {
-          if (item.tokenId !== token) {
-            console.log(item)
-            setNotRegistered([...notRegistered, item])
-          } else {
-          }
+      setUnregistered(ownerTokens)
+      console.log('no items owned in marketplace')
+      return
+    }
+    setUnregistered(ownerTokens)
+    for (let id of ownerTokens) {
+      for (let item of ownedItems) {
+        const tokenId = item.tokenId.toString()
+        if (tokenId === id.toString() && item.isListed === true) {
+          setListedItems((prev: any) => new Set(prev.add(item.itemId)))
+          setUnregistered((prev: any) => new Set([...prev].filter((x) => x !== id)))
+        } else if (tokenId === id.toString() && item.isListed === false) {
+          setNotListed((prev: any) => new Set(prev.add(item.itemId)))
+          setUnregistered((prev: any) => new Set([...prev].filter((x) => x !== id)))
         }
       }
     }
+    return
   }
 
   const fetchNFTsOwned = async () => {
     const totalSupply = await context.nftContract.totalSupply()
-    console.log('total supply', totalSupply)
     for (let i = 0; i < totalSupply; i++) {
       const owner = await context.nftContract.ownerOf(i)
       if (owner === context.walletAddress) {
-        setOwnerTokens([...ownerTokens, i])
+        setOwnerTokens((prev: any) => new Set(prev.add(i)))
       }
     }
-  }
-
-  const fetchNFTData = async () => {
-    let uri
-    for (let i in finalItems) {
-      try {
-        uri = await context.nftContract.tokenURI(i)
-      } catch (err) {
-        console.log(err)
-      }
-      const response = await fetch(uri)
-      if (!response.ok) throw new Error(response.statusText)
-      const data = await response.json()
-      console.log('data: ', data)
-      setTokenURIs([...tokenURIs, data])
-    }
+    console.log('total supply', totalSupply)
   }
 
   const fetchMarketItems = async () => {
     const owned = await context.marketplaceContract.getItemsOwned()
-    const listed = await context.marketplaceContract.getListedItems()
     setOwnedItems(owned)
-    setListedItems(listed)
   }
+
+  const fetchTokensMetadata = async () => {
+    for (let i of unregistered) {
+      const uri = await context.nftContract.tokenURI(i)
+      const response = await fetch(uri)
+      const data = await response.json()
+      data.tokenId = i
+      data.listPrice = 0
+      setTokenData((prev: any) => [...prev, data])
+    }
+  }
+
+  const fetchListedItemsMetadata = async () => {
+    for (let i of listedItems) {
+      const item = await context.marketplaceContract.getItemById(i)
+      console.log('item data: ', item)
+      const details = {
+        isListed: item.isListed,
+        owner: item.owner,
+        price: ethers.utils.formatUnits(item.price.toString(), 'ether'),
+        tokenId: item.tokenId.toNumber(),
+        itemId: item.itemId.toNumber(),
+        name: null,
+        description: null,
+        image: null,
+      }
+      const uri = await context.nftContract.tokenURI(details.tokenId)
+      const response = await fetch(uri)
+      const data = await response.json()
+      details.name = data.name
+      details.description = data.description
+      details.image = data.image
+      setListedItemData((prev: any) => [...prev, details])
+    }
+  }
+
+  const fetchUnlistedItemsMetadata = async () => {
+    for (let i of notListed) {
+      const item = await context.marketplaceContract.getItemById(i)
+      console.log('item data: ', item)
+      const details = {
+        isListed: item.isListed,
+        owner: item.owner,
+        price: ethers.utils.formatUnits(item.price.toString(), 'ether'),
+        tokenId: item.tokenId.toNumber(),
+        itemId: item.itemId.toNumber(),
+        name: null,
+        description: null,
+        image: null,
+      }
+      const uri = await context.nftContract.tokenURI(details.tokenId)
+      const response = await fetch(uri)
+      const data = await response.json()
+      details.name = data.name
+      details.description = data.description
+      details.image = data.image
+      setUnlistedItemData((prev: any) => [...prev, details])
+    }
+    setLoaded(true)
+  }
+
+  const renderListedItems = listedItemData.map((item: any) => {
+    return (
+      <TradeCard
+        key={item.image}
+        tokenId={item.tokenId}
+        itemId={item.itemId}
+        name={item.name}
+        image={item.image}
+        listPrice={item.price}
+        isListed={item.isListed}
+        burnModal={burnModal}
+        setBurnModal={setBurnModal}
+        setCurrentTokenId={setCurrentTokenId}
+      />
+    )
+  })
+
+  const renderUnlistedItems = unlistedItemData.map((item: any) => {
+    return (
+      <TradeCard
+        key={item.image}
+        tokenId={item.tokenId}
+        itemId={item.itemId}
+        name={item.name}
+        image={item.image}
+        listPrice={item.price}
+        isListed={item.isListed}
+        burnModal={burnModal}
+        setBurnModal={setBurnModal}
+        setCurrentTokenId={setCurrentTokenId}
+      />
+    )
+  })
+
+  const renderTokens = tokenData.map((uri: any) => {
+    return (
+      <TradeCard
+        key={uri.image}
+        tokenId={uri.tokenId}
+        itemId={null}
+        name={uri.name}
+        image={uri.image}
+        listPrice={uri.listPrice}
+        isListed={false}
+        burnModal={burnModal}
+        setBurnModal={setBurnModal}
+        setCurrentTokenId={setCurrentTokenId}
+      />
+    )
+  })
+
+  useEffect(() => {
+    if (context.nftContract && context.marketplaceContract) {
+      fetchNFTsOwned()
+      fetchMarketItems()
+    }
+  }, [context.nftContract, context.marketplaceContract])
+
+  useEffect(() => {
+    filterItems()
+  }, [ownerTokens, ownedItems])
+
+  //----------------Initialising Wallet----------------//
 
   const connectWallet = async () => {
     if (typeof window.ethereum !== 'undefined') {
@@ -92,48 +206,12 @@ const Trades = () => {
   }
 
   const changeNetwork = async () => {
-    try {
-      if (!window.ethereum) throw new Error('No crypto wallet found')
-      await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: '0x4' }],
-      })
-    } catch (err: any) {
-      console.log('error changing network: ', err.message)
-    }
+    if (!window.ethereum) throw new Error('No crypto wallet found')
+    await window.ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: '0x4' }],
+    })
   }
-
-  const initialiseContracts = async () => {
-    if (context.signer != null) {
-      const nftContract = new ethers.Contract(nftaddress, NFT.abi, context.signer)
-      const marketplaceContract = new ethers.Contract(
-        marketplaceaddress,
-        Marketplace.abi,
-        context.signer
-      )
-      context.setNftContract(nftContract)
-      context.setMarketplaceContract(marketplaceContract)
-    }
-  }
-
-  // useEffect(() => {
-  //   getFinalItems()
-  // }, [ownerTokens])
-
-  useEffect(() => {
-    if (context.nftContract) {
-      fetchNFTsOwned()
-      fetchMarketItems()
-    }
-  }, [context.nftContract])
-
-  useEffect(() => {
-    if (context.signer !== null) {
-      initialiseContracts()
-    } else {
-      console.log('no signer')
-    }
-  }, [context.signer])
 
   useEffect(() => {
     if (context.signer === null) {
@@ -142,17 +220,50 @@ const Trades = () => {
   }, [])
 
   return (
-    <div className="">
-      {deleteModal ? (
-        <DeleteNFTModal deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
+    <div>
+      <button
+        onClick={() => {
+          console.log('listed items:', listedItems)
+        }}
+        className="text-white mr-4"
+      >
+        Listed items
+      </button>
+      <button
+        onClick={() => {
+          console.log('unlisted items: ', notListed)
+        }}
+        className="text-white mr-4"
+      >
+        Unlisted items
+      </button>
+      <button
+        onClick={() => {
+          console.log('unregistered items: ', unregistered)
+        }}
+        className="text-white mr-4"
+      >
+        Unregistered items
+      </button>
+      <button
+        onClick={() => {
+          fetchTokensMetadata()
+          fetchListedItemsMetadata()
+          fetchUnlistedItemsMetadata()
+        }}
+        className="text-white mr-4"
+      >
+        Fetch Metadata
+      </button>
+      {burnModal ? (
+        <BurnNFTModal tokenId={currentTokenId} burnModal={burnModal} setBurnModal={setBurnModal} />
       ) : (
         ''
       )}
       <div className="flex flex-wrap gap-10 justify-center my-20 mx-32">
-        <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
-        <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
-        <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
-        <TradeCard deleteModal={deleteModal} setDeleteModal={setDeleteModal} />
+        {loaded ? renderListedItems : ''}
+        {loaded ? renderUnlistedItems : ''}
+        {loaded ? renderTokens : ''}
       </div>
     </div>
   )
