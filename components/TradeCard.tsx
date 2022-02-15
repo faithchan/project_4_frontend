@@ -93,15 +93,13 @@ const TradeCard = (props: CardProps) => {
             <p className="text-gray-300 font-body text-xs mt-1 tracking-widest">
               List Price: {props.listPrice === 0 ? '-' : props.listPrice + ' ETH'}
             </p>
-            {props.listPrice === 0 ? (
+            {props.listPrice === 0 && (
               <p
                 className="text-gray-300 font-body text-xs mt-1 tracking-widest underline cursor-pointer"
                 onClick={() => setListNFTModal(true)}
               >
                 List this NFT
               </p>
-            ) : (
-              ''
             )}
           </span>
           <span>
@@ -137,12 +135,10 @@ const TradeCard = (props: CardProps) => {
               <span className="pt-2 cursor-pointer" onClick={() => props.setBurnModal(true)}>
                 <Image className="mt-4" src={deleteImg} alt="Logo" />
               </span>
-              {props.isListed ? (
+              {props.isListed && (
                 <button className="text-white" onClick={delistItem}>
                   Delist
                 </button>
-              ) : (
-                ''
               )}
             </span>
           </span>
