@@ -4,20 +4,24 @@ import classNames from 'classnames'
 import styles from '../styles/style.module.css'
 
 export default function Ellipsis() {
-  let color= "white"
-  let size=80
-  let className=""
-  let style={}
+  let color = 'white'
+  let size = 80
+  let className = ''
+  let style = {}
 
-  const circles = [...Array(4)].map((_, index) => <div key={index} style={{ background: `${color}` }} />)
+  const circles = [...Array(4)].map((_, index) => (
+    <div key={index} style={{ background: `${color}` }} />
+  ))
 
   return (
-      
-    <div className={classNames(styles['lds-ellipsis'], className)} style={{ ...style, width: size, height: size }}>
+    <div
+      className={classNames(styles['lds-ellipsis'], className)}
+      style={{ ...style, width: size, height: size }}
+    >
       {circles}
     </div>
   )
-  }
+}
 
 Ellipsis.propTypes = {
   /** hex color */

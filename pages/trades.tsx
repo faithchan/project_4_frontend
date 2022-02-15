@@ -4,7 +4,6 @@ import { ethers } from 'ethers'
 import TradeCard from '../components/TradeCard'
 import globalContext from '../context/context'
 import BurnNFTModal from '../components/BurnNFTModal'
-import { isUint8ClampedArray } from 'util/types'
 
 const Trades = () => {
   const context = useContext(globalContext)
@@ -36,7 +35,6 @@ const Trades = () => {
       for (let item of ownedItems) {
         const tokenId = item.tokenId.toString()
         if (tokenId === id.toString() && item.isListed === true) {
-          // console.log('listed id: ', id)
           setListedItems((prev: any) => new Set(prev.add(item.itemId)))
           setUnregistered((prev: any) => new Set([...prev].filter((x) => x !== id)))
         } else if (tokenId === id.toString() && item.isListed === false) {
@@ -54,8 +52,6 @@ const Trades = () => {
       const owner = await context.nftContract.ownerOf(i)
       if (owner === context.walletAddress) {
         setOwnerTokens((prev: any) => new Set(prev.add(i)))
-      } else {
-        // console.log('item not owned: ', i)
       }
     }
     console.log('total supply', totalSupply)

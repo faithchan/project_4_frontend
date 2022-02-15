@@ -130,7 +130,7 @@ const TradeCard = (props: CardProps) => {
                 <hr className="border-gold border my-2"></hr>
                 <p
                   className="text-center text-white font-body text-xs tracking-widest"
-                  onClick={() => router.push(`/${creatorProfile.username}`)}
+                  onClick={() => router.push(`/user/${creatorProfile.username}`)}
                 >
                   View Profile
                 </p>

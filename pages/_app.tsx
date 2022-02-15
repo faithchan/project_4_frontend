@@ -19,7 +19,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [signer, setSigner] = useState(null)
   const [nftContract, setNftContract] = useState()
   const [marketplaceContract, setMarketplaceContract] = useState()
-  const [connected, setConnected] = useState(false)
 
   // console.log('app context: ', context)
 
