@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useEffect, useContext } from 'react'
 import globalContext from '../context/context'
 import { ethers } from 'ethers'
 import Web3Modal from 'web3modal'
@@ -8,14 +8,13 @@ import logo from '../public/ArkivLogo.svg'
 import Search from './Search'
 import walletImg from '../public/wallet.svg'
 import homeImg from '../public/home.svg'
-import uploadImg from '../public/upload.svg'
 import AccNavigation from './AccNavigation'
 import TradesNavigation from './TradesNavigation'
-import Wallet from './Wallet'
 
 const Navbar = () => {
   const context = useContext(globalContext)
-  const [connected, setConnected] = useState<boolean>(false)
+
+  // console.log('navbar context: ', context)
 
   const connectWallet = async () => {
     if (typeof window.ethereum !== 'undefined') {
@@ -37,16 +36,18 @@ const Navbar = () => {
   }
 
   const changeNetwork = async () => {
-    try {
-      if (!window.ethereum) throw new Error('No crypto wallet found')
-      await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: '0x4' }],
-      })
-    } catch (err: any) {
-      console.log('error changing network: ', err.message)
-    }
+    if (!window.ethereum) throw new Error('No crypto wallet found')
+    await window.ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: '0x4' }],
+    })
   }
+
+  useEffect(() => {
+    if (context.signer === null) {
+      connectWallet()
+    }
+  }, [])
 
   return (
     <div className="text-gold font-header text-xs">

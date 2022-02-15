@@ -1,10 +1,26 @@
-import React from 'react'
-interface buyProps{
-  buyModal:boolean,
-  setBuyModal:(a:boolean)=>void
+import { useEffect } from 'react'
+
+interface FeedProps {
+  name: string
+  description: string
+  image: string
+  price: string
+  itemId: number
+  isListed: boolean
+  owner: string
+  tokenId: number
+  buyModal: boolean
+  setBuyModal: (a: boolean) => void
+  setCurrentItemId: (a: number) => void
+  setCurrentPrice: (a: string) => void
 }
 
-const FeedCard = (props:buyProps) => {
+const FeedCard = (props: FeedProps) => {
+  useEffect(() => {
+    props.setCurrentItemId(props.itemId)
+    props.setCurrentPrice(props.price)
+  }, [])
+
   return (
     <div className="flex justify-center mt-20 mb-10">
       <div className=" px-8 pt-6 pb-6 bg-purple opacity-80 rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all transform duration-500">
@@ -19,22 +35,26 @@ const FeedCard = (props:buyProps) => {
               <p className="text-center text-gold font-header text-xs tracking-widest">FAKURIAN</p>
             </span>
           </span>
-
           <span className="font-MT font-semibold text-left leading-loose">
-            <img
-              className="w-96 h-96 object-cover rounded-3xl"
-              src="https://images.unsplash.com/photo-1617791160505-6f00504e3519?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1856&q=80"
-              alt=""
-            />
-            <p className="text-gold mt-4 text-md font-header tracking-widest">Title of NFT</p>
+            <img className="w-96 h-96 object-cover rounded-3xl" src={props.image} alt="" />
+            <p className="text-gold mt-4 text-md font-header tracking-widest">{props.name}</p>
             <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">
-                Description of the NFT
-              </p>
+              {props.description}
+            </p>
             <span className="flex justify-between">
               <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">
-                List Price: 1 Eth || Else Blank
+                List Price: {props.isListed ? props.price + 'ETH' : '-'}
               </p>
-              <button className="mb-2 md:mb-0 bg-green-400 px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg" onClick={()=>props.setBuyModal(true)}>Buy</button>
+              {props.isListed ? (
+                <button
+                  className="mb-2 md:mb-0 bg-green-400 px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg"
+                  onClick={() => props.setBuyModal(true)}
+                >
+                  Buy
+                </button>
+              ) : (
+                ''
+              )}
             </span>
           </span>
         </div>

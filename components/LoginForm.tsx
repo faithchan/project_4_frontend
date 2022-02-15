@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
-import UserContext from '../context/context'
+import globalContext from '../context/context'
 
 type FormData = {
   email: string
@@ -10,7 +10,7 @@ type FormData = {
 
 const LoginForm = () => {
   const router = useRouter()
-  const userLoginContext = useContext(UserContext)
+  const context = useContext(globalContext)
 
   const {
     register,
@@ -39,7 +39,11 @@ const LoginForm = () => {
     }
   }
 
-  console.log(process.env.API_ENDPOINT)
+  function validateEmail(email: any) {
+    const re =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    return re.test(String(email).toLowerCase())
+  }
 
   return (
     <div className="flex justify-center items-center w-full  mt-4">
@@ -51,8 +55,11 @@ const LoginForm = () => {
               <input
                 type="text"
                 className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md w-full"
-                {...register('email')}
+                {...register('email', { required: true, validate: validateEmail })}
               />
+              {errors.email && errors.email.type === 'validate' && (
+                <div className="text-white">Please enter a valid email address</div>
+              )}
             </div>
             <div>
               <label className="block mb-1 text-gray-300 font-semibold">Password</label>
@@ -61,10 +68,16 @@ const LoginForm = () => {
                 className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full"
                 {...register('password')}
               />
+              {errors.password && (
+                <div className="text-white">Please do not leave this field blank</div>
+              )}
             </div>
           </div>
           <div className="flex justify-center">
-            <button className="bg-gold hover:bg-blue-450 text-white font-semibold tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8" type="submit">
+            <button
+              className="bg-gold hover:bg-blue-450 text-white font-semibold tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8"
+              type="submit"
+            >
               LOGIN
             </button>
           </div>
