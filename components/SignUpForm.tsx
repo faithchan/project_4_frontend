@@ -94,7 +94,9 @@ const SignUpForm = () => {
                   className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md w-full mt-2"
                   {...register('username', { required: true })}
                 />
-                {errors.username?.type === 'required' && 'Username is required'}
+                {errors.username && (
+                  <div className="text-white">Please do not leave this field blank</div>
+                )}
               </div>
               <div>
                 <label className="block mb-1 md:text-sm text-xs text-white font-body">Email</label>
@@ -116,6 +118,9 @@ const SignUpForm = () => {
                   className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
                   {...register('password', { required: true })}
                 />
+                {errors.password && (
+                  <div className="text-white">Please do not leave this field blank</div>
+                )}
               </div>
               <div>
                 <label className="block mb-1 md:text-sm text-xs text-white font-body">

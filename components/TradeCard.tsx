@@ -74,14 +74,12 @@ const TradeCard = (props: CardProps) => {
 
   return (
     <div>
-      {ListNFTModal ? (
+      {ListNFTModal && (
         <ListNFTToken
           tokenId={props.tokenId}
           ListNFTModal={ListNFTModal}
           setListNFTModal={setListNFTModal}
         />
-      ) : (
-        ''
       )}
       <div className="w-full px-8 pt-8 pb-6 bg-purple opacity-80 rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all transform duration-500 ">
         <div className="flex justify-between space-x-14">
