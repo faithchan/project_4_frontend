@@ -123,7 +123,7 @@ const Trades = () => {
       details.name = data.name
       details.description = data.description
       details.image = data.image
-      setListedItemData((prev: any) => [...prev, details])
+      setUnlistedItemData((prev: any) => [...prev, details])
     }
   }
 
@@ -143,7 +143,7 @@ const Trades = () => {
     )
   })
 
-  const renderUnlistedItems = listedItemData.map((item: any) => {
+  const renderUnlistedItems = unlistedItemData.map((item: any) => {
     return (
       <TradeCard
         key={item.image}
