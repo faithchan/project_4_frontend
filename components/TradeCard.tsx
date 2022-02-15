@@ -19,9 +19,9 @@ interface CardProps {
 const TradeCard = (props: CardProps) => {
   const context = useContext(globalContext)
   const [ListNFTModal, setListNFTModal] = useState(false)
-  const [creator, setCreator] = useState()
-  const [isCreator, setIsCreater] = useState<boolean>(false)
-  const [creatorProfile, setCreatorProfile] = useState()
+  const [creator, setCreator] = useState() // creator's wallet address
+  const [isCreator, setIsCreater] = useState<boolean>(false) // checks if current token holder is creator
+  const [creatorProfile, setCreatorProfile] = useState<any>()
 
   const defaultAvatar =
     'https://bafkreigj5xab3lrgu7nty4r2sqwbfqkudeed7pz2w7fvajnflgphyw6nlu.ipfs.infura-ipfs.io/'
@@ -35,8 +35,9 @@ const TradeCard = (props: CardProps) => {
         },
       })
       const data = await res.json()
+      console.log('creator profile: ', data)
       setCreatorProfile(data)
-      console.log('user info:', data)
+      console.log('creator profile: ', creatorProfile)
     } catch (err) {
       console.log(err)
     }
@@ -61,6 +62,14 @@ const TradeCard = (props: CardProps) => {
   const shortenAddress = (str: any) => {
     return str.substring(0, 4) + '...' + str.substring(str.length - 2)
   }
+
+  // useEffect(() => {
+  //   console.log('creator profile: ', creatorProfile)
+  // }, [creatorProfile])
+
+  useEffect(() => {
+    fetchCreatorInfo()
+  }, [creator])
 
   useEffect(() => {
     if (context.nftContract) {
@@ -107,18 +116,18 @@ const TradeCard = (props: CardProps) => {
             <span className="flex space-x-4 mr-6">
               <img
                 className="w-16 h-16 object-cover rounded-full mr-4 mt-6 mb-4"
-                src={creatorProfile ? creatorProfile[0].avatar : defaultAvatar}
+                // src={creatorProfile ? creatorProfile[0].avatar : defaultAvatar}
                 alt=""
               />
               <span className="my-auto">
-                <p
-                  className="text-center text-gold font-header text-xs tracking-widest"
-                  onClick={fetchCreatorInfo}
-                >
-                  FAKURIAN
+                <p className="text-center text-gold font-header text-xs tracking-widest">
+                  {/* {creatorProfile ? creatorProfile[0].username : '-'} */}
                 </p>
                 <hr className="border-gold border my-2"></hr>
-                <p className="text-center text-white font-body text-xs tracking-widest">
+                <p
+                  className="text-center text-white font-body text-xs tracking-widest"
+                  onClick={fetchCreatorInfo}
+                >
                   View Profile
                 </p>
               </span>

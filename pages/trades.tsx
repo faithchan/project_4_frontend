@@ -42,8 +42,6 @@ const Trades = () => {
         } else if (tokenId === id.toString() && item.isListed === false) {
           setNotListed((prev: any) => new Set(prev.add(item.itemId)))
           setUnregistered((prev: any) => new Set([...prev].filter((x) => x !== id)))
-        } else {
-          console.log('not handled')
         }
       }
     }
@@ -77,7 +75,6 @@ const Trades = () => {
       data.listPrice = 0
       setTokenData((prev: any) => [...prev, data])
     }
-    setLoaded(true)
   }
 
   const fetchListedItemsMetadata = async () => {
@@ -126,6 +123,7 @@ const Trades = () => {
       details.image = data.image
       setUnlistedItemData((prev: any) => [...prev, details])
     }
+    setLoaded(true)
   }
 
   const renderListedItems = listedItemData.map((item: any) => {
@@ -180,7 +178,6 @@ const Trades = () => {
   })
 
   useEffect(() => {
-    // console.log('trades context: ', context)
     if (context.nftContract && context.marketplaceContract) {
       fetchNFTsOwned()
       fetchMarketItems()
@@ -228,16 +225,13 @@ const Trades = () => {
 
   return (
     <div>
-      {/* <button onClick={filterItems} className="text-white mr-4">
-        Filter Items
-      </button> */}
       <button
         onClick={() => {
           console.log('listed items:', listedItems)
         }}
         className="text-white mr-4"
       >
-        Print listed items
+        Listed items
       </button>
       <button
         onClick={() => {
@@ -245,7 +239,7 @@ const Trades = () => {
         }}
         className="text-white mr-4"
       >
-        Print unlisted items
+        Unlisted items
       </button>
       <button
         onClick={() => {
