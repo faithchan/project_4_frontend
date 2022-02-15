@@ -20,8 +20,13 @@ const SignUpForm = () => {
     register,
     handleSubmit,
     setValue,
+    getFieldState,
     formState: { errors },
   } = useForm<FormData>()
+
+  const viewAddress = async () => {
+    console.log(getFieldState('walletAddress'))
+  }
 
   const onSubmit = async (data: any) => {
     console.log('data: ', data)
@@ -35,7 +40,9 @@ const SignUpForm = () => {
       })
       const res = await response.json()
       console.log('response:', res)
-      router.push('/login')
+      if (res.status === 200) {
+        router.push('/login')
+      }
     } catch (err) {
       console.log(err)
     }
@@ -61,8 +68,12 @@ const SignUpForm = () => {
     }
   }
 
-  const test = () => {
-    console.log('test')
+  const validateAddress = (input: string) => {
+    const prefix = input.slice(0, 2)
+    if (input.length === 42 && prefix === '0x') {
+      return true
+    }
+    return false
   }
 
   return (
@@ -87,7 +98,7 @@ const SignUpForm = () => {
                 <input
                   type="text"
                   className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
-                  {...(register('email'), { required: true })}
+                  {...register('email', { required: true })}
                 />
               </div>
               <div>
@@ -97,7 +108,7 @@ const SignUpForm = () => {
                 <input
                   type="password"
                   className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
-                  {...(register('password'), { required: true })}
+                  {...register('password', { required: true })}
                 />
               </div>
               <div>
@@ -107,7 +118,7 @@ const SignUpForm = () => {
                 <input
                   type="text"
                   className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
-                  {...(register('walletAddress'), { required: true })}
+                  {...register('walletAddress', { required: true })}
                 />
               </div>
               <div className="">
@@ -116,7 +127,7 @@ const SignUpForm = () => {
                 </label>
                 <div className="flex items-center justify-center w-full mt-2">
                   <label className="flex flex-col border-2 border-dashed w-full rounded-lg h-32 group">
-                    {/* <div className="flex flex-col items-center justify-center pt-7 cursor-pointer">
+                    <div className="flex flex-col items-center justify-center pt-7 cursor-pointer">
                       <svg
                         className="w-10 h-10 text-purple-400 group-hover:text-purple-600"
                         fill="none"
@@ -134,7 +145,7 @@ const SignUpForm = () => {
                       <p className="lowercase text-sm text-white group-hover:text-purple-600 pt-1 tracking-wider">
                         Select a photo
                       </p>
-                    </div> */}
+                    </div>
                     <input
                       type="file"
                       className="hidden"
@@ -148,7 +159,7 @@ const SignUpForm = () => {
             </div>
             <div className="flex justify-center">
               <Link href="/login">
-                <button className=" border-2 border-gold hover:bg-blue-450 text-gold font-semibold tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8 mr-4">
+                <button className="border-2 border-gold hover:bg-blue-450 text-gold font-semibold tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8 mr-4">
                   LOGIN
                 </button>
               </Link>
@@ -158,7 +169,9 @@ const SignUpForm = () => {
               >
                 CREATE ACCOUNT
               </button>
-              {/* <input type="submit" className="text-white" /> */}
+              {/* <button onClick={() => console.log(getFieldState('username'))} className="text-white">
+                get field state
+              </button> */}
             </div>
           </div>
         </div>
