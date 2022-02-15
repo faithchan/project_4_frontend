@@ -135,13 +135,13 @@ const SignUpForm = () => {
                         Select a photo
                       </p>
                     </div> */}
-                    {/* <input
+                    <input
                       type="file"
                       className="hidden"
                       accept=".jpeg,.jpg,.png,.gif"
                       {...register('avatar')}
                       onChange={onFileUpload}
-                    /> */}
+                    />
                   </label>
                 </div>
               </div>
