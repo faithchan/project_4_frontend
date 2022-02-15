@@ -4,6 +4,7 @@ import { ethers } from 'ethers'
 import TradeCard from '../components/TradeCard'
 import globalContext from '../context/context'
 import BurnNFTModal from '../components/BurnNFTModal'
+import { isUint8ClampedArray } from 'util/types'
 
 const Trades = () => {
   const context = useContext(globalContext)
@@ -136,6 +137,7 @@ const Trades = () => {
         name={item.name}
         image={item.image}
         listPrice={item.price}
+        isListed={item.isListed}
         burnModal={burnModal}
         setBurnModal={setBurnModal}
         setCurrentTokenId={setCurrentTokenId}
@@ -152,6 +154,7 @@ const Trades = () => {
         name={item.name}
         image={item.image}
         listPrice={item.price}
+        isListed={item.isListed}
         burnModal={burnModal}
         setBurnModal={setBurnModal}
         setCurrentTokenId={setCurrentTokenId}
@@ -168,6 +171,7 @@ const Trades = () => {
         name={uri.name}
         image={uri.image}
         listPrice={uri.listPrice}
+        isListed={false}
         burnModal={burnModal}
         setBurnModal={setBurnModal}
         setCurrentTokenId={setCurrentTokenId}

@@ -10,6 +10,7 @@ interface CardProps {
   tokenId: number
   name: string
   image: string
+  isListed: boolean
   burnModal: boolean
   setBurnModal: (a: boolean) => void
   setCurrentTokenId: (a: number) => void
@@ -107,9 +108,13 @@ const TradeCard = (props: CardProps) => {
               <span className="pt-2 cursor-pointer" onClick={() => props.setBurnModal(true)}>
                 <Image className="mt-4" src={deleteImg} alt="Logo" />
               </span>
-              <button className="text-white" onClick={delistItem}>
-                Delist
-              </button>
+              {props.isListed ? (
+                <button className="text-white" onClick={delistItem}>
+                  Delist
+                </button>
+              ) : (
+                ''
+              )}
             </span>
           </span>
         </div>
