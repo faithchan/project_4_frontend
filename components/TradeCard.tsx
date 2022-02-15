@@ -6,6 +6,7 @@ import globalContext from '../context/context'
 
 interface CardProps {
   listPrice: number
+  itemId: any
   tokenId: number
   name: string
   image: string
@@ -17,11 +18,32 @@ interface CardProps {
 const TradeCard = (props: CardProps) => {
   const context = useContext(globalContext)
   const [ListNFTModal, setListNFTModal] = useState(false)
-  console.log('trade cards props:', props)
+  const [isCreator, setIsCreater] = useState<boolean>(false)
+
+  const checkIfHolderIsCreator = async () => {
+    const creator = await context.nftContract.tokenCreator(props.tokenId)
+    if (creator === context.walletAddress) {
+      setIsCreater(true)
+    } else {
+      setIsCreater(false)
+    }
+  }
+
+  const delistItem = async () => {
+    const txn = await context.marketplaceContract.delistItem(props.itemId)
+    const receipt = await txn.wait()
+    console.log('delisted item: ', receipt)
+  }
+
+  useEffect(() => {
+    if (context.nftContract) {
+      checkIfHolderIsCreator()
+    }
+  }, [context.nftContract])
 
   useEffect(() => {
     props.setCurrentTokenId(props.tokenId)
-  })
+  }, [])
 
   return (
     <div>
@@ -85,6 +107,9 @@ const TradeCard = (props: CardProps) => {
               <span className="pt-2 cursor-pointer" onClick={() => props.setBurnModal(true)}>
                 <Image className="mt-4" src={deleteImg} alt="Logo" />
               </span>
+              <button className="text-white" onClick={delistItem}>
+                Delist
+              </button>
             </span>
           </span>
         </div>
