@@ -25,6 +25,7 @@ const Username = () => {
       const data = await res.json()
       if (data.length === 0) {
         console.log('artist does not exist')
+        router.push('/404')
       } else {
         console.log('artist profile: ', data)
         setArtistProfile(data)
@@ -65,10 +66,8 @@ const Username = () => {
   const checkIfFollowing = async () => {
     const following = userProfile[0].following
     const artistAddress = artistProfile[0].walletAddress
-    // console.log(`artist address: ${artistAddress}, following array: ${following}`)
     const status = following.includes(artistAddress)
     setIsFollowing(status)
-    // console.log('status: ', status)
   }
 
   const followArtist = async () => {
@@ -173,7 +172,9 @@ const Username = () => {
   }, [artistProfile, userProfile])
 
   useEffect(() => {
-    fetchArtistProfile()
+    if (id) {
+      fetchArtistProfile()
+    }
     fetchUserProfile()
   }, [id, isFollowing])
 
@@ -191,7 +192,9 @@ const Username = () => {
             <div className="mt-6 w-fit mx-auto">
               <img
                 className="rounded-full"
-                src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"
+                src={artistProfile ? artistProfile[0].avatar : '-'}
+                width={140}
+                height={140}
               ></img>
             </div>
             <p className="text-gold text-2xl font-header mt-8">
