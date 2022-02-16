@@ -16,6 +16,8 @@ const feed = () => {
   const [tokenData, setTokenData] = useState<any>([])
   const [loaded, setLoaded] = useState(false)
   const [currentItemId, setCurrentItemId] = useState<number>()
+  const [currentTokenId, setCurrentTokenId] = useState<number>()
+  const [currentItemOwner, setCurrentItemOwner] = useState<string>()
   const [currentPrice, setCurrentPrice] = useState<any>()
 
   const fetchMarketItems = async () => {
@@ -72,6 +74,8 @@ const feed = () => {
         buyModal={buyModal}
         setBuyModal={setBuyModal}
         setCurrentItemId={setCurrentItemId}
+        setCurrentTokenId={setCurrentTokenId}
+        setCurrentItemOwner={setCurrentItemOwner}
         setCurrentPrice={setCurrentPrice}
       />
     )
@@ -120,6 +124,8 @@ const feed = () => {
       {buyModal ? (
         <BuyNFTModal
           itemId={currentItemId}
+          tokenId={currentTokenId}
+          owner={currentItemOwner}
           price={currentPrice}
           buyModal={buyModal}
           setBuyModal={setBuyModal}

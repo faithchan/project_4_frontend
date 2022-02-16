@@ -38,7 +38,6 @@ const TradeCard = (props: CardProps) => {
         },
       })
       const data = await res.json()
-      console.log('creator profile: ', data)
       setCreatorProfile(data)
       console.log('creator profile: ', creatorProfile)
     } catch (err) {
@@ -66,13 +65,14 @@ const TradeCard = (props: CardProps) => {
     return str.substring(0, 4) + '...' + str.substring(str.length - 2)
   }
 
-  // useEffect(() => {
-  //   console.log('creator profile: ', creatorProfile)
-  // }, [creatorProfile])
+  useEffect(() => {
+    if (creatorProfile !== undefined) {
+      setProfileLoaded(true)
+    }
+  }, [creatorProfile])
 
-  useEffect(async () => {
-    await fetchCreatorInfo()
-    setProfileLoaded(true)
+  useEffect(() => {
+    fetchCreatorInfo()
   }, [creator])
 
   useEffect(() => {
@@ -125,12 +125,12 @@ const TradeCard = (props: CardProps) => {
               />
               <span className="my-auto">
                 <p className="text-center text-gold font-header text-xs tracking-widest">
-                  {/* {profileLoaded ? creatorProfile[0].username : '-'} */}
+                  {profileLoaded ? creatorProfile[0].username : '-'}
                 </p>
                 <hr className="border-gold border my-2"></hr>
                 <p
                   className="text-center text-white font-body text-xs tracking-widest"
-                  onClick={() => router.push(`/user/${creatorProfile.username}`)}
+                  // onClick={() => router.push(`/user/${creatorProfile.username}`)}
                 >
                   View Profile
                 </p>
@@ -140,11 +140,7 @@ const TradeCard = (props: CardProps) => {
             <p className="text-gold text-xs font-header tracking-widest mt-2">
               {shortenAddress(context.walletAddress)}
             </p>
-            {/* <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">
-              Bought on 12 Feb 2021
-            </p> */}
             <span className="flex justify-between">
-              {/* <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">Price:0.01 Eth</p> */}
               <span className="pt-2 cursor-pointer" onClick={() => props.setBurnModal(true)}>
                 <Image className="mt-4" src={deleteImg} alt="Logo" />
               </span>
