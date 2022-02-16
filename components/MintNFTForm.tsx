@@ -13,7 +13,6 @@ const UploadNFTForm = () => {
   const context = useContext(globalContext)
   const router = useRouter()
   const [loggedIn, setLoggedIn] = useState<boolean>(false)
-  const [connected, setConnected] = useState<boolean>(false)
   const [fileName, setFileName] = useState('')
   const [imageURL, setImageURL] = useState('')
   const [metadata, setMetadata] = useState({ name: '', description: '', image: '' })
@@ -34,7 +33,6 @@ const UploadNFTForm = () => {
         const id = txn.events[0].args['tokenId']
         const idNum = id.toNumber()
         console.log('tokenId: ', idNum)
-        addTokenToDatabase(idNum)
         router.push('/trades')
       } else {
         alert('This wallet address is not whitelisted')
@@ -71,30 +69,6 @@ const UploadNFTForm = () => {
       setMetadata({ ...metadata, image: url })
     } catch (e) {
       console.error('Error uploading file: ', e)
-    }
-  }
-
-  const addTokenToDatabase = async (tokenId: number) => {
-    const tokenData = {
-      name: metadata.name,
-      description: metadata.description,
-      image: metadata.image,
-      tokenId: tokenId,
-      creator: context.walletAddress,
-      owner: context.walletAddress,
-    }
-    try {
-      const response = await fetch(`${process.env.API_ENDPOINT}/tokens`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(tokenData),
-      })
-      const data = await response.json()
-      console.log('adding token: ', data)
-    } catch (err) {
-      console.error(err)
     }
   }
 
