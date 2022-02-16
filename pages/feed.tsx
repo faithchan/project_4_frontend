@@ -12,7 +12,6 @@ import Ellipsis from '../components/Spinner'
 const feed = () => {
   const context = useContext(globalContext)
   const [buyModal, setBuyModal] = useState(false)
-  const [listedItems, setListedItems] = useState<any>([])
   const [tokenData, setTokenData] = useState<any>([])
   const [loaded, setLoaded] = useState(false)
   const [currentItemId, setCurrentItemId] = useState<number>()
@@ -23,11 +22,7 @@ const feed = () => {
   const fetchMarketItems = async () => {
     const listed = await context.marketplaceContract.getListedItems()
     console.log('market items: ', listed)
-    setListedItems(listed)
-  }
-
-  const fetchItemsMetadata = async () => {
-    for (let item of listedItems) {
+    for (let item of listed) {
       const details = {
         isListed: item.isListed,
         owner: item.owner,
@@ -54,10 +49,6 @@ const feed = () => {
       fetchMarketItems()
     }
   }, [context.marketplaceContract])
-
-  useEffect(() => {
-    fetchItemsMetadata()
-  }, [listedItems])
 
   const renderCards = tokenData.map((item: any) => {
     return (

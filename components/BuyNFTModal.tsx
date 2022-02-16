@@ -19,15 +19,10 @@ const BuyNFTModal = (props: buyProps) => {
   const [showPurchase, setShowPurchase] = useState(true)
   const [success, setSuccess] = useState(false)
   const context = useContext(globalContext)
-  const [isOwner, setIsOwner] = useState<boolean>(false)
-
-  // console.log('buy modal props ', props)
-  // console.log('buy modal context: ', context)
 
   const checkOwnership = async () => {
     const txn = await context.nftContract.ownerOf(props.tokenId)
     if (txn === props.owner) {
-      setIsOwner(true)
       return true
     } else {
       return false
@@ -82,7 +77,7 @@ const BuyNFTModal = (props: buyProps) => {
                   Designed by Fakurian
                 </p>
                 <p className="text-left text-sm font-body text-gray-300 mt-2">
-                  List Price 0.01 Eth
+                  List Price {props.price} ETH
                 </p>
               </span>
             </div>
