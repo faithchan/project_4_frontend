@@ -1,26 +1,41 @@
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext} from 'react'
 import verifiedImg from "../public/verified.svg"
 import ViewNFTCard from '../components/ViewNFTCard'
 import { id } from 'ethers/lib/utils'
+import globalContext from '../context/context'
 
 // fetch tokens from currently logged in and connected wallet addresses
 
+
 const profile = () => {
-  //NEED TO REFACTOR VERIFIED - Need to check if user is verified designer by jwt or global context!!
+  const context = useContext(globalContext)
+  // const walletAdd= context.walletAddress
+  const [userData, setUserData]= useState({})
   const [verified, setVerified]=useState(true)
   const [tokensOwned, setTokensOwned] = useState([])
   const [tokensCreated, setTokensCreated] = useState([])
   const [viewNFTModal, setViewNFTModal]=useState(false)
-
+  const [username, setUsername]= useState("")
+  const [following, setFollowing]= useState("")
+  const [followers, setFollowers]= useState("")
+  const [avatar, setAvatar]= useState("")
   
-  const userDataURL = `${process.env.API_ENDPOINT}/users/${"620c7200e8dac967c2489838"}`
+
+ //Get user details - image, followers, following, type of user, 
+  const userDataURL = `${process.env.API_ENDPOINT}/users/${context.walletAddress}`
 
   const userInfo = async() => {
       try {
           const response = await fetch (userDataURL); 
           const data = await response.json(); 
           console.log(data)
+          setUserData(data[0])
+          setUsername(data[0].username)
+          setFollowing(data[0].following.length)
+          setFollowers(data[0].followers.length)
+          setAvatar(data[0].avatar)
+          
       } 
       catch (err) {
           console.log("error:", err)
@@ -28,14 +43,12 @@ const profile = () => {
   }
   
   const getOwnedTokens = async () => {
-    
   }
 
   useEffect(() => {
     getOwnedTokens()
     userInfo()
   }, [])
-
   return (
     <div>
       <ViewNFTCard viewNFTModal={viewNFTModal} setViewNFTModal={setViewNFTModal}/>
@@ -44,11 +57,11 @@ const profile = () => {
           <div className="flex flex-col gap-1 text-center">
             <div className="mt-6 w-fit mx-auto">
               <img
-                className="rounded-full"
-                src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"
+                className="rounded-full w-48 h-48"
+                src={avatar}
               ></img>
             </div>
-            <p className="text-gold text-2xl font-header mt-8">Marina Davinchi{verified?<Image src={verifiedImg} alt="Logo"></Image>:""}</p>
+            <p className="text-gold text-2xl font-header mt-8">{username}{verified?<Image src={verifiedImg} alt="Logo"></Image>:""}</p>
             <span className="text-sm text-gray-300 mt-2 font-body">
               New York, NY - Los Angeles, CA
             </span>
@@ -60,11 +73,11 @@ const profile = () => {
               <span className="text-gray-300 font-body ">Posts</span>
             </div>
             <div className=" text-center mx-4">
-              <p className="text-gold text-sm font-header">102</p>
+              <p className="text-gold text-sm font-header">{followers}</p>
               <span className="text-gray-300 font-body">Followers</span>
             </div>
             <div className=" text-center mx-4">
-              <p className="text-gold text-sm font-header">102</p>
+              <p className="text-gold text-sm font-header">{following}</p>
               <span className="text-gray-300 font-body">Following</span>
             </div>
           </div>
