@@ -12,6 +12,7 @@ const Username = () => {
   const [artistProfile, setArtistProfile] = useState<any>()
   const [userProfile, setUserProfile] = useState<any>()
   const [isFollowing, setIsFollowing] = useState<boolean>(false)
+  const [tokenCount, setTokenCount] = useState()
 
   const fetchArtistProfile = async () => {
     try {
@@ -89,6 +90,7 @@ const Username = () => {
     // add user as follower to artist's followers array
     const artistFollowers = artistProfile[0].followers
     artistFollowers.push(context.walletAddress)
+    console.log('updated artist followers: ', artistFollowers)
     const artistObject = { followers: artistFollowers }
     try {
       const res = await fetch(`${process.env.API_ENDPOINT}/users/${artistAddress}`, {
@@ -109,7 +111,6 @@ const Username = () => {
   const unfollowArtist = async () => {
     const following = userProfile[0].following
     const artistAddress = artistProfile[0].walletAddress
-
     const usersFollowing = following.filter((x: any) => x !== artistAddress)
     console.log('unfollowed array: ', usersFollowing)
     const userObject = { following: usersFollowing }
@@ -126,9 +127,9 @@ const Username = () => {
     } catch (err) {
       console.log('error adding followers: ', err)
     }
-    // remove user from artist's followers array
     let artistFollowers = artistProfile[0].followers
     artistFollowers = artistFollowers.filter((x: any) => x !== context.walletAddress)
+    console.log('updated artist followers: ', artistFollowers)
     const artistObject = { followers: artistFollowers }
     try {
       const res = await fetch(`${process.env.API_ENDPOINT}/users/${artistAddress}`, {
@@ -143,10 +144,22 @@ const Username = () => {
     } catch (err) {
       console.log('error adding followers: ', err)
     }
-
     fetchUserProfile()
     checkIfFollowing()
   }
+
+  const fetchTokenCount = async () => {
+    const address = artistProfile[0].walletAddress
+    const txn = await context.nftContract.balanceOf(address)
+    const num = txn.toNumber()
+    setTokenCount(num)
+  }
+
+  useEffect(() => {
+    if (artistProfile && context.nftContract) {
+      fetchTokenCount()
+    }
+  }, [context.nftContract, artistProfile])
 
   useEffect(() => {
     if (context.nftContract) {
@@ -192,19 +205,22 @@ const Username = () => {
           </div>
           <div className="flex justify-center items-center gap-2 my-4">
             <div className="text-center mx-4">
-              <p className="text-gold text-sm font-header">102</p>
-              <span className="text-gray-300 font-body ">Posts</span>
+              <p className="text-gold text-sm font-header">{tokenCount && tokenCount}</p>
+              <span className="text-gray-300 font-body ">Tokens</span>
             </div>
             <div className=" text-center mx-4">
-              <p className="text-gold text-sm font-header">102</p>
+              <p className="text-gold text-sm font-header">
+                {artistProfile ? artistProfile[0].followers.length : '-'}
+              </p>
               <span className="text-gray-300 font-body">Followers</span>
             </div>
             <div className=" text-center mx-4">
-              <p className="text-gold text-sm font-header">102</p>
+              <p className="text-gold text-sm font-header">
+                {artistProfile ? artistProfile[0].following.length : '-'}
+              </p>
               <span className="text-gray-300 font-body">Following</span>
             </div>
           </div>
-
           <div className="flex justify-center gap-2 my-5">
             {isFollowing ? (
               <button
