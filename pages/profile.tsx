@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import verifiedImg from "../public/verified.svg"
 import ViewNFTCard from '../components/ViewNFTCard'
+import { id } from 'ethers/lib/utils'
 
 // fetch tokens from currently logged in and connected wallet addresses
 
@@ -12,11 +13,27 @@ const profile = () => {
   const [tokensCreated, setTokensCreated] = useState([])
   const [viewNFTModal, setViewNFTModal]=useState(false)
 
+  
+  const userDataURL = `${process.env.API_ENDPOINT}/users/${"620c7200e8dac967c2489838"}`
 
-  const getOwnedTokens = async () => {}
+  const userInfo = async() => {
+      try {
+          const response = await fetch (userDataURL); 
+          const data = await response.json(); 
+          console.log(data)
+      } 
+      catch (err) {
+          console.log("error:", err)
+      }
+  }
+  
+  const getOwnedTokens = async () => {
+    
+  }
 
   useEffect(() => {
     getOwnedTokens()
+    userInfo()
   }, [])
 
   return (
