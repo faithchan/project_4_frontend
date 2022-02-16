@@ -63,20 +63,22 @@ const Trades = () => {
   }
 
   const fetchTokensMetadata = async () => {
+    const unregisteredData = []
     for (let i of unregistered) {
       const uri = await context.nftContract.tokenURI(i)
       const response = await fetch(uri)
       const data = await response.json()
       data.tokenId = i
       data.listPrice = 0
-      setTokenData((prev: any) => [...prev, data])
+      unregisteredData.push(data)
+      setTokenData(unregisteredData)
     }
   }
 
   const fetchListedItemsMetadata = async () => {
+    const listedData = []
     for (let i of listedItems) {
       const item = await context.marketplaceContract.getItemById(i)
-      console.log('item data: ', item)
       const details = {
         isListed: item.isListed,
         owner: item.owner,
@@ -93,14 +95,15 @@ const Trades = () => {
       details.name = data.name
       details.description = data.description
       details.image = data.image
-      setListedItemData((prev: any) => [...prev, details])
+      listedData.push(details)
+      setListedItemData(listedData)
     }
   }
 
   const fetchUnlistedItemsMetadata = async () => {
+    const unlistedData = []
     for (let i of notListed) {
       const item = await context.marketplaceContract.getItemById(i)
-      console.log('item data: ', item)
       const details = {
         isListed: item.isListed,
         owner: item.owner,
@@ -117,7 +120,8 @@ const Trades = () => {
       details.name = data.name
       details.description = data.description
       details.image = data.image
-      setUnlistedItemData((prev: any) => [...prev, details])
+      unlistedData.push(details)
+      setUnlistedItemData(unlistedData)
     }
     setLoaded(true)
   }
@@ -174,6 +178,12 @@ const Trades = () => {
   })
 
   useEffect(() => {
+    fetchTokensMetadata()
+    fetchListedItemsMetadata()
+    fetchUnlistedItemsMetadata()
+  }, [unregistered, listedItems, notListed])
+
+  useEffect(() => {
     if (context.nftContract && context.marketplaceContract) {
       fetchNFTsOwned()
       fetchMarketItems()
@@ -221,40 +231,6 @@ const Trades = () => {
 
   return (
     <div>
-      <button
-        onClick={() => {
-          console.log('listed items:', listedItems)
-        }}
-        className="text-white mr-4"
-      >
-        Listed items
-      </button>
-      <button
-        onClick={() => {
-          console.log('unlisted items: ', notListed)
-        }}
-        className="text-white mr-4"
-      >
-        Unlisted items
-      </button>
-      <button
-        onClick={() => {
-          console.log('unregistered items: ', unregistered)
-        }}
-        className="text-white mr-4"
-      >
-        Unregistered items
-      </button>
-      <button
-        onClick={() => {
-          fetchTokensMetadata()
-          fetchListedItemsMetadata()
-          fetchUnlistedItemsMetadata()
-        }}
-        className="text-white mr-4"
-      >
-        Fetch Metadata
-      </button>
       {burnModal ? (
         <BurnNFTModal tokenId={currentTokenId} burnModal={burnModal} setBurnModal={setBurnModal} />
       ) : (
