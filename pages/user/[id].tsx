@@ -45,7 +45,7 @@ const Username = () => {
       if (data.length === 0) {
         console.log('user does not exist')
       } else {
-        console.log('user profile: ', data)
+        // console.log('user profile: ', data)
         setUserProfile(data)
       }
     } catch (err) {
@@ -64,27 +64,42 @@ const Username = () => {
   const checkIfFollowing = async () => {
     const following = userProfile[0].following
     const artistAddress = artistProfile[0].walletAddress
-    console.log(`artist address: ${artistAddress}, following array: ${following}`)
+    // console.log(`artist address: ${artistAddress}, following array: ${following}`)
     const status = following.includes(artistAddress)
     setIsFollowing(status)
-    console.log('status: ', status)
+    // console.log('status: ', status)
   }
 
   const followArtist = async () => {
-    const following = userProfile[0].following
+    const usersFollowing = userProfile[0].following
     const artistAddress = artistProfile[0].walletAddress
-    following.push(artistAddress)
-    const object = { following: following }
+    usersFollowing.push(artistAddress)
+    const userObject = { following: usersFollowing }
     try {
       const res = await fetch(`${process.env.API_ENDPOINT}/users/${context.walletAddress}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(object),
+        body: JSON.stringify(userObject),
+      })
+    } catch (err) {
+      console.log('error adding followers: ', err)
+    }
+    // add user as follower to artist's followers array
+    const artistFollowers = artistProfile[0].followers
+    artistFollowers.push(context.walletAddress)
+    const artistObject = { followers: artistFollowers }
+    try {
+      const res = await fetch(`${process.env.API_ENDPOINT}/users/${artistAddress}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(artistObject),
       })
       const data = await res.json()
-      console.log('followed artist: ', data)
+      console.log('added to artist followers: ', data)
     } catch (err) {
       console.log('error adding followers: ', err)
     }
@@ -94,23 +109,41 @@ const Username = () => {
   const unfollowArtist = async () => {
     const following = userProfile[0].following
     const artistAddress = artistProfile[0].walletAddress
-    // console.log(`removing artist ${artistAddress} from ${following}`)
-    const newArr = following.filter((x: any) => x !== artistAddress)
-    console.log('unfollowed array: ', newArr)
-    const object = { following: newArr }
+
+    const usersFollowing = following.filter((x: any) => x !== artistAddress)
+    console.log('unfollowed array: ', usersFollowing)
+    const userObject = { following: usersFollowing }
     try {
       const res = await fetch(`${process.env.API_ENDPOINT}/users/${context.walletAddress}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(object),
+        body: JSON.stringify(userObject),
       })
       const data = await res.json()
-      console.log('unfollowed artist: ', data)
+      // console.log('unfollowed artist: ', data)
     } catch (err) {
       console.log('error adding followers: ', err)
     }
+    // remove user from artist's followers array
+    let artistFollowers = artistProfile[0].followers
+    artistFollowers = artistFollowers.filter((x: any) => x !== context.walletAddress)
+    const artistObject = { followers: artistFollowers }
+    try {
+      const res = await fetch(`${process.env.API_ENDPOINT}/users/${artistAddress}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(artistObject),
+      })
+      const data = await res.json()
+      console.log('removed from artist followers: ', data)
+    } catch (err) {
+      console.log('error adding followers: ', err)
+    }
+
     fetchUserProfile()
     checkIfFollowing()
   }
