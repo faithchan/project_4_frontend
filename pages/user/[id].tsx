@@ -92,7 +92,28 @@ const Username = () => {
     }
   }
 
-  const unfollowArtist = async () => {}
+  const unfollowArtist = async () => {
+    const following = userProfile[0].following
+    const artistAddress = artistProfile[0].walletAddress
+    console.log(`removing artist ${artistAddress} from ${following}`)
+    const newArr = following.filter((x: any) => x !== artistAddress)
+    console.log('unfollowed array: ', newArr)
+    const object = { following: newArr }
+    try {
+      const res = await fetch(`${process.env.API_ENDPOINT}/users/${context.walletAddress}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(object),
+      })
+      const data = await res.json()
+      console.log('response: ', data)
+    } catch (err) {
+      console.log('error adding followers: ', err)
+    }
+    checkIfFollowing()
+  }
 
   useEffect(() => {
     if (context.nftContract) {
@@ -108,13 +129,13 @@ const Username = () => {
 
   useEffect(() => {
     fetchArtistProfile()
-  }, [id])
+  }, [id, isFollowing])
 
   useEffect(() => {
     if (context.walletAddress) {
       fetchUserProfile()
     }
-  }, [context.walletAddress])
+  }, [context.walletAddress, isFollowing])
 
   return (
     <div>
@@ -129,11 +150,7 @@ const Username = () => {
             </div>
             <p className="text-gold text-2xl font-header mt-8">
               {id}
-              {verified ? (
-                <Image src="/verified.svg" width={38} height={38} alt="Logo"></Image>
-              ) : (
-                ''
-              )}
+              {verified && <Image src="/verified.svg" width={38} height={38} alt="Logo"></Image>}
             </p>
             <span className="text-sm text-gray-300 mt-2 font-body">
               New York, NY - Los Angeles, CA
@@ -155,12 +172,21 @@ const Username = () => {
           </div>
 
           <div className="flex justify-center gap-2 my-5">
-            <button
-              className="bg-gold text-sm font-header px-10 py-2 rounded-full text-white shadow-lg"
-              onClick={followArtist}
-            >
-              Follow
-            </button>
+            {isFollowing ? (
+              <button
+                className="bg-slate-400 text-sm font-header px-10 py-2 rounded-full text-white shadow-lg"
+                onClick={unfollowArtist}
+              >
+                Unfollow
+              </button>
+            ) : (
+              <button
+                className="bg-gold text-sm font-header px-10 py-2 rounded-full text-white shadow-lg"
+                onClick={followArtist}
+              >
+                Follow
+              </button>
+            )}
           </div>
           <div className="flex justify-between items-center">
             <button className="w-full py-4">
