@@ -4,6 +4,7 @@ import { ethers } from 'ethers'
 import TradeCard from '../components/TradeCard'
 import globalContext from '../context/context'
 import BurnNFTModal from '../components/BurnNFTModal'
+import Ellipsis from '../components/Spinner'
 
 const Trades = () => {
   const context = useContext(globalContext)

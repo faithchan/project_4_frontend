@@ -104,7 +104,8 @@ const TradeCard = (props: CardProps) => {
             />
             <p className="text-gold mt-4 text-md font-header tracking-widest">{props.name}</p>
             <p className="text-gray-300 font-body text-xs mt-1 tracking-widest">
-              List Price: {props.listPrice === 0 ? '-' : props.listPrice + ' ETH'}
+              List Price:{' '}
+              {props.listPrice === 0 || props.isListed === false ? '-' : props.listPrice + ' ETH'}
             </p>
             {props.listPrice === 0 && (
               <p
