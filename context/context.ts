@@ -14,14 +14,14 @@ interface userLoginStatus {
 
 const userDefaultValue = {
   designerState: false,
-  walletAddress: '0x',
+  walletAddress: '',
   signer: null,
   nftContract: null,
   marketplaceContract: null,
   setSigner: (signer: any) => null,
   setNftContract: (nftContract: any) => null,
   setMarketplaceContract: (marketplaceContract: any) => null,
-  setWalletAddress: (address: string) => '0x',
+  setWalletAddress: (address: string) => '',
 }
 
 const userContext = createContext<userLoginStatus>(userDefaultValue)
