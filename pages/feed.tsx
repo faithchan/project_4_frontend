@@ -21,7 +21,8 @@ const feed = () => {
 
   const fetchMarketItems = async () => {
     const listed = await context.marketplaceContract.getListedItems()
-    console.log('market items: ', listed)
+    // console.log('market items: ', listed)
+    const allTokens = []
     for (let item of listed) {
       const details = {
         isListed: item.isListed,
@@ -39,7 +40,8 @@ const feed = () => {
       details.name = data.name
       details.description = data.description
       details.image = data.image
-      setTokenData((prev: any) => [...prev, details])
+      allTokens.push(details)
+      setTokenData(allTokens)
     }
     setLoaded(true)
   }
