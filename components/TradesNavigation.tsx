@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/solid'
 interface connectWalletProps {
-  connectWallat:(a:any)=>void
+  connectWallet:(a:any)=>void
 }
 
 const TradesNavigation = (props:connectWalletProps) => {
@@ -15,7 +15,7 @@ const TradesNavigation = (props:connectWalletProps) => {
         <div>
           <Menu.Button className="inline-flex justify-center w-full  text-sm font-medium text-white  rounded-md  focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <Link href="/trades">
-              <a onClick={props.connectWallat}>
+              <a onClick={props.connectWallet}>
                 <Image src={tradeImg}></Image>
               </a>
             </Link>

@@ -20,6 +20,8 @@ const profile = () => {
   const [following, setFollowing]= useState("")
   const [followers, setFollowers]= useState("")
   const [avatar, setAvatar]= useState("")
+  const [type, setType]= useState("user")
+  
   
 
  //Get user details - image, followers, following, type of user, 
@@ -35,6 +37,7 @@ const profile = () => {
           setFollowing(data[0].following.length)
           setFollowers(data[0].followers.length)
           setAvatar(data[0].avatar)
+          setType(data[0].type)
           
       } 
       catch (err) {
@@ -61,7 +64,7 @@ const profile = () => {
                 src={avatar}
               ></img>
             </div>
-            <p className="text-gold text-2xl font-header mt-8">{username}{verified?<Image src={verifiedImg} alt="Logo"></Image>:""}</p>
+            <p className="text-gold text-2xl font-header mt-8">{username}{type==="designer"?<Image src={verifiedImg} alt="Logo"></Image>:""}</p>
             <span className="text-sm text-gray-300 mt-2 font-body">
               New York, NY - Los Angeles, CA
             </span>
