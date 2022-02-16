@@ -8,13 +8,11 @@ import { ethers } from 'ethers'
 interface buyProps {
   itemId: number | undefined
   tokenId: number | undefined
-  owner: string
+  owner: string | undefined
   price: string
   buyModal: boolean
   setBuyModal: (a: boolean) => void
 }
-
-// check if owner is still holder of token
 
 const BuyNFTModal = (props: buyProps) => {
   const router = useRouter()
@@ -37,19 +35,26 @@ const BuyNFTModal = (props: buyProps) => {
   }
 
   const buyItem = async () => {
-    const priceInWei = ethers.utils.parseUnits(props.price, 'ether')
-    console.log('price in wei: ', priceInWei.toString())
-    const txn = await context.marketplaceContract.purchaseItem(nftaddress, props.itemId, {
-      value: priceInWei,
-    })
-    const receipt = await txn.wait()
-    console.log('item purchased: ', receipt)
-    setSuccess(true)
+    const isOwner = await checkOwnership()
+    if (isOwner === true) {
+      const priceInWei = ethers.utils.parseUnits(props.price, 'ether')
+      console.log('price in wei: ', priceInWei.toString())
+      const txn = await context.marketplaceContract.purchaseItem(nftaddress, props.itemId, {
+        value: priceInWei,
+      })
+      const receipt = await txn.wait()
+      console.log('item purchased: ', receipt)
+      setShowPurchase(false)
+
+      setSuccess(true)
+    } else {
+      alert('Item is no longer on sale')
+      return
+    }
   }
 
   const purchaseHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setShowPurchase(false)
   }
 
   return (
@@ -95,12 +100,12 @@ const BuyNFTModal = (props: buyProps) => {
               >
                 Confirm Purchase
               </button>
-              <button
+              {/* <button
                 className="mb-2 md:mb-0 bg-gold px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg "
                 onClick={checkOwnership}
               >
                 Check Owner
-              </button>
+              </button> */}
             </div>
           </form>
         ) : (

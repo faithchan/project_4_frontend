@@ -125,12 +125,12 @@ const TradeCard = (props: CardProps) => {
               />
               <span className="my-auto">
                 <p className="text-center text-gold font-header text-xs tracking-widest">
-                  {profileLoaded ? creatorProfile[0].username : '-'}
+                  {/* {profileLoaded ? creatorProfile[0].username : '-'} */}
                 </p>
                 <hr className="border-gold border my-2"></hr>
                 <p
                   className="text-center text-white font-body text-xs tracking-widest"
-                  // onClick={() => router.push(`/user/${creatorProfile.username}`)}
+                  onClick={() => router.push(`/user/${creatorProfile.username}`)}
                 >
                   View Profile
                 </p>
