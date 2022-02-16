@@ -74,7 +74,7 @@ const Navbar = () => {
               </a>
             </li>
             <li className="ml-10 mr-20 mt-2 ">
-              <TradesNavigation />
+              <TradesNavigation connectWallet={connectWallet} />
             </li>
             <li className="mr-10 mt-2">
               <AccNavigation />
