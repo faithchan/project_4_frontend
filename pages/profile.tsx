@@ -85,7 +85,7 @@ const profile = () => {
 
           <div className="flex justify-center items-center gap-2 my-4">
             <div className="text-center mx-4">
-              <p className="text-gold text-sm font-header">102</p>
+              <p className="text-gold text-sm font-header">{tokensOwned.length?tokensOwned.length:0}</p>
               <span className="text-gray-300 font-body ">Posts</span>
             </div>
             <div className=" text-center mx-4">
