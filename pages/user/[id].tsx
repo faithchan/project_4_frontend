@@ -5,8 +5,6 @@ import globalContext from '../../context/context'
 import Image from 'next/image'
 
 const Username = () => {
-  // NEED TO REFACTOR VERIFIED - Need to check if user is verified designer by jwt or global context!!
-
   const router = useRouter()
   const context = useContext(globalContext)
   const { id } = router.query
@@ -16,7 +14,6 @@ const Username = () => {
   const [isFollowing, setIsFollowing] = useState<boolean>(false)
 
   const fetchArtistProfile = async () => {
-    console.log('id: ', id)
     try {
       const res = await fetch(`${process.env.API_ENDPOINT}/users/profile/${id}`, {
         method: 'GET',
@@ -67,6 +64,7 @@ const Username = () => {
   const checkIfFollowing = async () => {
     const following = userProfile[0].following
     const artistAddress = artistProfile[0].walletAddress
+    console.log(`artist address: ${artistAddress}, following array: ${following}`)
     const status = following.includes(artistAddress)
     setIsFollowing(status)
     console.log('status: ', status)
@@ -86,16 +84,17 @@ const Username = () => {
         body: JSON.stringify(object),
       })
       const data = await res.json()
-      // console.log('response: ', data)
+      console.log('followed artist: ', data)
     } catch (err) {
       console.log('error adding followers: ', err)
     }
+    checkIfFollowing()
   }
 
   const unfollowArtist = async () => {
     const following = userProfile[0].following
     const artistAddress = artistProfile[0].walletAddress
-    console.log(`removing artist ${artistAddress} from ${following}`)
+    // console.log(`removing artist ${artistAddress} from ${following}`)
     const newArr = following.filter((x: any) => x !== artistAddress)
     console.log('unfollowed array: ', newArr)
     const object = { following: newArr }
@@ -108,10 +107,11 @@ const Username = () => {
         body: JSON.stringify(object),
       })
       const data = await res.json()
-      console.log('response: ', data)
+      console.log('unfollowed artist: ', data)
     } catch (err) {
       console.log('error adding followers: ', err)
     }
+    fetchUserProfile()
     checkIfFollowing()
   }
 
@@ -129,6 +129,7 @@ const Username = () => {
 
   useEffect(() => {
     fetchArtistProfile()
+    fetchUserProfile()
   }, [id, isFollowing])
 
   useEffect(() => {
