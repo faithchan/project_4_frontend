@@ -52,6 +52,7 @@ const profile = () => {
       const response = await fetch (ownedTokensUrl); 
       const data = await response.json(); 
       console.log(data)
+      setTokensOwned(data)
     }
       catch (err) {
         console.log("error:", err)
@@ -62,6 +63,8 @@ const profile = () => {
     getOwnedTokens()
     userInfo()
   }, [])
+
+  console.log(tokensOwned)
   return (
     <div>
       <ViewNFTCard viewNFTModal={viewNFTModal} setViewNFTModal={setViewNFTModal}/>
@@ -86,11 +89,11 @@ const profile = () => {
               <span className="text-gray-300 font-body ">Posts</span>
             </div>
             <div className=" text-center mx-4">
-              <p className="text-gold text-sm font-header">{followers}</p>
+              <p className="text-gold text-sm font-header">{followers?followers:0}</p>
               <span className="text-gray-300 font-body">Followers</span>
             </div>
             <div className=" text-center mx-4">
-              <p className="text-gold text-sm font-header">{following}</p>
+              <p className="text-gold text-sm font-header">{following?following:0}</p>
               <span className="text-gray-300 font-body">Following</span>
             </div>
           </div>
@@ -113,10 +116,12 @@ const profile = () => {
             </button>
           </div>
           <div className="grid grid-cols-3 gap-6 mt-3 mb-6">
-            <img
-              className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg cursor-pointer"
-              src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe" onClick={()=>setViewNFTModal(true)}
-            ></img>
+            {tokensOwned.map(({description, isListed, listPrice, name, owner, image, _id, tokenId})=>
+            image?<img
+              className="block bg-center  bg-cover h-48 w-48 rounded-lg cursor-pointer"
+              src={image} onClick={()=>setViewNFTModal(true)}
+            ></img>:"")
+            }
            
           </div>
         </div>
