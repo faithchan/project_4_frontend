@@ -12,7 +12,6 @@ const profile = () => {
   const context = useContext(globalContext)
   // const walletAdd= context.walletAddress
   const [userData, setUserData]= useState({})
-  const [verified, setVerified]=useState(true)
   const [tokensOwned, setTokensOwned] = useState([])
   const [tokensCreated, setTokensCreated] = useState([])
   const [viewNFTModal, setViewNFTModal]=useState(false)
@@ -21,6 +20,7 @@ const profile = () => {
   const [followers, setFollowers]= useState("")
   const [avatar, setAvatar]= useState("")
   const [type, setType]= useState("user")
+  const [id, setId]= useState("")
   
   
 
@@ -37,15 +37,25 @@ const profile = () => {
           setFollowing(data[0].following.length)
           setFollowers(data[0].followers.length)
           setAvatar(data[0].avatar)
-          setType(data[0].type)
-          
+          setType(data[0].type) 
+          setId(data[0]._id) 
       } 
       catch (err) {
           console.log("error:", err)
       }
   }
+
+  const ownedTokensUrl = `${process.env.API_ENDPOINT}/tokens/${id}`
   
   const getOwnedTokens = async () => {
+    try {
+      const response = await fetch (ownedTokensUrl); 
+      const data = await response.json(); 
+      console.log(data)
+    }
+      catch (err) {
+        console.log("error:", err)
+    }
   }
 
   useEffect(() => {
