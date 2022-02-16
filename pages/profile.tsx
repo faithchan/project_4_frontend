@@ -67,7 +67,7 @@ const profile = () => {
   console.log(tokensOwned)
   return (
     <div>
-      <ViewNFTCard viewNFTModal={viewNFTModal} setViewNFTModal={setViewNFTModal}/>
+      <ViewNFTCard viewNFTModal={viewNFTModal} setViewNFTModal={setViewNFTModal} />
       <div className="max-w-2xl mx-auto mt-10">
         <div className="px-3 py-2">
           <div className="flex flex-col gap-1 text-center">
