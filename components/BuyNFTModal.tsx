@@ -40,7 +40,6 @@ const BuyNFTModal = (props: buyProps) => {
       const receipt = await txn.wait()
       console.log('item purchased: ', receipt)
       setShowPurchase(false)
-
       setSuccess(true)
     } else {
       alert('Item is no longer on sale')

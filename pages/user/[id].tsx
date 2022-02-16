@@ -11,18 +11,9 @@ const Username = () => {
   const context = useContext(globalContext)
   const { id } = router.query
   const [verified, setVerified] = useState(true)
-  const [artistProfile, setArtistProfile] = useState()
-  const [userProfile, setUserProfile] = useState()
-  const [isFollowing, setIsFollowing] = useState<boolean>()
-
-  const checkWhitelistStatus = async () => {
-    if (artistProfile) {
-      const address = artistProfile[0].walletAddress
-      const txn = await context.nftContract.isWhitelisted(address)
-      console.log('whitelist txn: ', txn)
-      setVerified(txn)
-    }
-  }
+  const [artistProfile, setArtistProfile] = useState<any>()
+  const [userProfile, setUserProfile] = useState<any>()
+  const [isFollowing, setIsFollowing] = useState<boolean>(false)
 
   const fetchArtistProfile = async () => {
     console.log('id: ', id)
@@ -46,7 +37,6 @@ const Username = () => {
   }
 
   const fetchUserProfile = async () => {
-    console.log('current wallet address: ', context.walletAddress)
     try {
       const res = await fetch(`${process.env.API_ENDPOINT}/users/${context.walletAddress}`, {
         method: 'GET',
@@ -66,16 +56,55 @@ const Username = () => {
     }
   }
 
-  const followArtist = async () => {
-    console.log('current following: ', userProfile[0].followers)
-    console.log('current artist address:', artistProfile[0].walletAddress)
+  const checkWhitelistStatus = async () => {
+    if (artistProfile) {
+      const address = artistProfile[0].walletAddress
+      const txn = await context.nftContract.isWhitelisted(address)
+      setVerified(txn)
+    }
   }
+
+  const checkIfFollowing = async () => {
+    const following = userProfile[0].following
+    const artistAddress = artistProfile[0].walletAddress
+    const status = following.includes(artistAddress)
+    setIsFollowing(status)
+    console.log('status: ', status)
+  }
+
+  const followArtist = async () => {
+    const following = userProfile[0].following
+    const artistAddress = artistProfile[0].walletAddress
+    following.push(artistAddress)
+    const object = { following: following }
+    try {
+      const res = await fetch(`${process.env.API_ENDPOINT}/users/${context.walletAddress}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(object),
+      })
+      const data = await res.json()
+      // console.log('response: ', data)
+    } catch (err) {
+      console.log('error adding followers: ', err)
+    }
+  }
+
+  const unfollowArtist = async () => {}
 
   useEffect(() => {
     if (context.nftContract) {
       checkWhitelistStatus()
     }
   }, [context.nftContract, artistProfile])
+
+  useEffect(() => {
+    if (artistProfile && userProfile) {
+      checkIfFollowing()
+    }
+  }, [artistProfile, userProfile])
 
   useEffect(() => {
     fetchArtistProfile()
