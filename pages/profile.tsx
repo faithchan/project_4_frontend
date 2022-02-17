@@ -12,7 +12,7 @@ import { ethers } from 'ethers'
 
 const profile = () => {
   const context = useContext(globalContext)
-  // const walletAdd= context.walletAddress
+  const [tokenData, setTokenData] = useState<any>([])
   const [userData, setUserData]= useState({})
   const [tokensOwned, setTokensOwned] = useState([])
   const [tokensCreated, setTokensCreated] = useState([])
@@ -64,60 +64,72 @@ const profile = () => {
   //       console.log("error:", err)
   //   }
   // }
-  // const fetchNFTsOwned = async () => {
-  //   const totalSupply = await context.nftContract.totalSupply()
-  //   for (let i = 0; i < totalSupply; i++) {
-  //     const owner = await context.nftContract.ownerOf(i)
-  //     if (owner === context.walletAddress) {
-  //       setOwnerTokens((prev: any) => new Set(prev.add(i)))
-  //       console.log(ownerTokens)
-  //     }
-  //   }
-  //   console.log('total supply', totalSupply)
-  // }
+  const fetchNFTsOwned = async () => {
+    const totalSupply = await context.nftContract.totalSupply()
+    for (let i = 0; i < totalSupply; i++) {
+      const owner = await context.nftContract.ownerOf(i)
+      if (owner === context.walletAddress) {
+        setOwnerTokens((prev: any) => new Set(prev.add(i)))
+        console.log(ownerTokens)
+      }
+    }
+    console.log('total supply', totalSupply)
+  }
 
   const fetchOwnedTokens = async () => {
     const owned = await context.marketplaceContract.getItemsOwned()
-    console.log(owned)
-    setTokensOwned(owned.length)
+    console.log(owned[0].length)
+    setTokensOwned(owned[0].length)
   }
 
-  // const filterItems = () => {
-  //   // console.log('owner tokens: ', ownerTokens)
-  //   if (ownerTokens.length === 0) {
-  //     console.log('no tokens in wallet')
-  //     return
-  //   }
-  //   if (ownedItems.length === 0) {
-  //     setUnregistered(ownerTokens)
-  //     console.log('no items owned in marketplace')
-  //     return
-  //   }
-  //   setUnregistered(ownerTokens)
-  //   for (let id of ownerTokens) {
-  //     for (let item of ownedItems) {
-  //       const tokenId = item.tokenId.toString()
-  //       if (tokenId === id.toString() && item.isListed === true) {
-  //         setListedItems((prev: any) => new Set(prev.add(item.itemId)))
-  //         setUnregistered((prev: any) => new Set([...prev].filter((x) => x !== id)))
-  //       } else if (tokenId === id.toString() && item.isListed === false) {
-  //         setNotListed((prev: any) => new Set(prev.add(item.itemId)))
-  //         setUnregistered((prev: any) => new Set([...prev].filter((x) => x !== id)))
-  //       }
-  //     }
-  //   }
-  //   return
-  // }
+  const filterItems = () => {
+    // console.log('owner tokens: ', ownerTokens)
+    if (ownerTokens.length === 0) {
+      console.log('no tokens in wallet')
+      return
+    }
+    if (ownedItems.length === 0) {
+      setUnregistered(ownerTokens)
+      console.log('no items owned in marketplace')
+      return
+    }
+    setUnregistered(ownerTokens)
+    for (let id of ownerTokens) {
+      for (let item of ownedItems) {
+        const tokenId = item.tokenId.toString()
+        if (tokenId === id.toString() && item.isListed === true) {
+          setListedItems((prev: any) => new Set(prev.add(item.itemId)))
+          setUnregistered((prev: any) => new Set([...prev].filter((x) => x !== id)))
+        } else if (tokenId === id.toString() && item.isListed === false) {
+          setNotListed((prev: any) => new Set(prev.add(item.itemId)))
+          setUnregistered((prev: any) => new Set([...prev].filter((x) => x !== id)))
+        }
+      }
+    }
+    return
+  }
+
+  const fetchTokensMetadata = async () => {
+    for (let i of tokensOwned) {
+      const uri = await context.nftContract.tokenURI(i)
+      const response = await fetch(uri)
+      const data = await response.json()
+      data.tokenId = i
+      data.listPrice = 0
+      setTokenData((prev: any) => [...prev, data])
+    }
+  }
 
   useEffect(() => {
-    // fetchNFTsOwned()
+    fetchNFTsOwned()
     fetchOwnedTokens()
+    fetchTokensMetadata()
     // filterItems();
     // getOwnedTokens()
     userInfo()
   }, [])
 
-  console.log(tokensOwned)
+  console.log(tokenData)
   return (
     <div>
       <ViewNFTCard viewNFTModal={viewNFTModal} setViewNFTModal={setViewNFTModal} />

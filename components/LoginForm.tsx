@@ -11,7 +11,7 @@ type FormData = {
 const LoginForm = () => {
   const router = useRouter()
   const context = useContext(globalContext)
-
+  console.log(context)
   const {
     register,
     handleSubmit,

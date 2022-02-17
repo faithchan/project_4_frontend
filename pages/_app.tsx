@@ -14,6 +14,7 @@ import Marketplace from '../contract-abis/Marketplace.json'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const context = useContext(GlobalContext)
+  const [login, setLogin]=useState(false)
   const [isDesigner, setDesigner] = useState(false)
   const [walletAddress, setWalletAddress] = useState('0x')
   const [signer, setSigner] = useState(null)
@@ -23,11 +24,13 @@ function MyApp({ Component, pageProps }: AppProps) {
   // console.log('app context: ', context)
 
   const userLoginData = {
+    login:login,
     designerState: isDesigner,
     walletAddress: walletAddress,
     signer: signer,
     nftContract: nftContract,
     marketplaceContract: marketplaceContract,
+    setLogin: (login: boolean) => setLogin(login),
     setSigner: (signer: any) => setSigner(signer),
     setNftContract: (nftContract: any) => setNftContract(nftContract),
     setMarketplaceContract: (marketplaceContract: any) =>
