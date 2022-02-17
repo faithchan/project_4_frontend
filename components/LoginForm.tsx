@@ -11,7 +11,7 @@ type FormData = {
 const LoginForm = () => {
   const router = useRouter()
   const context = useContext(globalContext)
-
+  console.log(context)
   const {
     register,
     handleSubmit,
@@ -32,6 +32,7 @@ const LoginForm = () => {
         alert('Invalid Email / Password, please try again')
       } else {
         localStorage.setItem('token', decodedResponse.token)
+        context.setLogin(true)
         router.push('/')
       }
     } catch (err) {

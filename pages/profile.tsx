@@ -1,23 +1,138 @@
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
-import verifiedImg from '../public/verified.svg'
+import { useEffect, useState, useContext} from 'react'
+import verifiedImg from "../public/verified.svg"
 import ViewNFTCard from '../components/ViewNFTCard'
+import { id } from 'ethers/lib/utils'
+import globalContext from '../context/context'
+import Web3Modal from 'web3modal'
+import { ethers } from 'ethers'
 
 // fetch tokens from currently logged in and connected wallet addresses
 
+
 const profile = () => {
-  //NEED TO REFACTOR VERIFIED - Need to check if user is verified designer by jwt or global context!!
-  const [verified, setVerified] = useState(true)
+  const context = useContext(globalContext)
+  const [tokenData, setTokenData] = useState<any>([])
+  const [userData, setUserData]= useState({})
   const [tokensOwned, setTokensOwned] = useState([])
   const [tokensCreated, setTokensCreated] = useState([])
-  const [viewNFTModal, setViewNFTModal] = useState(false)
+  const [viewNFTModal, setViewNFTModal]=useState(false)
+  const [username, setUsername]= useState("")
+  const [following, setFollowing]= useState("")
+  const [followers, setFollowers]= useState("")
+  const [avatar, setAvatar]= useState("")
+  const [type, setType]= useState("user")
+  const [id, setId]= useState("")
+  const [ownerTokens, setOwnerTokens] = useState<any>(new Set())
+  const [listedItems, setListedItems] = useState<any>(new Set()) // itemIds
+  const [notListed, setNotListed] = useState<any>(new Set()) // itemsIds
+  const [unregistered, setUnregistered] = useState<any>(new Set()) // tokenIds
+  const [ownedItems, setOwnedItems] = useState<any>([])
+  const [verified, setVerified] = useState(true)
+  console.log(context.login)
+  
 
-  const getOwnedTokens = async () => {}
+ //Get user details - image, followers, following, type of user, 
+  const userDataURL = `${process.env.API_ENDPOINT}/users/${context.walletAddress}`
+
+  const userInfo = async() => {
+      try {
+          const response = await fetch (userDataURL); 
+          const data = await response.json(); 
+          console.log(data)
+          setUserData(data[0])
+          setUsername(data[0].username)
+          setFollowing(data[0].following.length)
+          setFollowers(data[0].followers.length)
+          setAvatar(data[0].avatar)
+          setType(data[0].type) 
+          setId(data[0]._id) 
+      } 
+      catch (err) {
+          console.log("error:", err)
+      }
+  }
+
+  // const ownedTokensUrl = `${process.env.API_ENDPOINT}/tokens/${id}`
+  
+  // const getOwnedTokens = async () => {
+  //   try {
+  //     const response = await fetch (ownedTokensUrl); 
+  //     const data = await response.json(); 
+  //     setTokensOwned(data)
+  //   }
+  //     catch (err) {
+  //       console.log("error:", err)
+  //   }
+  // }
+  const fetchNFTsOwned = async () => {
+    const totalSupply = await context.nftContract.totalSupply()
+    for (let i = 0; i < totalSupply; i++) {
+      const owner = await context.nftContract.ownerOf(i)
+      if (owner === context.walletAddress) {
+        setOwnerTokens((prev: any) => new Set(prev.add(i)))
+        console.log(ownerTokens)
+      }
+    }
+    console.log('total supply', totalSupply)
+  }
+
+  const fetchOwnedTokens = async () => {
+    const owned = await context.marketplaceContract.getItemsOwned()
+    console.log(owned[0].length)
+    setTokensOwned(owned[0].length)
+  }
+
+  const filterItems = () => {
+    // console.log('owner tokens: ', ownerTokens)
+    if (ownerTokens.length === 0) {
+      console.log('no tokens in wallet')
+      return
+    }
+    if (ownedItems.length === 0) {
+      setUnregistered(ownerTokens)
+      console.log('no items owned in marketplace')
+      return
+    }
+    setUnregistered(ownerTokens)
+    for (let id of ownerTokens) {
+      for (let item of ownedItems) {
+        const tokenId = item.tokenId.toString()
+        if (tokenId === id.toString() && item.isListed === true) {
+          setListedItems((prev: any) => new Set(prev.add(item.itemId)))
+          setUnregistered((prev: any) => new Set([...prev].filter((x) => x !== id)))
+        } else if (tokenId === id.toString() && item.isListed === false) {
+          setNotListed((prev: any) => new Set(prev.add(item.itemId)))
+          setUnregistered((prev: any) => new Set([...prev].filter((x) => x !== id)))
+        }
+      }
+    }
+    return
+  }
+
+
+  const fetchTokensMetadata = async () => {
+    for (let i of tokensOwned) {
+      const uri = await context.nftContract.tokenURI(i)
+      const response = await fetch(uri)
+      const data = await response.json()
+      data.tokenId = i
+      data.listPrice = 0
+      setTokenData((prev: any) => [...prev, data])
+    }
+  }
 
   useEffect(() => {
-    getOwnedTokens()
+    fetchNFTsOwned()
+    fetchOwnedTokens()
+    fetchTokensMetadata()
+    // filterItems();
+    // getOwnedTokens()
+    userInfo()
   }, [])
 
+  console.log(tokenData)
+  console.log(tokensOwned)
   return (
     <div>
       <ViewNFTCard viewNFTModal={viewNFTModal} setViewNFTModal={setViewNFTModal} />
@@ -26,13 +141,12 @@ const profile = () => {
           <div className="flex flex-col gap-1 text-center">
             <div className="mt-6 w-fit mx-auto">
               <img
-                className="rounded-full"
-                src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"
+                className="rounded-full w-48 h-48"
+                src={avatar}
               ></img>
             </div>
-            <p className="text-gold text-2xl font-header mt-8">
-              Marina Davinchi{verified ? <Image src={verifiedImg} alt="Logo"></Image> : ''}
-            </p>
+            <p className="text-gold text-2xl font-header mt-8">{username}{type==="designer"?<Image src={verifiedImg} alt="Logo"></Image>:""}</p>
+
             <span className="text-sm text-gray-300 mt-2 font-body">
               New York, NY - Los Angeles, CA
             </span>
@@ -40,15 +154,15 @@ const profile = () => {
 
           <div className="flex justify-center items-center gap-2 my-4">
             <div className="text-center mx-4">
-              <p className="text-gold text-sm font-header">102</p>
-              <span className="text-gray-300 font-body ">Posts</span>
+              <p className="text-gold text-sm font-header">{tokensOwned?tokensOwned:0}</p>
+              <span className="text-gray-300 font-body ">Tokens</span>
             </div>
             <div className=" text-center mx-4">
-              <p className="text-gold text-sm font-header">102</p>
+              <p className="text-gold text-sm font-header">{followers?followers:0}</p>
               <span className="text-gray-300 font-body">Followers</span>
             </div>
             <div className=" text-center mx-4">
-              <p className="text-gold text-sm font-header">102</p>
+              <p className="text-gold text-sm font-header">{following?following:0}</p>
               <span className="text-gray-300 font-body">Following</span>
             </div>
           </div>
@@ -72,9 +186,8 @@ const profile = () => {
           </div>
           <div className="grid grid-cols-3 gap-6 mt-3 mb-6">
             <img
-              className="block bg-center bg-no-repeat bg-cover h-50 w-full rounded-lg cursor-pointer"
-              src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"
-              onClick={() => setViewNFTModal(true)}
+              className="block bg-center  bg-cover h-48 w-48 rounded-lg cursor-pointer"
+              src={avatar} onClick={()=>setViewNFTModal(true)}
             ></img>
           </div>
         </div>
