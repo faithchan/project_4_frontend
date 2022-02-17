@@ -4,6 +4,8 @@ import verifiedImg from "../public/verified.svg"
 import ViewNFTCard from '../components/ViewNFTCard'
 import { id } from 'ethers/lib/utils'
 import globalContext from '../context/context'
+import Web3Modal from 'web3modal'
+import { ethers } from 'ethers'
 
 // fetch tokens from currently logged in and connected wallet addresses
 
@@ -21,6 +23,11 @@ const profile = () => {
   const [avatar, setAvatar]= useState("")
   const [type, setType]= useState("user")
   const [id, setId]= useState("")
+  const [ownerTokens, setOwnerTokens] = useState<any>(new Set())
+  const [listedItems, setListedItems] = useState<any>(new Set()) // itemIds
+  const [notListed, setNotListed] = useState<any>(new Set()) // itemsIds
+  const [unregistered, setUnregistered] = useState<any>(new Set()) // tokenIds
+  const [ownedItems, setOwnedItems] = useState<any>([])
   
   
 
@@ -45,22 +52,68 @@ const profile = () => {
       }
   }
 
-  const ownedTokensUrl = `${process.env.API_ENDPOINT}/tokens/${id}`
+  // const ownedTokensUrl = `${process.env.API_ENDPOINT}/tokens/${id}`
   
-  const getOwnedTokens = async () => {
-    try {
-      const response = await fetch (ownedTokensUrl); 
-      const data = await response.json(); 
-      console.log(data)
-      setTokensOwned(data)
-    }
-      catch (err) {
-        console.log("error:", err)
-    }
+  // const getOwnedTokens = async () => {
+  //   try {
+  //     const response = await fetch (ownedTokensUrl); 
+  //     const data = await response.json(); 
+  //     setTokensOwned(data)
+  //   }
+  //     catch (err) {
+  //       console.log("error:", err)
+  //   }
+  // }
+  // const fetchNFTsOwned = async () => {
+  //   const totalSupply = await context.nftContract.totalSupply()
+  //   for (let i = 0; i < totalSupply; i++) {
+  //     const owner = await context.nftContract.ownerOf(i)
+  //     if (owner === context.walletAddress) {
+  //       setOwnerTokens((prev: any) => new Set(prev.add(i)))
+  //       console.log(ownerTokens)
+  //     }
+  //   }
+  //   console.log('total supply', totalSupply)
+  // }
+
+  const fetchOwnedTokens = async () => {
+    const owned = await context.marketplaceContract.getItemsOwned()
+    console.log(owned)
+    setTokensOwned(owned.length)
   }
 
+  // const filterItems = () => {
+  //   // console.log('owner tokens: ', ownerTokens)
+  //   if (ownerTokens.length === 0) {
+  //     console.log('no tokens in wallet')
+  //     return
+  //   }
+  //   if (ownedItems.length === 0) {
+  //     setUnregistered(ownerTokens)
+  //     console.log('no items owned in marketplace')
+  //     return
+  //   }
+  //   setUnregistered(ownerTokens)
+  //   for (let id of ownerTokens) {
+  //     for (let item of ownedItems) {
+  //       const tokenId = item.tokenId.toString()
+  //       if (tokenId === id.toString() && item.isListed === true) {
+  //         setListedItems((prev: any) => new Set(prev.add(item.itemId)))
+  //         setUnregistered((prev: any) => new Set([...prev].filter((x) => x !== id)))
+  //       } else if (tokenId === id.toString() && item.isListed === false) {
+  //         setNotListed((prev: any) => new Set(prev.add(item.itemId)))
+  //         setUnregistered((prev: any) => new Set([...prev].filter((x) => x !== id)))
+  //       }
+  //     }
+  //   }
+  //   return
+  // }
+
   useEffect(() => {
-    getOwnedTokens()
+    // fetchNFTsOwned()
+    fetchOwnedTokens()
+    // filterItems();
+    // getOwnedTokens()
     userInfo()
   }, [])
 
@@ -85,8 +138,8 @@ const profile = () => {
 
           <div className="flex justify-center items-center gap-2 my-4">
             <div className="text-center mx-4">
-              <p className="text-gold text-sm font-header">{tokensOwned.length?tokensOwned.length:0}</p>
-              <span className="text-gray-300 font-body ">Posts</span>
+              <p className="text-gold text-sm font-header">{tokensOwned?tokensOwned:0}</p>
+              <span className="text-gray-300 font-body ">Tokens</span>
             </div>
             <div className=" text-center mx-4">
               <p className="text-gold text-sm font-header">{followers?followers:0}</p>
@@ -116,13 +169,11 @@ const profile = () => {
             </button>
           </div>
           <div className="grid grid-cols-3 gap-6 mt-3 mb-6">
-            {tokensOwned.map(({description, isListed, listPrice, name, owner, image, _id, tokenId})=>
-            image?<img
+            <img
               className="block bg-center  bg-cover h-48 w-48 rounded-lg cursor-pointer"
-              src={image} onClick={()=>setViewNFTModal(true)}
-            ></img>:"")
-            }
-           
+              src={avatar} onClick={()=>setViewNFTModal(true)}
+            ></img>
+            
           </div>
         </div>
       </div>
