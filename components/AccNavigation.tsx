@@ -1,11 +1,17 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import accountImg from '../public/account.svg'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/solid'
+import globalContext from '../context/context'
 
 const AccNavigation = () => {
+  const context = useContext(globalContext)
+  const logoutHandler=()=>{
+  localStorage.removeItem('token')
+  context.setLogin(false)
+  }
   return (
     <div className="text-right font-body">
       <Menu as="div" className="relative inline-block text-left">
@@ -49,7 +55,7 @@ const AccNavigation = () => {
               </Menu.Item>
               <Menu.Item>
                 <Link href="/">
-                  <a className="group flex items-center px-4 py-1 text-gray-300 hover:text-gold">
+                  <a className="group flex items-center px-4 py-1 text-gray-300 hover:text-gold" onClick={logoutHandler}>
                     Log Out
                   </a>
                 </Link>
