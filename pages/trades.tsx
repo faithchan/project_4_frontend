@@ -4,7 +4,6 @@ import { ethers } from 'ethers'
 import TradeCard from '../components/TradeCard'
 import globalContext from '../context/context'
 import BurnNFTModal from '../components/BurnNFTModal'
-import Ellipsis from '../components/Spinner'
 
 const Trades = () => {
   const context = useContext(globalContext)
@@ -47,6 +46,11 @@ const Trades = () => {
     return
   }
 
+  const fetchMarketItems = async () => {
+    const owned = await context.marketplaceContract.getItemsOwned()
+    setOwnedItems(owned)
+  }
+
   const fetchNFTsOwned = async () => {
     const totalSupply = await context.nftContract.totalSupply()
     for (let i = 0; i < totalSupply; i++) {
@@ -55,12 +59,6 @@ const Trades = () => {
         setOwnerTokens((prev: any) => new Set(prev.add(i)))
       }
     }
-    console.log('total supply', totalSupply)
-  }
-
-  const fetchMarketItems = async () => {
-    const owned = await context.marketplaceContract.getItemsOwned()
-    setOwnedItems(owned)
   }
 
   const fetchTokensMetadata = async () => {
@@ -71,6 +69,10 @@ const Trades = () => {
       const data = await response.json()
       data.tokenId = i
       data.listPrice = 0
+      const creator = await context.nftContract.tokenCreator(data.tokenId)
+      const creatorInfo = await fetchCreatorInfo(creator)
+      data.creator = creatorInfo[0].username
+      data.avatar = creatorInfo[0].avatar
       unregisteredData.push(data)
       setTokenData(unregisteredData)
     }
@@ -89,6 +91,8 @@ const Trades = () => {
         name: null,
         description: null,
         image: null,
+        creator: null,
+        avatar: null,
       }
       const uri = await context.nftContract.tokenURI(details.tokenId)
       const response = await fetch(uri)
@@ -96,6 +100,10 @@ const Trades = () => {
       details.name = data.name
       details.description = data.description
       details.image = data.image
+      const creator = await context.nftContract.tokenCreator(details.tokenId)
+      const creatorInfo = await fetchCreatorInfo(creator)
+      details.creator = creatorInfo[0].username
+      details.avatar = creatorInfo[0].avatar
       listedData.push(details)
       setListedItemData(listedData)
     }
@@ -114,6 +122,8 @@ const Trades = () => {
         name: null,
         description: null,
         image: null,
+        creator: null,
+        avatar: null,
       }
       const uri = await context.nftContract.tokenURI(details.tokenId)
       const response = await fetch(uri)
@@ -121,10 +131,29 @@ const Trades = () => {
       details.name = data.name
       details.description = data.description
       details.image = data.image
+      const creator = await context.nftContract.tokenCreator(details.tokenId)
+      const creatorInfo = await fetchCreatorInfo(creator)
+      details.creator = creatorInfo[0].username
+      details.avatar = creatorInfo[0].avatar
       unlistedData.push(details)
       setUnlistedItemData(unlistedData)
     }
     setLoaded(true)
+  }
+
+  const fetchCreatorInfo = async (creator: string) => {
+    try {
+      const res = await fetch(`${process.env.API_ENDPOINT}/users/${creator}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const data = await res.json()
+      return data
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const renderListedItems = listedItemData.map((item: any) => {
@@ -137,6 +166,8 @@ const Trades = () => {
         image={item.image}
         listPrice={item.price}
         isListed={item.isListed}
+        creator={item.creator}
+        avatar={item.avatar}
         burnModal={burnModal}
         setBurnModal={setBurnModal}
         setCurrentTokenId={setCurrentTokenId}
@@ -154,6 +185,8 @@ const Trades = () => {
         image={item.image}
         listPrice={item.price}
         isListed={item.isListed}
+        creator={item.creator}
+        avatar={item.avatar}
         burnModal={burnModal}
         setBurnModal={setBurnModal}
         setCurrentTokenId={setCurrentTokenId}
@@ -161,16 +194,18 @@ const Trades = () => {
     )
   })
 
-  const renderTokens = tokenData.map((uri: any) => {
+  const renderTokens = tokenData.map((data: any) => {
     return (
       <TradeCard
-        key={uri.image}
-        tokenId={uri.tokenId}
+        key={data.image}
+        tokenId={data.tokenId}
         itemId={null}
-        name={uri.name}
-        image={uri.image}
-        listPrice={uri.listPrice}
+        name={data.name}
+        image={data.image}
+        listPrice={data.listPrice}
         isListed={false}
+        creator={data.creator}
+        avatar={data.avatar}
         burnModal={burnModal}
         setBurnModal={setBurnModal}
         setCurrentTokenId={setCurrentTokenId}

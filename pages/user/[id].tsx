@@ -87,7 +87,6 @@ const Username = () => {
     } catch (err) {
       console.log('error adding followers: ', err)
     }
-    // add user as follower to artist's followers array
     const artistFollowers = artistProfile[0].followers
     artistFollowers.push(context.walletAddress)
     console.log('updated artist followers: ', artistFollowers)

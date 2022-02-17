@@ -14,8 +14,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [nftContract, setNftContract] = useState()
   const [marketplaceContract, setMarketplaceContract] = useState()
 
-  // console.log('app context: ', context)
-
   const userLoginData = {
     designerState: isDesigner,
     walletAddress: walletAddress,
