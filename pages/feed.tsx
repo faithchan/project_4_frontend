@@ -4,10 +4,6 @@ import BuyNFTModal from '../components/BuyNFTModal'
 import globalContext from '../context/context'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
-import Ellipsis from '../components/Spinner'
-
-// should show user's following artists tokens
-// but rendering all listed items first for testing
 
 const feed = () => {
   const context = useContext(globalContext)
@@ -21,7 +17,7 @@ const feed = () => {
 
   const fetchMarketItems = async () => {
     const listed = await context.marketplaceContract.getListedItems()
-    // console.log('market items: ', listed)
+    console.log('market items: ', listed)
     const allTokens = []
     for (let item of listed) {
       const details = {

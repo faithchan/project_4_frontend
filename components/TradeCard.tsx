@@ -74,6 +74,7 @@ const TradeCard = (props: CardProps) => {
           tokenId={props.tokenId}
           ListNFTModal={ListNFTModal}
           setListNFTModal={setListNFTModal}
+          isCreator={isCreator}
         />
       )}
       <div className="w-full px-8 pt-8 pb-6 bg-purple opacity-80 rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all transform duration-500 ">
