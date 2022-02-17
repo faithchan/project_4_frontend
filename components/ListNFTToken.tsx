@@ -1,6 +1,5 @@
 import { useEffect, useState, useContext } from 'react'
 import { ethers } from 'ethers'
-import Web3Modal from 'web3modal'
 import globalContext from '../context/context'
 import { nftaddress } from '../config'
 import { useRouter } from 'next/router'
@@ -8,6 +7,7 @@ import { useRouter } from 'next/router'
 interface listingProps {
   tokenId: number
   ListNFTModal: boolean
+  isCreator: boolean
   setListNFTModal: (a: boolean) => void
 }
 
@@ -44,14 +44,6 @@ const ListNFTToken = (props: listingProps) => {
     setRoyaltyAmount(bp)
   }
 
-  // const getRoyaltyInfo = async () => {
-  //   if (context.nftContract) {
-  //     const salePrice = ethers.utils.parseUnits(listPrice, 'ether')
-  //     const info = await context.nftContract.royaltyInfo(props.tokenId, salePrice)
-  //     console.log('royalty info: ', info)
-  //   }
-  // }
-
   //----------------Listing Token----------------//
 
   const listToken = async () => {
@@ -74,37 +66,6 @@ const ListNFTToken = (props: listingProps) => {
     setListPrice(value)
   }
 
-  const connectWallet = async () => {
-    if (typeof window.ethereum !== 'undefined') {
-      if (window.ethereum.chainId !== '0x4') {
-        console.log('switch to rinkeby network')
-        changeNetwork()
-      } else {
-        const web3Modal = new Web3Modal()
-        const connection = await web3Modal.connect()
-        const provider = new ethers.providers.Web3Provider(connection)
-        const signer = provider.getSigner()
-        const connectedAddress = await signer.getAddress()
-        context.setSigner(signer)
-        context.setWalletAddress(connectedAddress)
-      }
-    } else {
-      alert('Please install Metamask')
-    }
-  }
-
-  const changeNetwork = async () => {
-    try {
-      if (!window.ethereum) throw new Error('No crypto wallet found')
-      await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: '0x4' }],
-      })
-    } catch (err: any) {
-      console.log('error changing network: ', err.message)
-    }
-  }
-
   const royaltyHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
   }
@@ -119,7 +80,7 @@ const ListNFTToken = (props: listingProps) => {
     >
       <div className="absolute bg-black opacity-80 inset-0 z-0"></div>
       <div className="w-full  max-w-lg p-5 relative mx-auto my-auto rounded-xl shadow-lg  bg-purple">
-        {showRoyalty ? (
+        {showRoyalty && props.isCreator ? (
           <form className="" onSubmit={royaltyHandler}>
             <div className="text-center p-5 flex-auto justify-center">
               <p className="text-2xl text-gold font-header px-8">Set Royalty</p>
@@ -164,7 +125,7 @@ const ListNFTToken = (props: listingProps) => {
                   Continue to List
                 </button>
               ) : (
-                ''
+                <div></div>
               )}
             </div>
           </form>

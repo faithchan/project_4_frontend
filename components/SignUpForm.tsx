@@ -29,6 +29,7 @@ const SignUpForm = () => {
   })
 
   const onSubmit = async (data: any) => {
+    data.username = data.username.toLowerCase()
     console.log('data: ', data)
     try {
       const response = await fetch(`${process.env.API_ENDPOINT}/users`, {

@@ -46,6 +46,11 @@ const Trades = () => {
     return
   }
 
+  const fetchMarketItems = async () => {
+    const owned = await context.marketplaceContract.getItemsOwned()
+    setOwnedItems(owned)
+  }
+
   const fetchNFTsOwned = async () => {
     const totalSupply = await context.nftContract.totalSupply()
     for (let i = 0; i < totalSupply; i++) {
@@ -54,29 +59,29 @@ const Trades = () => {
         setOwnerTokens((prev: any) => new Set(prev.add(i)))
       }
     }
-    console.log('total supply', totalSupply)
-  }
-
-  const fetchMarketItems = async () => {
-    const owned = await context.marketplaceContract.getItemsOwned()
-    setOwnedItems(owned)
   }
 
   const fetchTokensMetadata = async () => {
+    const unregisteredData = []
     for (let i of unregistered) {
       const uri = await context.nftContract.tokenURI(i)
       const response = await fetch(uri)
       const data = await response.json()
       data.tokenId = i
       data.listPrice = 0
-      setTokenData((prev: any) => [...prev, data])
+      const creator = await context.nftContract.tokenCreator(data.tokenId)
+      const creatorInfo = await fetchCreatorInfo(creator)
+      data.creator = creatorInfo[0].username
+      data.avatar = creatorInfo[0].avatar
+      unregisteredData.push(data)
+      setTokenData(unregisteredData)
     }
   }
 
   const fetchListedItemsMetadata = async () => {
+    const listedData = []
     for (let i of listedItems) {
       const item = await context.marketplaceContract.getItemById(i)
-      console.log('item data: ', item)
       const details = {
         isListed: item.isListed,
         owner: item.owner,
@@ -86,6 +91,8 @@ const Trades = () => {
         name: null,
         description: null,
         image: null,
+        creator: null,
+        avatar: null,
       }
       const uri = await context.nftContract.tokenURI(details.tokenId)
       const response = await fetch(uri)
@@ -93,14 +100,19 @@ const Trades = () => {
       details.name = data.name
       details.description = data.description
       details.image = data.image
-      setListedItemData((prev: any) => [...prev, details])
+      const creator = await context.nftContract.tokenCreator(details.tokenId)
+      const creatorInfo = await fetchCreatorInfo(creator)
+      details.creator = creatorInfo[0].username
+      details.avatar = creatorInfo[0].avatar
+      listedData.push(details)
+      setListedItemData(listedData)
     }
   }
 
   const fetchUnlistedItemsMetadata = async () => {
+    const unlistedData = []
     for (let i of notListed) {
       const item = await context.marketplaceContract.getItemById(i)
-      console.log('item data: ', item)
       const details = {
         isListed: item.isListed,
         owner: item.owner,
@@ -110,6 +122,8 @@ const Trades = () => {
         name: null,
         description: null,
         image: null,
+        creator: null,
+        avatar: null,
       }
       const uri = await context.nftContract.tokenURI(details.tokenId)
       const response = await fetch(uri)
@@ -117,9 +131,29 @@ const Trades = () => {
       details.name = data.name
       details.description = data.description
       details.image = data.image
-      setUnlistedItemData((prev: any) => [...prev, details])
+      const creator = await context.nftContract.tokenCreator(details.tokenId)
+      const creatorInfo = await fetchCreatorInfo(creator)
+      details.creator = creatorInfo[0].username
+      details.avatar = creatorInfo[0].avatar
+      unlistedData.push(details)
+      setUnlistedItemData(unlistedData)
     }
     setLoaded(true)
+  }
+
+  const fetchCreatorInfo = async (creator: string) => {
+    try {
+      const res = await fetch(`${process.env.API_ENDPOINT}/users/${creator}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const data = await res.json()
+      return data
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const renderListedItems = listedItemData.map((item: any) => {
@@ -132,6 +166,8 @@ const Trades = () => {
         image={item.image}
         listPrice={item.price}
         isListed={item.isListed}
+        creator={item.creator}
+        avatar={item.avatar}
         burnModal={burnModal}
         setBurnModal={setBurnModal}
         setCurrentTokenId={setCurrentTokenId}
@@ -149,6 +185,8 @@ const Trades = () => {
         image={item.image}
         listPrice={item.price}
         isListed={item.isListed}
+        creator={item.creator}
+        avatar={item.avatar}
         burnModal={burnModal}
         setBurnModal={setBurnModal}
         setCurrentTokenId={setCurrentTokenId}
@@ -156,22 +194,30 @@ const Trades = () => {
     )
   })
 
-  const renderTokens = tokenData.map((uri: any) => {
+  const renderTokens = tokenData.map((data: any) => {
     return (
       <TradeCard
-        key={uri.image}
-        tokenId={uri.tokenId}
+        key={data.image}
+        tokenId={data.tokenId}
         itemId={null}
-        name={uri.name}
-        image={uri.image}
-        listPrice={uri.listPrice}
+        name={data.name}
+        image={data.image}
+        listPrice={data.listPrice}
         isListed={false}
+        creator={data.creator}
+        avatar={data.avatar}
         burnModal={burnModal}
         setBurnModal={setBurnModal}
         setCurrentTokenId={setCurrentTokenId}
       />
     )
   })
+
+  useEffect(() => {
+    fetchTokensMetadata()
+    fetchListedItemsMetadata()
+    fetchUnlistedItemsMetadata()
+  }, [unregistered, listedItems, notListed])
 
   useEffect(() => {
     if (context.nftContract && context.marketplaceContract) {
@@ -221,40 +267,6 @@ const Trades = () => {
 
   return (
     <div>
-      <button
-        onClick={() => {
-          console.log('listed items:', listedItems)
-        }}
-        className="text-white mr-4"
-      >
-        Listed items
-      </button>
-      <button
-        onClick={() => {
-          console.log('unlisted items: ', notListed)
-        }}
-        className="text-white mr-4"
-      >
-        Unlisted items
-      </button>
-      <button
-        onClick={() => {
-          console.log('unregistered items: ', unregistered)
-        }}
-        className="text-white mr-4"
-      >
-        Unregistered items
-      </button>
-      <button
-        onClick={() => {
-          fetchTokensMetadata()
-          fetchListedItemsMetadata()
-          fetchUnlistedItemsMetadata()
-        }}
-        className="text-white mr-4"
-      >
-        Fetch Metadata
-      </button>
       {burnModal ? (
         <BurnNFTModal tokenId={currentTokenId} burnModal={burnModal} setBurnModal={setBurnModal} />
       ) : (

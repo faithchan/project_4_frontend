@@ -12,6 +12,8 @@ interface CardProps {
   name: string
   image: string
   isListed: boolean
+  avatar: string
+  creator: string
   burnModal: boolean
   setBurnModal: (a: boolean) => void
   setCurrentTokenId: (a: number) => void
@@ -28,23 +30,6 @@ const TradeCard = (props: CardProps) => {
 
   const defaultAvatar =
     'https://bafkreigj5xab3lrgu7nty4r2sqwbfqkudeed7pz2w7fvajnflgphyw6nlu.ipfs.infura-ipfs.io/'
-
-  const fetchCreatorInfo = async () => {
-    try {
-      const res = await fetch(`${process.env.API_ENDPOINT}/users/${creator}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      const data = await res.json()
-      console.log('creator profile: ', data)
-      setCreatorProfile(data)
-      console.log('creator profile: ', creatorProfile)
-    } catch (err) {
-      console.log(err)
-    }
-  }
 
   const checkIfHolderIsCreator = async () => {
     const creator = await context.nftContract.tokenCreator(props.tokenId)
@@ -66,14 +51,11 @@ const TradeCard = (props: CardProps) => {
     return str.substring(0, 4) + '...' + str.substring(str.length - 2)
   }
 
-  // useEffect(() => {
-  //   console.log('creator profile: ', creatorProfile)
-  // }, [creatorProfile])
-
-  useEffect(async () => {
-    await fetchCreatorInfo()
-    setProfileLoaded(true)
-  }, [creator])
+  useEffect(() => {
+    if (creatorProfile !== undefined) {
+      setProfileLoaded(true)
+    }
+  }, [creatorProfile])
 
   useEffect(() => {
     if (context.nftContract) {
@@ -92,6 +74,7 @@ const TradeCard = (props: CardProps) => {
           tokenId={props.tokenId}
           ListNFTModal={ListNFTModal}
           setListNFTModal={setListNFTModal}
+          isCreator={isCreator}
         />
       )}
       <div className="w-full px-8 pt-8 pb-6 bg-purple opacity-80 rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all transform duration-500 ">
@@ -104,15 +87,18 @@ const TradeCard = (props: CardProps) => {
             />
             <p className="text-gold mt-4 text-md font-header tracking-widest">{props.name}</p>
             <p className="text-gray-300 font-body text-xs mt-1 tracking-widest">
-              List Price: {props.listPrice === 0 ? '-' : props.listPrice + ' ETH'}
+              List Price:{' '}
+              {props.listPrice === 0 || props.isListed === false ? '-' : props.listPrice + ' ETH'}
             </p>
-            {props.listPrice === 0 && (
+            {props.listPrice === 0 || props.isListed === false ? (
               <p
                 className="text-gray-300 font-body text-xs mt-1 tracking-widest underline cursor-pointer"
                 onClick={() => setListNFTModal(true)}
               >
                 List this NFT
               </p>
+            ) : (
+              ''
             )}
           </span>
           <span>
@@ -120,12 +106,12 @@ const TradeCard = (props: CardProps) => {
             <span className="flex space-x-4 mr-6">
               <img
                 className="w-16 h-16 object-cover rounded-full mr-4 mt-6 mb-4"
-                // src={profileLoaded ? creatorProfile[0].avatar : defaultAvatar}
+                src={props.avatar}
                 alt=""
               />
               <span className="my-auto">
                 <p className="text-center text-gold font-header text-xs tracking-widest">
-                  {/* {profileLoaded ? creatorProfile[0].username : '-'} */}
+                  {props.creator}
                 </p>
                 <hr className="border-gold border my-2"></hr>
                 <p
@@ -140,11 +126,7 @@ const TradeCard = (props: CardProps) => {
             <p className="text-gold text-xs font-header tracking-widest mt-2">
               {shortenAddress(context.walletAddress)}
             </p>
-            {/* <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">
-              Bought on 12 Feb 2021
-            </p> */}
             <span className="flex justify-between">
-              {/* <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">Price:0.01 Eth</p> */}
               <span className="pt-2 cursor-pointer" onClick={() => props.setBurnModal(true)}>
                 <Image className="mt-4" src={deleteImg} alt="Logo" />
               </span>
