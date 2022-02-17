@@ -4,28 +4,22 @@ import BuyNFTModal from '../components/BuyNFTModal'
 import globalContext from '../context/context'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
-import Ellipsis from '../components/Spinner'
-
-// should show user's following artists tokens
-// but rendering all listed items first for testing
 
 const feed = () => {
   const context = useContext(globalContext)
   const [buyModal, setBuyModal] = useState(false)
-  const [listedItems, setListedItems] = useState<any>([])
   const [tokenData, setTokenData] = useState<any>([])
   const [loaded, setLoaded] = useState(false)
   const [currentItemId, setCurrentItemId] = useState<number>()
+  const [currentTokenId, setCurrentTokenId] = useState<number>()
+  const [currentItemOwner, setCurrentItemOwner] = useState<string>()
   const [currentPrice, setCurrentPrice] = useState<any>()
 
   const fetchMarketItems = async () => {
     const listed = await context.marketplaceContract.getListedItems()
     console.log('market items: ', listed)
-    setListedItems(listed)
-  }
-
-  const fetchItemsMetadata = async () => {
-    for (let item of listedItems) {
+    const allTokens = []
+    for (let item of listed) {
       const details = {
         isListed: item.isListed,
         owner: item.owner,
@@ -42,7 +36,8 @@ const feed = () => {
       details.name = data.name
       details.description = data.description
       details.image = data.image
-      setTokenData((prev: any) => [...prev, details])
+      allTokens.push(details)
+      setTokenData(allTokens)
     }
     setLoaded(true)
   }
@@ -53,28 +48,30 @@ const feed = () => {
     }
   }, [context.marketplaceContract])
 
-  useEffect(() => {
-    fetchItemsMetadata()
-  }, [listedItems])
-
   const renderCards = tokenData.map((item: any) => {
-    return (
-      <FeedCard
-        key={item.image}
-        name={item.name}
-        description={item.description}
-        image={item.image}
-        price={item.price}
-        itemId={item.itemId}
-        isListed={item.isListed}
-        owner={item.owner}
-        tokenId={item.tokenId}
-        buyModal={buyModal}
-        setBuyModal={setBuyModal}
-        setCurrentItemId={setCurrentItemId}
-        setCurrentPrice={setCurrentPrice}
-      />
-    )
+    if (item.owner === context.walletAddress) {
+      return <></>
+    } else {
+      return (
+        <FeedCard
+          key={item.image}
+          name={item.name}
+          description={item.description}
+          image={item.image}
+          price={item.price}
+          itemId={item.itemId}
+          isListed={item.isListed}
+          owner={item.owner}
+          tokenId={item.tokenId}
+          buyModal={buyModal}
+          setBuyModal={setBuyModal}
+          setCurrentItemId={setCurrentItemId}
+          setCurrentTokenId={setCurrentTokenId}
+          setCurrentItemOwner={setCurrentItemOwner}
+          setCurrentPrice={setCurrentPrice}
+        />
+      )
+    }
   })
   //----------------Initialising Wallet----------------//
 
@@ -120,6 +117,8 @@ const feed = () => {
       {buyModal ? (
         <BuyNFTModal
           itemId={currentItemId}
+          tokenId={currentTokenId}
+          owner={currentItemOwner}
           price={currentPrice}
           buyModal={buyModal}
           setBuyModal={setBuyModal}

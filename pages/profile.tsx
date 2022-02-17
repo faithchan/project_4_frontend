@@ -28,6 +28,7 @@ const profile = () => {
   const [notListed, setNotListed] = useState<any>(new Set()) // itemsIds
   const [unregistered, setUnregistered] = useState<any>(new Set()) // tokenIds
   const [ownedItems, setOwnedItems] = useState<any>([])
+  const [verified, setVerified] = useState(true)
   console.log(context.login)
   
 
@@ -109,6 +110,7 @@ const profile = () => {
     return
   }
 
+
   const fetchTokensMetadata = async () => {
     for (let i of tokensOwned) {
       const uri = await context.nftContract.tokenURI(i)
@@ -144,6 +146,7 @@ const profile = () => {
               ></img>
             </div>
             <p className="text-gold text-2xl font-header mt-8">{username}{type==="designer"?<Image src={verifiedImg} alt="Logo"></Image>:""}</p>
+
             <span className="text-sm text-gray-300 mt-2 font-body">
               New York, NY - Los Angeles, CA
             </span>
@@ -186,7 +189,6 @@ const profile = () => {
               className="block bg-center  bg-cover h-48 w-48 rounded-lg cursor-pointer"
               src={avatar} onClick={()=>setViewNFTModal(true)}
             ></img>
-            
           </div>
         </div>
       </div>

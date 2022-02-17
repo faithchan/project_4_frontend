@@ -12,18 +12,22 @@ interface FeedProps {
   buyModal: boolean
   setBuyModal: (a: boolean) => void
   setCurrentItemId: (a: number) => void
+  setCurrentTokenId: (a: number) => void
+  setCurrentItemOwner: (a: string) => void
   setCurrentPrice: (a: string) => void
 }
 
 const FeedCard = (props: FeedProps) => {
   useEffect(() => {
     props.setCurrentItemId(props.itemId)
+    props.setCurrentTokenId(props.tokenId)
     props.setCurrentPrice(props.price)
+    props.setCurrentItemOwner(props.owner)
   }, [])
 
   return (
     <div className="flex justify-center mt-20 mb-10">
-      <div className=" px-8 pt-6 pb-6 bg-purple opacity-80 rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all transform duration-500">
+      <div className="px-8 pt-6 pb-6 bg-purple opacity-80 rounded-3xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all transform duration-500">
         <div className="">
           <span className="flex space-x-4 mr-6">
             <img
