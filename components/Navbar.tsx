@@ -68,11 +68,11 @@ const Navbar = () => {
                 </a>
               </Link>
             </li>
-            <li className="ml-10 mr-10 mt-2 ">
+            {/* <li className="ml-10 mr-10 mt-2 ">
               <a onClick={connectWallet}>
                 <Image src={walletImg}></Image>
               </a>
-            </li>
+            </li> */}
             <li className="ml-10 mr-20 mt-2 ">
               <TradesNavigation connectWallet={connectWallet} />
             </li>
