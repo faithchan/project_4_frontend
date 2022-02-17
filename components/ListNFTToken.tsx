@@ -1,6 +1,5 @@
 import { useEffect, useState, useContext } from 'react'
 import { ethers } from 'ethers'
-import Web3Modal from 'web3modal'
 import globalContext from '../context/context'
 import { nftaddress } from '../config'
 import { useRouter } from 'next/router'
@@ -126,7 +125,7 @@ const ListNFTToken = (props: listingProps) => {
                   Continue to List
                 </button>
               ) : (
-                ''
+                <div></div>
               )}
             </div>
           </form>
