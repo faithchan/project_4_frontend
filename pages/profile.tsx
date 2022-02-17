@@ -28,7 +28,7 @@ const profile = () => {
   const [notListed, setNotListed] = useState<any>(new Set()) // itemsIds
   const [unregistered, setUnregistered] = useState<any>(new Set()) // tokenIds
   const [ownedItems, setOwnedItems] = useState<any>([])
-  
+  console.log(context.login)
   
 
  //Get user details - image, followers, following, type of user, 
@@ -130,6 +130,7 @@ const profile = () => {
   }, [])
 
   console.log(tokenData)
+  console.log(tokensOwned)
   return (
     <div>
       <ViewNFTCard viewNFTModal={viewNFTModal} setViewNFTModal={setViewNFTModal} />

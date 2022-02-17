@@ -8,9 +8,14 @@ import globalContext from '../context/context'
 
 const AccNavigation = () => {
   const context = useContext(globalContext)
+
   const logoutHandler=()=>{
   localStorage.removeItem('token')
   context.setLogin(false)
+  context.setSigner(null)
+  context.setNftContract(null)
+  context.setMarketplaceContract(null)
+  context.setWalletAddress("")
   }
   return (
     <div className="text-right font-body">
