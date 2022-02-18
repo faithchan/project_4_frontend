@@ -8,16 +8,16 @@ import { useState, useContext, useEffect } from 'react'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const context = useContext(GlobalContext)
-  const [login, setLogin]=useState(false)
+  const [login, setLogin] = useState(false)
   const [isDesigner, setDesigner] = useState(false)
   const [walletAddress, setWalletAddress] = useState('')
   const [signer, setSigner] = useState(null)
   const [nftContract, setNftContract] = useState()
   const [marketplaceContract, setMarketplaceContract] = useState()
-  const [checkToken, setCheckToken]=useState("")
+  const [checkToken, setCheckToken] = useState('')
 
   const userLoginData = {
-    login:login,
+    login: login,
     designerState: isDesigner,
     walletAddress: walletAddress,
     signer: signer,
@@ -34,22 +34,20 @@ function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     //localStorage.setItem('userID', "61d8fb4d770c3094270135f7")
     if (!login) {
-      const loggedInUser = localStorage.getItem("token");
-      console.log(loggedInUser)
+      const loggedInUser = localStorage.getItem('token')
+      // console.log('user jwt: ', loggedInUser)
       if (loggedInUser) {
-        console.log("found local storage setlogin to true");
+        console.log('found local storage setlogin to true')
         setCheckToken(loggedInUser)
         setLogin(true)
+      } else {
+        console.log('no local storage found for userID')
       }
-      else {
-        console.log("no local storage found for userID")
-      }
-      if(checkToken) {
-        console.log("token exists")
+      if (checkToken) {
+        console.log('token exists')
       }
     }
-    
-  }, [checkToken]);
+  }, [checkToken])
 
   return (
     <div>
