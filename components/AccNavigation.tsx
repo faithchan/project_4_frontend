@@ -32,11 +32,15 @@ const AccNavigation = (props:connectWalletProps) => {
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button className="inline-flex justify-center w-full  text-sm font-medium text-white  rounded-md  focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-            <Link href="/profile">
+            {context.login?<Link href="/profile">
               <a onClick={connectWalletHandler}>
                 <Image src={accountImg}></Image>
               </a>
-            </Link>
+            </Link>:<Link href="/login">
+              <a>
+                <Image src={accountImg}></Image>
+              </a>
+            </Link>}
             <ChevronDownIcon
               className="w-5 h-5 ml-2 -mr-1 mt-2 text-gold hover:text-violet-100"
               aria-hidden="true"
