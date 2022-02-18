@@ -44,7 +44,7 @@ const Navbar = () => {
   }
 
   useEffect(() => {
-    if (context.signer === null) {
+    if (context.signer === null && context.login===true) {
       connectWallet()
     }
   }, [])
