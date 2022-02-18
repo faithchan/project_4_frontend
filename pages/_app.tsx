@@ -37,11 +37,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       const loggedInUser = localStorage.getItem('token')
       // console.log('user jwt: ', loggedInUser)
       if (loggedInUser) {
-        console.log('found local storage setlogin to true')
+        // console.log('found local storage setlogin to true')
         setCheckToken(loggedInUser)
         setLogin(true)
       } else {
-        console.log('no local storage found for userID')
+        // console.log('no local storage found for userID')
       }
       if (checkToken) {
         console.log('token exists')

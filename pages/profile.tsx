@@ -1,6 +1,6 @@
 import Image from 'next/image'
-import { useEffect, useState, useContext} from 'react'
-import verifiedImg from "../public/verified.svg"
+import { useEffect, useState, useContext } from 'react'
+import verifiedImg from '../public/verified.svg'
 import ViewNFTCard from '../components/ViewNFTCard'
 import { id } from 'ethers/lib/utils'
 import globalContext from '../context/context'
@@ -9,20 +9,19 @@ import { ethers } from 'ethers'
 
 // fetch tokens from currently logged in and connected wallet addresses
 
-
 const profile = () => {
   const context = useContext(globalContext)
   const [tokenData, setTokenData] = useState<any>([])
-  const [userData, setUserData]= useState({})
+  const [userData, setUserData] = useState({})
   const [tokensOwned, setTokensOwned] = useState([])
   const [tokensCreated, setTokensCreated] = useState([])
-  const [viewNFTModal, setViewNFTModal]=useState(false)
-  const [username, setUsername]= useState("")
-  const [following, setFollowing]= useState("")
-  const [followers, setFollowers]= useState("")
-  const [avatar, setAvatar]= useState("")
-  const [type, setType]= useState("user")
-  const [id, setId]= useState("")
+  const [viewNFTModal, setViewNFTModal] = useState(false)
+  const [username, setUsername] = useState('')
+  const [following, setFollowing] = useState('')
+  const [followers, setFollowers] = useState('')
+  const [avatar, setAvatar] = useState('')
+  const [type, setType] = useState('user')
+  const [id, setId] = useState('')
   const [ownerTokens, setOwnerTokens] = useState<any>(new Set())
   const [listedItems, setListedItems] = useState<any>(new Set()) // itemIds
   const [notListed, setNotListed] = useState<any>(new Set()) // itemsIds
@@ -30,41 +29,40 @@ const profile = () => {
   const [ownedItems, setOwnedItems] = useState<any>([])
   const [verified, setVerified] = useState(true)
   console.log(context.login)
-  
 
- //Get user details - image, followers, following, type of user, 
+  //Get user details - image, followers, following, type of user,
   const userDataURL = `${process.env.API_ENDPOINT}/users/${context.walletAddress}`
 
-  const userInfo = async() => {
-      try {
-          const response = await fetch (userDataURL); 
-          const data = await response.json(); 
-          console.log(data)
-          setUserData(data[0])
-          setUsername(data[0].username)
-          setFollowing(data[0].following.length)
-          setFollowers(data[0].followers.length)
-          setAvatar(data[0].avatar)
-          setType(data[0].type) 
-          setId(data[0]._id) 
-      } 
-      catch (err) {
-          console.log("error:", err)
-      }
+  const userInfo = async () => {
+    try {
+      const response = await fetch(userDataURL)
+      const data = await response.json()
+      console.log(data)
+      setUserData(data[0])
+      setUsername(data[0].username)
+      setFollowing(data[0].following.length)
+      setFollowers(data[0].followers.length)
+      setAvatar(data[0].avatar)
+      setType(data[0].type)
+      setId(data[0]._id)
+    } catch (err) {
+      console.log('error:', err)
+    }
   }
 
   // const ownedTokensUrl = `${process.env.API_ENDPOINT}/tokens/${id}`
-  
+
   // const getOwnedTokens = async () => {
   //   try {
-  //     const response = await fetch (ownedTokensUrl); 
-  //     const data = await response.json(); 
+  //     const response = await fetch (ownedTokensUrl);
+  //     const data = await response.json();
   //     setTokensOwned(data)
   //   }
   //     catch (err) {
   //       console.log("error:", err)
   //   }
   // }
+
   const fetchNFTsOwned = async () => {
     const totalSupply = await context.nftContract.totalSupply()
     for (let i = 0; i < totalSupply; i++) {
@@ -110,7 +108,6 @@ const profile = () => {
     return
   }
 
-
   const fetchTokensMetadata = async () => {
     for (let i of tokensOwned) {
       const uri = await context.nftContract.tokenURI(i)
@@ -140,12 +137,12 @@ const profile = () => {
         <div className="px-3 py-2">
           <div className="flex flex-col gap-1 text-center">
             <div className="mt-6 w-fit mx-auto">
-              <img
-                className="rounded-full w-48 h-48"
-                src={avatar}
-              ></img>
+              <img className="rounded-full w-48 h-48" src={avatar}></img>
             </div>
-            <p className="text-gold text-2xl font-header mt-8">{username}{type==="designer"?<Image src={verifiedImg} alt="Logo"></Image>:""}</p>
+            <p className="text-gold text-2xl font-header mt-8">
+              {username}
+              {type === 'designer' ? <Image src={verifiedImg} alt="Logo"></Image> : ''}
+            </p>
 
             <span className="text-sm text-gray-300 mt-2 font-body">
               New York, NY - Los Angeles, CA
@@ -154,15 +151,15 @@ const profile = () => {
 
           <div className="flex justify-center items-center gap-2 my-4">
             <div className="text-center mx-4">
-              <p className="text-gold text-sm font-header">{tokensOwned?tokensOwned:0}</p>
+              <p className="text-gold text-sm font-header">{tokensOwned ? tokensOwned : 0}</p>
               <span className="text-gray-300 font-body ">Tokens</span>
             </div>
             <div className=" text-center mx-4">
-              <p className="text-gold text-sm font-header">{followers?followers:0}</p>
+              <p className="text-gold text-sm font-header">{followers ? followers : 0}</p>
               <span className="text-gray-300 font-body">Followers</span>
             </div>
             <div className=" text-center mx-4">
-              <p className="text-gold text-sm font-header">{following?following:0}</p>
+              <p className="text-gold text-sm font-header">{following ? following : 0}</p>
               <span className="text-gray-300 font-body">Following</span>
             </div>
           </div>
@@ -187,7 +184,8 @@ const profile = () => {
           <div className="grid grid-cols-3 gap-6 mt-3 mb-6">
             <img
               className="block bg-center  bg-cover h-48 w-48 rounded-lg cursor-pointer"
-              src={avatar} onClick={()=>setViewNFTModal(true)}
+              src={avatar}
+              onClick={() => setViewNFTModal(true)}
             ></img>
           </div>
         </div>
