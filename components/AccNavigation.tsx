@@ -53,36 +53,36 @@ const AccNavigation = (props:connectWalletProps) => {
         >
           <Menu.Items className="origin-top-right absolute left-0 mt-2 w-32 rounded-md shadow-lg bg-opacity-20  bg-black  divide-y divide-gray-100 focus:outline-none">
             <div className="py-1 ">
-              <Menu.Item>
+            {!context.login?<Menu.Item>
                 <Link href="/login">
                   <a className="group flex items-center px-4 py-1  text-gray-300 hover:text-gold">
                     Log In
                   </a>
                 </Link>
-              </Menu.Item>
+              </Menu.Item>:""}
 
-              <Menu.Item>
-                <Link href="/signup">
+              {!context.login?<Menu.Item>
+              <Link href="/signup">
                   <a className="group flex items-center px-4 py-1 text-gray-300 hover:text-gold">
                     Sign Up
                   </a>
                 </Link>
-              </Menu.Item>
-              <Menu.Item>
+              </Menu.Item>:""}
+              {context.login? <Menu.Item>
                 <Link href="/">
                   <a className="group flex items-center px-4 py-1 text-gray-300 hover:text-gold" onClick={logoutHandler}>
                     Log Out
                   </a>
-                </Link>
-              </Menu.Item>
+                </Link></Menu.Item>:""}
+              
 
-              <Menu.Item>
-                <Link href="/edit">
+              {context.login?<Menu.Item>
+              <Link href="/edit">
                   <a className="group flex items-center px-4 py-1 text-gray-300 hover:text-gold">
                     Edit Profile
                   </a>
-                </Link>
-              </Menu.Item>
+                </Link></Menu.Item>:""}
+              
             </div>
           </Menu.Items>
         </Transition>

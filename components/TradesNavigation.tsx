@@ -48,18 +48,26 @@ const TradesNavigation = (props:connectWalletProps) => {
           <Menu.Items className="origin-top-right absolute left-0 mt-2 w-32 rounded-md shadow-lg bg-opacity-20  bg-black  divide-y divide-gray-100 focus:outline-none">
             <div className="py-1 ">
               <Menu.Item>
-                <Link href="/trades">
+                {context.login?<Link href="/trades">
                   <a className="group flex items-center px-4 py-1  text-gray-300 hover:text-gold">
                     History
                   </a>
-                </Link>
+                </Link>:<Link href="/login">
+                  <a className="group flex items-center px-4 py-1  text-gray-300 hover:text-gold">
+                    History
+                  </a>
+                </Link>}
               </Menu.Item>
               <Menu.Item>
-                <Link href="/mint">
+                {context.login?<Link href="/mint">
                   <a className="group flex items-center px-4 py-1 text-gray-300 hover:text-gold">
                     Upload NFT
                   </a>
-                </Link>
+                </Link>:<Link href="/login">
+                  <a className="group flex items-center px-4 py-1 text-gray-300 hover:text-gold">
+                    Upload NFT
+                  </a>
+                </Link>}
               </Menu.Item>
             </div>
           </Menu.Items>
