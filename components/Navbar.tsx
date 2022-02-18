@@ -62,11 +62,16 @@ const Navbar = () => {
         <span>
           <ul className="flex items-right mt-6 h-full tracking-widest">
             <li className="ml-10 mr-10 mt-2 ">
-              <Link href="/feed">
+            {context.login?<Link href="/feed">
                 <a>
                   <Image src={homeImg}></Image>
                 </a>
-              </Link>
+              </Link>:
+              <Link href="/login">
+                <a>
+                  <Image src={homeImg}></Image>
+                </a>
+              </Link>}
             </li>
             {/* <li className="ml-10 mr-10 mt-2 ">
               <a onClick={connectWallet}>
