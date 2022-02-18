@@ -1,10 +1,10 @@
 import React from 'react'
-
+import Error from '../components/404Section'
 const error = () => {
     return (
-        <div>
-            
-        </div>
+        <div >
+        <Error />
+    </div>
     )
 }
 
