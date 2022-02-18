@@ -171,9 +171,7 @@ const admin = () => {
         <img
           src={user.avatar}
           alt={user.username}
-          width={50}
-          height={50}
-          className="mr-5 rounded-full"
+          className="mr-5 w-16 h-16 rounded-full"
         />
         {user.username}
         <button
