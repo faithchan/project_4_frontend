@@ -3,6 +3,7 @@ import LoginForm from '../components/LoginForm'
 import Link from 'next/link'
 
 const login = () => {
+  
   return (
     <div>
       <h1 className="text-center mt-28 font-header tracking-widest text-gold text-2xl">
