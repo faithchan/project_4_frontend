@@ -1,21 +1,29 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import tradeImg from '../public/trade.svg'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/solid'
+import globalContext from '../context/context'
 interface connectWalletProps {
   connectWallet:(a:any)=>void
 }
-
 const TradesNavigation = (props:connectWalletProps) => {
+  const context = useContext(globalContext)
+  const connectWalletHandler=()=>{
+    if (context.signer===null && context.login===true){
+      props.connectWallet
+    }
+    else{console.log("You are not authorised")}
+  }
+  console.log(context)
   return (
     <div className="text-right font-body">
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button className="inline-flex justify-center w-full  text-sm font-medium text-white  rounded-md  focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <Link href="/trades">
-              <a onClick={props.connectWallet}>
+              <a onClick={connectWalletHandler}>
                 <Image src={tradeImg}></Image>
               </a>
             </Link>
