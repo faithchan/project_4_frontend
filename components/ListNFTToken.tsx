@@ -15,7 +15,7 @@ const ListNFTToken = (props: listingProps) => {
   const context = useContext(globalContext)
   const router = useRouter()
   const [showRoyalty, setShowRoyalty] = useState(true)
-  const [showList, setShowList] = useState(false)
+  const [showList, setShowList] = useState(true)
   const [showContBtn, setShowContBtn] = useState(false)
   const [showRoyaltyBtn, setShowRoyaltyBtn] = useState(true)
   const [royaltyAmount, setRoyaltyAmount] = useState<any>() // convert % to number between 0-10000
