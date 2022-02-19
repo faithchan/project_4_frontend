@@ -221,14 +221,47 @@ const getAllWhitelistees = async () => {
   }, [])
 
     return (
-        <div className="bg-white p-8 rounded-xl mx-32 my-20">
-	<div className=" flex items-center justify-between pb-6">
-		<div>
-			<h2 className="text-gray-600 font-semibold">Manage All Users</h2>
-			<span className="text-xs">All products item</span>
-		</div>
+        <div className="bg-purple p-8 rounded-xl mx-32 my-20">
+	
+    <div className="text-center my-8 font-header tracking-widest text-gold text-2xl">
+          MANAGE WHITELIST
+        </div>
+
+        <div className="mx-56">
+          <div className="grid grid-cols-1 ">
+            <label className="md:text-sm text-xs text-white font-body tracking-wider">
+              Wallet Address
+            </label>
+            <input
+              className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md mt-2"
+              type="text"
+              name="whitelistAddress"
+              onChange={handleInputChange}
+              value={whitelistAddress}
+            />
+          </div>
+          <div className="flex items-center justify-center py-5 mt-2 grid-cols-4">
+            <button
+              className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto"
+              onClick={addToWhitelist}
+            >
+              ADD
+            </button>
+            <button
+              className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto"
+              onClick={removeFromWhitelist}
+            >
+              REMOVE
+            </button>
+            <button
+              className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto"
+              onClick={checkWhitelistStatus}
+            >
+              VERIFY
+            </button>
+          </div>
+        </div>
 		
-		</div>
 		<div>
 			<div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
 				<div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
