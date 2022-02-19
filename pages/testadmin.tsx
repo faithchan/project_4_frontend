@@ -1,28 +1,233 @@
-import React from 'react'
+import { useEffect, useState, useContext } from 'react'
+import Web3Modal from 'web3modal'
+import { ethers } from 'ethers'
+import jwtDecode from 'jwt-decode'
+import globalContext from '../context/context'
+import { useRouter } from 'next/router'
+
+// console.log('admin context: ', context)
 
 const testadmin = () => {
+const context = useContext(globalContext)
+const [whitelistAddress, setWhitelistAddress] = useState('')
+const [connected, setConnected] = useState<boolean>(false)
+const [whitelistedAddrs, setWhitelistedAddrs] = useState<any>([])
+const [allUsers, setAllUsers] = useState([])
+const router = useRouter()
+const getAllWhitelistees = async () => {
+    if (allUsers && context.nftContract) {
+      for (let user of allUsers) {
+        const txn = await context.nftContract.isWhitelisted(user.walletAddress)
+        if (txn) {
+          console.log(`${user.username} is whitelisted`)
+          setWhitelistedAddrs([...whitelistedAddrs, user.walletAddress])
+        } else {
+          console.log(`${user.username} is not whitelisted`)
+        }
+      }
+    } else {
+      console.log('no users in database')
+    }
+  }
+  
+  const addToWhitelist = async () => {
+    if (context.nftContract) {
+      if (validateAddress(whitelistAddress) === true) {
+        console.log(`adding ${whitelistAddress} to whitelist`)
+        try {
+          const txn = await context.nftContract.addToWhitelist(whitelistAddress)
+          const receipt = await txn.wait()
+          console.log('whitelist txn: ', receipt)
+          setWhitelistAddress('')
+        } catch (err) {
+          console.error('error adding to whitelist: ', err)
+        }
+      } else {
+        alert('Please enter a valid address.')
+      }
+    } else {
+      alert('Please connect your Metamask wallet')
+    }
+  }
+  
+  const removeFromWhitelist = async () => {
+    if (context.nftContract) {
+      if (validateAddress(whitelistAddress) === true) {
+        console.log(`removing ${whitelistAddress} from whitelist`)
+        try {
+          const txn = await context.nftContract.removeFromWhitelist(whitelistAddress)
+          const receipt = await txn.wait()
+          console.log('whitelist txn: ', receipt)
+          setWhitelistAddress('')
+        } catch (err) {
+          console.error('error removing from whitelist: ', err)
+        }
+      } else {
+        alert('Please enter a valid address.')
+      }
+    } else {
+      alert('Please connect your Metamask wallet')
+    }
+  }
+  
+  const checkWhitelistStatus = async () => {
+    if (context.nftContract) {
+      if (validateAddress(whitelistAddress) === true) {
+        console.log(`checking ${whitelistAddress} whitelist status`)
+        try {
+          const txn = await context.nftContract.isWhitelisted(whitelistAddress)
+          console.log('whitelist txn: ', txn)
+          setWhitelistAddress('')
+        } catch (err) {
+          console.error('checking whitelist status: ', err)
+        }
+      } else {
+        alert('Please enter a valid address.')
+      }
+    } else {
+      alert('Please connect your Metamask wallet')
+    }
+  }
+  
+  const fetchAllUsers = async () => {
+    try {
+      const response = await fetch(`${process.env.API_ENDPOINT}/users`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const data = await response.json()
+      setAllUsers(data)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+  
+  const removeUser = async (userId: string) => {
+    console.log(`trying to remove user with id ${userId}`)
+    try {
+      const response = await fetch(`${process.env.API_ENDPOINT}/users/${userId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      console.log('deleted user: ', response)
+      router.reload()
+    } catch (err) {
+      console.error(err)
+    }
+  }
+  
+  const handleInputChange = (event: any) => {
+    const value = event.target.value
+    setWhitelistAddress(value)
+  }
+  
+  const validateAddress = (input: string) => {
+    const prefix = input.slice(0, 2)
+    if (input.length === 42 && prefix === '0x') {
+      return true
+    }
+    return false
+  }
+  
+  useEffect(() => {
+    getAllWhitelistees()
+  }, [context.nftContract])
+  
+  useEffect(() => {
+    let token = localStorage.getItem('token')
+    let tempToken: any = token
+    if (tempToken) {
+      let decodedToken: any = jwtDecode(tempToken)
+      console.log('decoded token: ', decodedToken)
+      if (decodedToken.role !== 'Admin') {
+        router.push('/404')
+      } else {
+        fetchAllUsers()
+      }
+    } else {
+      router.push('/404')
+    }
+  }, [])
+  
+  const renderWhitelist = whitelistedAddrs.map((address: any) => {
     return (
-        <div className="bg-white p-8 rounded-xl mx-32 my-10">
+      <div className="md:text-sm text-xs text-white font-body tracking-wider mb-4" key={address}>
+        {address}
+      </div>
+    )
+  })
+  
+  const renderUsers = allUsers.map((user: any) => {
+    return (
+      <div
+        className="md:text-sm text-xs text-white font-body tracking-wider my-4 flex items-center"
+        key={user._id}
+      >
+        <img
+          src={user.avatar}
+          alt={user.username}
+          className="mr-5 w-16 h-16 rounded-full"
+        />
+        {user.username}
+        <button
+          className="border-2 border-gold hover:bg-blue-450 text-gold font-semibold font-header py-2 px-6 rounded-full text-xs ml-5"
+          onClick={() => {
+            removeUser(user._id)
+          }}
+        >
+          Remove
+        </button>
+      </div>
+    )
+  })
+  
+  //----------------Initialising Wallet----------------//
+  
+  const connectWallet = async () => {
+    if (typeof window.ethereum !== 'undefined') {
+      if (window.ethereum.chainId !== '0x4') {
+        console.log('switch to rinkeby network')
+        changeNetwork()
+      } else {
+        const web3Modal = new Web3Modal()
+        const connection = await web3Modal.connect()
+        const provider = new ethers.providers.Web3Provider(connection)
+        const signer = provider.getSigner()
+        const connectedAddress = await signer.getAddress()
+        context.setSigner(signer)
+        context.setWalletAddress(connectedAddress)
+      }
+    } else {
+      alert('Please install Metamask')
+    }
+  }
+  
+  const changeNetwork = async () => {
+    if (!window.ethereum) throw new Error('No crypto wallet found')
+    await window.ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: '0x4' }],
+    })
+  }
+  
+  useEffect(() => {
+    if (context.signer === null) {
+      connectWallet()
+    }
+  }, [])
+
+    return (
+        <div className="bg-white p-8 rounded-xl mx-32 mt-10">
 	<div className=" flex items-center justify-between pb-6">
 		<div>
-			<h2 className="text-gray-600 font-semibold">Products Oder</h2>
+			<h2 className="text-gray-600 font-semibold">Manage All Users</h2>
 			<span className="text-xs">All products item</span>
 		</div>
-		<div className="flex items-center justify-between">
-			<div className="flex bg-gray-50 items-center p-2 rounded-md">
-				<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20"
-					fill="currentColor">
-					<path fill-rule="evenodd"
-						d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-						clip-rule="evenodd" />
-				</svg>
-				<input className="bg-gray-50 outline-none ml-1 block " type="text" name="" id="" placeholder="search..."/>
-          </div>
-				<div className="lg:ml-40 ml-10 space-x-8">
-					<button className="bg-indigo-600 px-4 py-2 rounded-md text-white font-semibold tracking-wide cursor-pointer">New Report</button>
-					<button className="bg-indigo-600 px-4 py-2 rounded-md text-white font-semibold tracking-wide cursor-pointer">Create</button>
-				</div>
-			</div>
+		
 		</div>
 		<div>
 			<div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
@@ -32,23 +237,19 @@ const testadmin = () => {
 							<tr>
 								<th
 									className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-									Name
+									User
 								</th>
 								<th
 									className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-									products
+									Role
 								</th>
 								<th
 									className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-									Created at
+									Wallet Address
 								</th>
 								<th
 									className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-									QRT
-								</th>
-								<th
-									className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-									Status
+									Whitelisted Status
 								</th>
 							</tr>
 						</thead>
@@ -73,12 +274,7 @@ const testadmin = () => {
 								</td>
 								<td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
 									<p className="text-gray-900 whitespace-no-wrap">
-										Jan 21, 2020
-									</p>
-								</td>
-								<td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-									<p className="text-gray-900 whitespace-no-wrap">
-										43
+										0x8126736dhjefe232
 									</p>
 								</td>
 								<td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
