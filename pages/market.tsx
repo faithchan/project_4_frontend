@@ -114,7 +114,7 @@ const Market = () => {
 
   return (
     <div>
-      {buyModal ? (
+      {buyModal && (
         <BuyNFTModal
           itemId={currentItemId}
           tokenId={currentTokenId}
@@ -123,10 +123,8 @@ const Market = () => {
           buyModal={buyModal}
           setBuyModal={setBuyModal}
         />
-      ) : (
-        ''
       )}
-      {loaded ? renderCards : '-'}
+      {loaded && renderCards}
     </div>
   )
 }

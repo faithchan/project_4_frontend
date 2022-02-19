@@ -10,12 +10,13 @@ import { ethers } from 'ethers'
 
 const feed = () => {
   const context = useContext(globalContext)
-  const [buyModal, setBuyModal] = useState(false)
-  const [userProfile, setUserProfile] = useState()
+  const [buyModal, setBuyModal] = useState<boolean>(false)
   const [creatorsFollowed, setCreatorsFollowed] = useState<any>()
   const [ownedTokens, setOwnedTokens] = useState<any>(new Set())
   const [createdTokens, setCreatedTokens] = useState<any>(new Set())
   const [finalTokens, setFinalTokens] = useState<any>(new Set())
+  const [createdLoaded, setCreatedLoaded] = useState<boolean>(false)
+  const [ownedLoaded, setOwnedLoaded] = useState<boolean>(false)
   const [currentItemId, setCurrentItemId] = useState<number>()
   const [currentTokenId, setCurrentTokenId] = useState<number>()
   const [currentItemOwner, setCurrentItemOwner] = useState<string>()
@@ -33,6 +34,7 @@ const feed = () => {
         }
       }
     }
+    setCreatedLoaded(true)
   }
 
   const fetchCreatorOwned = async () => {
@@ -45,6 +47,7 @@ const feed = () => {
         }
       }
     }
+    setOwnedLoaded(true)
   }
 
   const fetchUserInfo = async () => {
@@ -56,13 +59,29 @@ const feed = () => {
         },
       })
       const data = await res.json()
-      setUserProfile(data)
       setCreatorsFollowed(data[0].following)
-      // console.log('user profile: ', data)
     } catch (err) {
       console.log(err)
     }
   }
+
+  useEffect(() => {
+    if (createdLoaded && ownedLoaded) {
+      filterTokens()
+    }
+  }, [createdLoaded && ownedLoaded])
+
+  useEffect(() => {
+    if (createdLoaded) {
+      console.log('created tokens: ', createdTokens)
+    }
+  }, [createdLoaded])
+
+  useEffect(() => {
+    if (ownedLoaded) {
+      console.log('created tokens: ', ownedTokens)
+    }
+  }, [ownedLoaded])
 
   useEffect(() => {
     if (creatorsFollowed && context.nftContract) {
@@ -116,7 +135,7 @@ const feed = () => {
 
   return (
     <div>
-      {buyModal ? (
+      {buyModal && (
         <BuyNFTModal
           itemId={currentItemId}
           tokenId={currentTokenId}
@@ -125,25 +144,7 @@ const feed = () => {
           buyModal={buyModal}
           setBuyModal={setBuyModal}
         />
-      ) : (
-        ''
       )}
-      <button
-        className="text-white mr-4"
-        onClick={() => {
-          console.log('owned tokens: ', ownedTokens)
-        }}
-      >
-        ownedTokens
-      </button>
-      <button
-        className="text-white mr-4"
-        onClick={() => {
-          console.log('created tokens: ', createdTokens)
-        }}
-      >
-        createdTokens
-      </button>
     </div>
   )
 }
