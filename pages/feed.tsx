@@ -5,15 +5,23 @@ import globalContext from '../context/context'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
 
-// query tokensCreated & tokensOwned
-// fetch URI for creator tokens
+// conflate created and owned tokens
+// render final list
 
 const feed = () => {
   const context = useContext(globalContext)
+  const [buyModal, setBuyModal] = useState(false)
   const [userProfile, setUserProfile] = useState()
   const [creatorsFollowed, setCreatorsFollowed] = useState<any>()
   const [ownedTokens, setOwnedTokens] = useState<any>(new Set())
   const [createdTokens, setCreatedTokens] = useState<any>(new Set())
+  const [finalTokens, setFinalTokens] = useState<any>(new Set())
+  const [currentItemId, setCurrentItemId] = useState<number>()
+  const [currentTokenId, setCurrentTokenId] = useState<number>()
+  const [currentItemOwner, setCurrentItemOwner] = useState<string>()
+  const [currentPrice, setCurrentPrice] = useState<any>()
+
+  const filterTokens = async () => {}
 
   const fetchCreatorCreated = async () => {
     const totalSupply = await context.nftContract.totalSupply()
@@ -38,8 +46,6 @@ const feed = () => {
       }
     }
   }
-
-  const filterTokens = async () => {}
 
   const fetchUserInfo = async () => {
     try {
@@ -110,6 +116,18 @@ const feed = () => {
 
   return (
     <div>
+      {buyModal ? (
+        <BuyNFTModal
+          itemId={currentItemId}
+          tokenId={currentTokenId}
+          owner={currentItemOwner}
+          price={currentPrice}
+          buyModal={buyModal}
+          setBuyModal={setBuyModal}
+        />
+      ) : (
+        ''
+      )}
       <button
         className="text-white mr-4"
         onClick={() => {
