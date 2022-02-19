@@ -4,6 +4,7 @@ import BuyNFTModal from '../components/BuyNFTModal'
 import globalContext from '../context/context'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
+import { FocusTrap } from '@headlessui/react'
 
 // conflate created and owned tokens
 // render final list
@@ -14,7 +15,7 @@ const feed = () => {
   const [creatorsFollowed, setCreatorsFollowed] = useState<any>()
   const [ownedTokens, setOwnedTokens] = useState<any>(new Set())
   const [createdTokens, setCreatedTokens] = useState<any>(new Set())
-  const [finalTokens, setFinalTokens] = useState<any>(new Set())
+  const [filteredTokens, setFilteredTokens] = useState<any>(new Set())
   const [createdLoaded, setCreatedLoaded] = useState<boolean>(false)
   const [ownedLoaded, setOwnedLoaded] = useState<boolean>(false)
   const [currentItemId, setCurrentItemId] = useState<number>()
@@ -22,7 +23,32 @@ const feed = () => {
   const [currentItemOwner, setCurrentItemOwner] = useState<string>()
   const [currentPrice, setCurrentPrice] = useState<any>()
 
-  const filterTokens = async () => {}
+  const filterTokens = async () => {
+    const tempSet = new Set<any>()
+    for (let owned of ownedTokens) {
+      for (let created of createdTokens) {
+        if (owned === created) {
+          tempSet.add(owned)
+        }
+      }
+    }
+    for (let owned of ownedTokens) {
+      for (let token of tempSet) {
+        if (owned !== token) {
+          tempSet.add(owned)
+        }
+      }
+    }
+    for (let created of createdTokens) {
+      for (let token of tempSet) {
+        if (created !== token) {
+          console.log('not the same: ', created)
+          tempSet.add(created)
+        }
+      }
+    }
+    setFilteredTokens(tempSet)
+  }
 
   const fetchCreatorCreated = async () => {
     const totalSupply = await context.nftContract.totalSupply()
