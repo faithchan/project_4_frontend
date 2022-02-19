@@ -55,6 +55,7 @@ const feed = () => {
         data.listPrice = 0
         const creator = await context.nftContract.tokenCreator(data.tokenId)
         const creatorInfo = await fetchCreatorInfo(creator)
+        console.log('creator info: ', creatorInfo)
         data.creator = creatorInfo[0].username
         data.avatar = creatorInfo[0].avatar
         fetchedData.push(data)
@@ -76,6 +77,8 @@ const feed = () => {
         isListed={item.isListed}
         owner={item.owner}
         tokenId={item.tokenId}
+        creator={item.creator}
+        avatar={item.avatar}
         buyModal={buyModal}
         setBuyModal={setBuyModal}
         setCurrentItemId={setCurrentItemId}

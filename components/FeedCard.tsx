@@ -23,6 +23,8 @@ interface FeedProps {
 const FeedCard = (props: FeedProps) => {
   const context = useContext(globalContext)
 
+  console.log('feed card props: ', props)
+
   useEffect(() => {
     props.setCurrentItemId(props.itemId)
     props.setCurrentTokenId(props.tokenId)
@@ -54,9 +56,9 @@ const FeedCard = (props: FeedProps) => {
             </p>
             <span className="flex justify-between">
               <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">
-                List Price: {props.isListed ? props.price + 'ETH' : '-'}
+                {props.isListed && 'List Price:' + props.price + 'ETH'}
               </p>
-              {props.owner !== context.walletAddress && (
+              {props.owner !== context.walletAddress && props.isListed && (
                 <button
                   className="mb-2 md:mb-0 bg-green-400 px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg"
                   onClick={() => props.setBuyModal(true)}
