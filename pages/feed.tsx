@@ -4,10 +4,8 @@ import BuyNFTModal from '../components/BuyNFTModal'
 import globalContext from '../context/context'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
-import { FocusTrap } from '@headlessui/react'
 
-// conflate created and owned tokens
-// render final list
+// get itemId from tokenId
 
 const feed = () => {
   const context = useContext(globalContext)
@@ -18,6 +16,7 @@ const feed = () => {
   const [filteredTokens, setFilteredTokens] = useState<any>(new Set())
   const [createdLoaded, setCreatedLoaded] = useState<boolean>(false)
   const [ownedLoaded, setOwnedLoaded] = useState<boolean>(false)
+  const [tokenData, setTokenData] = useState<any>([])
   const [currentItemId, setCurrentItemId] = useState<number>()
   const [currentTokenId, setCurrentTokenId] = useState<number>()
   const [currentItemOwner, setCurrentItemOwner] = useState<string>()
@@ -96,18 +95,6 @@ const feed = () => {
       filterTokens()
     }
   }, [createdLoaded && ownedLoaded])
-
-  useEffect(() => {
-    if (createdLoaded) {
-      console.log('created tokens: ', createdTokens)
-    }
-  }, [createdLoaded])
-
-  useEffect(() => {
-    if (ownedLoaded) {
-      console.log('created tokens: ', ownedTokens)
-    }
-  }, [ownedLoaded])
 
   useEffect(() => {
     if (creatorsFollowed && context.nftContract) {
