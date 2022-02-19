@@ -5,13 +5,17 @@ import globalContext from '../context/context'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
 
-// fetch current wallet address following
-// query creator tokens
+// query tokensCreated
 // fetch URI for creator tokens
 
 const feed = () => {
   const context = useContext(globalContext)
   const [userProfile, setUserProfile] = useState()
+  const [userFollowing, setUserFollowing] = useState()
+
+  const filterTokens = async () => {}
+  const fetchCreatorCreated = async () => {}
+  const fetchCreatorOwned = async () => {}
 
   const fetchUserInfo = async () => {
     try {
@@ -23,6 +27,7 @@ const feed = () => {
       })
       const data = await res.json()
       setUserProfile(data)
+      setUserFollowing(data[0].following)
       console.log('user profile: ', data)
     } catch (err) {
       console.log(err)
