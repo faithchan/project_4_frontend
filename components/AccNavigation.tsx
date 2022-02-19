@@ -7,6 +7,7 @@ import { ChevronDownIcon } from '@heroicons/react/solid'
 import globalContext from '../context/context'
 interface connectWalletProps {
   connectWallet:(a:any)=>void
+  type:string
 }
 
 const AccNavigation = (props:connectWalletProps) => {
@@ -72,6 +73,15 @@ const AccNavigation = (props:connectWalletProps) => {
                   </a>
                 </Link>
               </Menu.Item>:""}
+
+              {props.type==="Admin"?<Menu.Item>
+                <Link href="/admin">
+                  <a className="group flex items-center px-4 py-1  text-gray-300 hover:text-gold">
+                    Admin
+                  </a>
+                </Link>
+              </Menu.Item>:""}      
+
               {context.login? <Menu.Item>
                 <Link href="/">
                   <a className="group flex items-center px-4 py-1 text-gray-300 hover:text-gold" onClick={logoutHandler}>
@@ -80,7 +90,7 @@ const AccNavigation = (props:connectWalletProps) => {
                 </Link></Menu.Item>:""}
               
 
-              {context.login?<Menu.Item>
+              {context.login && props.type!== "Admin"?<Menu.Item>
               <Link href="/edit">
                   <a className="group flex items-center px-4 py-1 text-gray-300 hover:text-gold">
                     Edit Profile

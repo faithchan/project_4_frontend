@@ -1,4 +1,4 @@
-import { useEffect, useContext } from 'react'
+import { useEffect, useContext, useState } from 'react'
 import globalContext from '../context/context'
 import { ethers } from 'ethers'
 import Web3Modal from 'web3modal'
@@ -15,6 +15,19 @@ import tradeImg from '../public/trade.svg'
 
 const Navbar = () => {
   const context = useContext(globalContext)
+  const [type, setType]= useState("user")
+  const userDataURL = `${process.env.API_ENDPOINT}/users/${context.walletAddress}`
+  const userInfo = async() => {
+    try {
+        const response = await fetch (userDataURL); 
+        const data = await response.json(); 
+        console.log(data)
+        setType(data[0].type) 
+    } 
+    catch (err) {
+        console.log("error:", err)
+    }
+}
 
   // console.log('navbar context: ', context)
 
@@ -46,6 +59,7 @@ const Navbar = () => {
   }
 
   useEffect(() => {
+    userInfo()
     if (context.signer === null && context.login===true) {
       connectWallet()
     }
@@ -101,7 +115,7 @@ const Navbar = () => {
               </a>
             </Link>}</li>
             <li className="mr-10 mt-2">
-              <AccNavigation connectWallet={connectWallet} />
+              <AccNavigation connectWallet={connectWallet} type={type}/>
             </li>
 
             <Search />
