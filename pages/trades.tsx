@@ -20,16 +20,15 @@ const Trades = () => {
   const [currentTokenId, setCurrentTokenId] = useState<any>()
 
   const filterItems = () => {
-    console.log('owner tokens: ', ownerTokens)
-    console.log('owner items: ', ownedItems)
-
+    // console.log('owner tokens: ', ownerTokens)
+    // console.log('owner items: ', ownedItems)
     if (ownerTokens.length === 0) {
       console.log('no tokens in wallet')
       return
     }
     if (ownedItems.length === 0) {
       setUnregistered(ownerTokens)
-      console.log('no items owned in marketplace')
+      // console.log('no items owned in marketplace')
       return
     }
     setUnregistered(ownerTokens)

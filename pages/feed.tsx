@@ -11,11 +11,26 @@ import { ethers } from 'ethers'
 const feed = () => {
   const context = useContext(globalContext)
   const [userProfile, setUserProfile] = useState()
-  const [userFollowing, setUserFollowing] = useState()
+  const [userFollowing, setUserFollowing] = useState<any>()
+  const [ownedTokens, setOwnedTokens] = useState<any>(new Set())
+  const [createdTokens, setCreatedTokens] = useState<any>(new Set())
+
+  const fetchCreatorCreated = async () => {}
+
+  const fetchCreatorOwned = async () => {
+    const totalSupply = await context.nftContract.totalSupply()
+    for (let creator of userFollowing) {
+      console.log('creator: ', creator)
+    }
+    // for (let i = 0; i < totalSupply; i++) {
+    //   const owner = await context.nftContract.ownerOf(i)
+    //   if (owner === context.walletAddress) {
+    //     setOwnedTokens((prev: any) => new Set(prev.add(i)))
+    //   }
+    // }
+  }
 
   const filterTokens = async () => {}
-  const fetchCreatorCreated = async () => {}
-  const fetchCreatorOwned = async () => {}
 
   const fetchUserInfo = async () => {
     try {
@@ -33,6 +48,13 @@ const feed = () => {
       console.log(err)
     }
   }
+
+  useEffect(() => {
+    if (userFollowing) {
+      fetchCreatorOwned()
+      fetchCreatorCreated()
+    }
+  }, [userFollowing])
 
   useEffect(() => {
     fetchUserInfo()
