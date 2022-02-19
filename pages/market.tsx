@@ -49,29 +49,25 @@ const Market = () => {
   }, [context.marketplaceContract])
 
   const renderCards = tokenData.map((item: any) => {
-    if (item.owner === context.walletAddress) {
-      return <></>
-    } else {
-      return (
-        <FeedCard
-          key={item.image}
-          name={item.name}
-          description={item.description}
-          image={item.image}
-          price={item.price}
-          itemId={item.itemId}
-          isListed={item.isListed}
-          owner={item.owner}
-          tokenId={item.tokenId}
-          buyModal={buyModal}
-          setBuyModal={setBuyModal}
-          setCurrentItemId={setCurrentItemId}
-          setCurrentTokenId={setCurrentTokenId}
-          setCurrentItemOwner={setCurrentItemOwner}
-          setCurrentPrice={setCurrentPrice}
-        />
-      )
-    }
+    return (
+      <FeedCard
+        key={item.image}
+        name={item.name}
+        description={item.description}
+        image={item.image}
+        price={item.price}
+        itemId={item.itemId}
+        isListed={item.isListed}
+        owner={item.owner}
+        tokenId={item.tokenId}
+        buyModal={buyModal}
+        setBuyModal={setBuyModal}
+        setCurrentItemId={setCurrentItemId}
+        setCurrentTokenId={setCurrentTokenId}
+        setCurrentItemOwner={setCurrentItemOwner}
+        setCurrentPrice={setCurrentPrice}
+      />
+    )
   })
   //----------------Initialising Wallet----------------//
 

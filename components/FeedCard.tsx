@@ -1,4 +1,5 @@
-import { useEffect } from 'react'
+import { useEffect, useContext } from 'react'
+import globalContext from '../context/context'
 
 interface FeedProps {
   name: string
@@ -18,6 +19,8 @@ interface FeedProps {
 }
 
 const FeedCard = (props: FeedProps) => {
+  const context = useContext(globalContext)
+
   useEffect(() => {
     props.setCurrentItemId(props.itemId)
     props.setCurrentTokenId(props.tokenId)
@@ -49,15 +52,13 @@ const FeedCard = (props: FeedProps) => {
               <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">
                 List Price: {props.isListed ? props.price + 'ETH' : '-'}
               </p>
-              {props.isListed ? (
+              {props.owner !== context.walletAddress && (
                 <button
                   className="mb-2 md:mb-0 bg-green-400 px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg"
                   onClick={() => props.setBuyModal(true)}
                 >
                   Buy
                 </button>
-              ) : (
-                ''
               )}
             </span>
           </span>
