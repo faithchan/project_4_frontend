@@ -10,6 +10,8 @@ import walletImg from '../public/wallet.svg'
 import homeImg from '../public/home.svg'
 import AccNavigation from './AccNavigation'
 import TradesNavigation from './TradesNavigation'
+import uploadImg from "../public/upload.svg"
+import tradeImg from '../public/trade.svg'
 
 const Navbar = () => {
   const context = useContext(globalContext)
@@ -78,9 +80,26 @@ const Navbar = () => {
                 <Image src={walletImg}></Image>
               </a>
             </li> */}
-            <li className="ml-10 mr-20 mt-2 ">
-              <TradesNavigation connectWallet={connectWallet} />
+            <li className="ml-10 mr-10 mt-2 ">
+            {context.login && context.designerState?<Link href="/upload">
+            <a onClick={connectWallet}>
+              <Image src={uploadImg}></Image>
+            </a>
+              </Link>:<Link href="/404">
+            <a>
+              <Image src={uploadImg}></Image>
+            </a>
+              </Link>}
             </li>
+            <li className="ml-10 mr-20 mt-2 ">{context.login?<Link href="/trades">
+              <a onClick={connectWallet}>
+                <Image src={tradeImg}></Image>
+              </a>
+            </Link>:<Link href="/login">
+              <a>
+                <Image src={tradeImg}></Image>
+              </a>
+            </Link>}</li>
             <li className="mr-10 mt-2">
               <AccNavigation connectWallet={connectWallet} />
             </li>
