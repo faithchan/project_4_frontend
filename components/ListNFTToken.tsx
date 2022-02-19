@@ -54,7 +54,7 @@ const ListNFTToken = (props: listingProps) => {
       setShowList(false)
       props.setListNFTModal(false)
       setTimeout(() => {
-        router.push('/feed')
+        router.push('/market')
       }, 1000)
     }
   }

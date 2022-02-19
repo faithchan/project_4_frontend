@@ -28,9 +28,6 @@ const TradeCard = (props: CardProps) => {
   const [creatorProfile, setCreatorProfile] = useState<any>()
   const [profileLoaded, setProfileLoaded] = useState<boolean>(false)
 
-  const defaultAvatar =
-    'https://bafkreigj5xab3lrgu7nty4r2sqwbfqkudeed7pz2w7fvajnflgphyw6nlu.ipfs.infura-ipfs.io/'
-
   const checkIfHolderIsCreator = async () => {
     const creator = await context.nftContract.tokenCreator(props.tokenId)
     setCreator(creator)
@@ -45,7 +42,7 @@ const TradeCard = (props: CardProps) => {
     const txn = await context.marketplaceContract.delistItem(props.itemId)
     const receipt = await txn.wait()
     console.log('delisted item: ', receipt)
-    router.push('/trades')
+    router.reload()
   }
 
   const shortenAddress = (str: any) => {
