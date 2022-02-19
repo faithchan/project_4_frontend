@@ -8,9 +8,11 @@ import { ethers } from 'ethers'
 import { nftaddress, marketplaceaddress } from '../config'
 import NFT from '../contract-abis/NFT.json'
 import Marketplace from '../contract-abis/Marketplace.json'
+import { useRouter } from 'next/router'
 
 const Layout = ({ children }: { children: any }) => {
   const context = useContext(GlobalContext)
+  const router = useRouter()
 
   const initialiseContracts = async () => {
     const nftContract = new ethers.Contract(nftaddress, NFT.abi, context.signer)
@@ -52,6 +54,14 @@ const Layout = ({ children }: { children: any }) => {
       console.log('error changing network: ', err.message)
     }
   }
+
+  useEffect(() => {
+    window.ethereum.on('accountsChanged', function (accounts: any) {
+      console.log('account: ', accounts[0])
+      connectWallet()
+      router.reload()
+    })
+  }, [])
 
   useEffect(() => {
     if (context.signer === null) {
