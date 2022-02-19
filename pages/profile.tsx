@@ -64,6 +64,7 @@ const profile = () => {
   // }
 
   const fetchNFTsOwned = async () => {
+    try{
     const totalSupply = await context.nftContract.totalSupply()
     for (let i = 0; i < totalSupply; i++) {
       const owner = await context.nftContract.ownerOf(i)
@@ -74,11 +75,16 @@ const profile = () => {
     }
     console.log('total supply', totalSupply)
   }
+  catch(err){console.log('error', err)}}
 
   const fetchOwnedTokens = async () => {
+    try{
     const owned = await context.marketplaceContract.getItemsOwned()
     console.log(owned[0].length)
-    setTokensOwned(owned[0].length)
+    setTokensOwned(owned[0].length)}
+    catch(err){
+      console.log("error", err)
+    }
   }
 
   const filterItems = () => {
