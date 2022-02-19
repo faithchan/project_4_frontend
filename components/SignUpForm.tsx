@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { create } from 'ipfs-http-client'
+
 const url: string | any = 'https://ipfs.infura.io:5001/api/v0'
 const client = create(url)
 
@@ -43,13 +44,13 @@ const SignUpForm = () => {
       console.log('response:', res)
       const { username, email, walletAddress } = res.keyValue
       if (username) {
-        alert('Username already registered')
+        alert('Username already registered. Please try again.')
       }
       if (email) {
-        alert('Email already registered')
+        alert('Email already registered. Please try again.')
       }
       if (walletAddress) {
-        alert('Wallet address already registered')
+        alert('Wallet address already registered. Please try again.')
       }
     } catch (err) {
       console.log(err)
@@ -194,9 +195,6 @@ const SignUpForm = () => {
               >
                 CREATE ACCOUNT
               </button>
-              {/* <button onClick={() => console.log(getFieldState('username'))} className="text-white">
-                get field state
-              </button> */}
             </div>
           </div>
         </div>
