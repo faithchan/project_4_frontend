@@ -20,7 +20,9 @@ const Trades = () => {
   const [currentTokenId, setCurrentTokenId] = useState<any>()
 
   const filterItems = () => {
-    // console.log('owner tokens: ', ownerTokens)
+    console.log('owner tokens: ', ownerTokens)
+    console.log('owner items: ', ownedItems)
+
     if (ownerTokens.length === 0) {
       console.log('no tokens in wallet')
       return
@@ -40,6 +42,8 @@ const Trades = () => {
         } else if (tokenId === id.toString() && item.isListed === false) {
           setNotListed((prev: any) => new Set(prev.add(item.itemId)))
           setUnregistered((prev: any) => new Set([...prev].filter((x) => x !== id)))
+        } else {
+          // console.log(`item id ${item.itemId} and token id ${id} not handled`)
         }
       }
     }

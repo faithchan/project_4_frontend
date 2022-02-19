@@ -15,7 +15,7 @@ const ListNFTToken = (props: listingProps) => {
   const context = useContext(globalContext)
   const router = useRouter()
   const [showRoyalty, setShowRoyalty] = useState(true)
-  const [showList, setShowList] = useState(false)
+  const [showList, setShowList] = useState(true)
   const [showContBtn, setShowContBtn] = useState(false)
   const [showRoyaltyBtn, setShowRoyaltyBtn] = useState(true)
   const [royaltyAmount, setRoyaltyAmount] = useState<any>() // convert % to number between 0-10000
@@ -73,6 +73,16 @@ const ListNFTToken = (props: listingProps) => {
     e.preventDefault()
   }
 
+  useEffect(() => {
+    if (props.isCreator) {
+      setShowRoyalty(true)
+      setShowList(false)
+    } else {
+      setShowRoyalty(false)
+      setShowList(true)
+    }
+  }, [])
+
   return (
     <div
       className="min-w-screen h-screen animated fadeIn faster fixed  left-0 top-0 flex justify-center items-center inset-0 z-50 outline-none focus:outline-none bg-no-repeat bg-center bg-cover"
@@ -80,7 +90,7 @@ const ListNFTToken = (props: listingProps) => {
     >
       <div className="absolute bg-black opacity-80 inset-0 z-0"></div>
       <div className="w-full  max-w-lg p-5 relative mx-auto my-auto rounded-xl shadow-lg  bg-purple">
-        {showRoyalty && props.isCreator ? (
+        {props.isCreator && showRoyalty ? (
           <form className="" onSubmit={royaltyHandler}>
             <div className="text-center p-5 flex-auto justify-center">
               <p className="text-2xl text-gold font-header px-8">Set Royalty</p>

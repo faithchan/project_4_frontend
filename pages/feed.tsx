@@ -5,74 +5,39 @@ import globalContext from '../context/context'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
 
+// query tokensCreated
+// fetch URI for creator tokens
+
 const feed = () => {
   const context = useContext(globalContext)
-  const [buyModal, setBuyModal] = useState(false)
-  const [tokenData, setTokenData] = useState<any>([])
-  const [loaded, setLoaded] = useState(false)
-  const [currentItemId, setCurrentItemId] = useState<number>()
-  const [currentTokenId, setCurrentTokenId] = useState<number>()
-  const [currentItemOwner, setCurrentItemOwner] = useState<string>()
-  const [currentPrice, setCurrentPrice] = useState<any>()
+  const [userProfile, setUserProfile] = useState()
+  const [userFollowing, setUserFollowing] = useState()
 
-  const fetchMarketItems = async () => {
-    const listed = await context.marketplaceContract.getListedItems()
-    console.log('market items: ', listed)
-    const allTokens = []
-    for (let item of listed) {
-      const details = {
-        isListed: item.isListed,
-        owner: item.owner,
-        price: ethers.utils.formatUnits(item.price.toString(), 'ether'),
-        tokenId: item.tokenId.toNumber(),
-        itemId: item.itemId.toNumber(),
-        name: null,
-        description: null,
-        image: null,
-      }
-      const uri = await context.nftContract.tokenURI(details.tokenId)
-      const response = await fetch(uri)
-      const data = await response.json()
-      details.name = data.name
-      details.description = data.description
-      details.image = data.image
-      allTokens.push(details)
-      setTokenData(allTokens)
+  const filterTokens = async () => {}
+  const fetchCreatorCreated = async () => {}
+  const fetchCreatorOwned = async () => {}
+
+  const fetchUserInfo = async () => {
+    try {
+      const res = await fetch(`${process.env.API_ENDPOINT}/users/${context.walletAddress}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const data = await res.json()
+      setUserProfile(data)
+      setUserFollowing(data[0].following)
+      console.log('user profile: ', data)
+    } catch (err) {
+      console.log(err)
     }
-    setLoaded(true)
   }
 
   useEffect(() => {
-    if (context.marketplaceContract) {
-      fetchMarketItems()
-    }
-  }, [context.marketplaceContract])
+    fetchUserInfo()
+  }, [context.walletAddress])
 
-  const renderCards = tokenData.map((item: any) => {
-    if (item.owner === context.walletAddress) {
-      return <></>
-    } else {
-      return (
-        <FeedCard
-          key={item.image}
-          name={item.name}
-          description={item.description}
-          image={item.image}
-          price={item.price}
-          itemId={item.itemId}
-          isListed={item.isListed}
-          owner={item.owner}
-          tokenId={item.tokenId}
-          buyModal={buyModal}
-          setBuyModal={setBuyModal}
-          setCurrentItemId={setCurrentItemId}
-          setCurrentTokenId={setCurrentTokenId}
-          setCurrentItemOwner={setCurrentItemOwner}
-          setCurrentPrice={setCurrentPrice}
-        />
-      )
-    }
-  })
   //----------------Initialising Wallet----------------//
 
   const connectWallet = async () => {
@@ -114,19 +79,7 @@ const feed = () => {
 
   return (
     <div>
-      {buyModal ? (
-        <BuyNFTModal
-          itemId={currentItemId}
-          tokenId={currentTokenId}
-          owner={currentItemOwner}
-          price={currentPrice}
-          buyModal={buyModal}
-          setBuyModal={setBuyModal}
-        />
-      ) : (
-        ''
-      )}
-      {loaded ? renderCards : '-'}
+      <div className="text-white">feed</div>
     </div>
   )
 }
