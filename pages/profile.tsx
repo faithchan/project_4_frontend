@@ -28,7 +28,7 @@ const profile = () => {
   const [unregistered, setUnregistered] = useState<any>(new Set()) // tokenIds
   const [ownedItems, setOwnedItems] = useState<any>([])
   const [verified, setVerified] = useState(true)
-  console.log(context.login)
+  // console.log(context.login)
 
   //Get user details - image, followers, following, type of user,
   const userDataURL = `${process.env.API_ENDPOINT}/users/${context.walletAddress}`
@@ -64,38 +64,40 @@ const profile = () => {
   // }
 
   const fetchNFTsOwned = async () => {
-    try{
-    const totalSupply = await context.nftContract.totalSupply()
-    for (let i = 0; i < totalSupply; i++) {
-      const owner = await context.nftContract.ownerOf(i)
-      if (owner === context.walletAddress) {
-        setOwnerTokens((prev: any) => new Set(prev.add(i)))
-        console.log(ownerTokens)
+    try {
+      const totalSupply = await context.nftContract.totalSupply()
+      for (let i = 0; i < totalSupply; i++) {
+        const owner = await context.nftContract.ownerOf(i)
+        if (owner === context.walletAddress) {
+          setOwnerTokens((prev: any) => new Set(prev.add(i)))
+          console.log(ownerTokens)
+        }
       }
+      console.log('total supply', totalSupply)
+    } catch (err) {
+      console.log('error', err)
     }
-    console.log('total supply', totalSupply)
   }
-  catch(err){console.log('error', err)}}
 
   const fetchOwnedTokens = async () => {
-    try{
-    const owned = await context.marketplaceContract.getItemsOwned()
-    console.log(owned[0].length)
-    setTokensOwned(owned[0].length)}
-    catch(err){
-      console.log("error", err)
+    try {
+      const owned = await context.marketplaceContract.getItemsOwned()
+      console.log(owned[0].length)
+      setTokensOwned(owned[0].length)
+    } catch (err) {
+      console.log('error', err)
     }
   }
 
   const filterItems = () => {
     // console.log('owner tokens: ', ownerTokens)
     if (ownerTokens.length === 0) {
-      console.log('no tokens in wallet')
+      // console.log('no tokens in wallet')
       return
     }
     if (ownedItems.length === 0) {
       setUnregistered(ownerTokens)
-      console.log('no items owned in marketplace')
+      // console.log('no items owned in marketplace')
       return
     }
     setUnregistered(ownerTokens)
@@ -134,8 +136,8 @@ const profile = () => {
     userInfo()
   }, [])
 
-  console.log(tokenData)
-  console.log(tokensOwned)
+  // console.log(tokenData)
+  // console.log(tokensOwned)
   return (
     <div>
       <ViewNFTCard viewNFTModal={viewNFTModal} setViewNFTModal={setViewNFTModal} />

@@ -20,8 +20,6 @@ const Trades = () => {
   const [currentTokenId, setCurrentTokenId] = useState<any>()
 
   const filterItems = () => {
-    // console.log('owner tokens: ', ownerTokens)
-    // console.log('owner items: ', ownedItems)
     if (ownerTokens.length === 0) {
       console.log('no tokens in wallet')
       return

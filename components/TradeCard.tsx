@@ -45,10 +45,11 @@ const TradeCard = (props: CardProps) => {
     const txn = await context.marketplaceContract.delistItem(props.itemId)
     const receipt = await txn.wait()
     console.log('delisted item: ', receipt)
+    router.push('/trades')
   }
 
   const shortenAddress = (str: any) => {
-    return str.substring(0, 4) + '...' + str.substring(str.length - 2)
+    return str.substring(0, 5) + '...' + str.substring(str.length - 2)
   }
 
   useEffect(() => {

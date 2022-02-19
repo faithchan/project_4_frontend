@@ -40,7 +40,6 @@ const ListNFTToken = (props: listingProps) => {
   const handleRoyaltyInputChange = (event: any) => {
     const value = event.target.value
     const bp = value * 100
-    console.log('royalty bp: ', bp)
     setRoyaltyAmount(bp)
   }
 
@@ -62,7 +61,6 @@ const ListNFTToken = (props: listingProps) => {
 
   const handlePriceInputChange = (event: any) => {
     const value = event.target.value
-    console.log('price: ', value)
     setListPrice(value)
   }
 

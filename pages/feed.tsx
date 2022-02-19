@@ -22,6 +22,16 @@ const feed = () => {
   const [currentItemOwner, setCurrentItemOwner] = useState<string>()
   const [currentPrice, setCurrentPrice] = useState<any>()
 
+  const fetchTokenData = async () => {
+    for (let token of filteredTokens) {
+      const itemId = await context.marketplaceContract.getItemId(token)
+      if (itemId.toNumber() !== 0) {
+        console.log('existing itemid: ', itemId)
+      } else {
+      }
+    }
+  }
+
   const filterTokens = async () => {
     const tempSet = new Set<any>()
     for (let owned of ownedTokens) {
@@ -41,7 +51,6 @@ const feed = () => {
     for (let created of createdTokens) {
       for (let token of tempSet) {
         if (created !== token) {
-          console.log('not the same: ', created)
           tempSet.add(created)
         }
       }
@@ -89,6 +98,12 @@ const feed = () => {
       console.log(err)
     }
   }
+
+  useEffect(() => {
+    if (filteredTokens) {
+      fetchTokenData()
+    }
+  }, [filteredTokens])
 
   useEffect(() => {
     if (createdLoaded && ownedLoaded) {
