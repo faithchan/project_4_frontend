@@ -14,23 +14,78 @@ const feed = () => {
   const [ownedTokens, setOwnedTokens] = useState<any>(new Set())
   const [createdTokens, setCreatedTokens] = useState<any>(new Set())
   const [filteredTokens, setFilteredTokens] = useState<any>(new Set())
+  const [tokenData, setTokenData] = useState<any>([])
   const [createdLoaded, setCreatedLoaded] = useState<boolean>(false)
   const [ownedLoaded, setOwnedLoaded] = useState<boolean>(false)
-  const [tokenData, setTokenData] = useState<any>([])
+  const [dataFetched, setDataFetched] = useState<boolean>(false)
+
   const [currentItemId, setCurrentItemId] = useState<number>()
   const [currentTokenId, setCurrentTokenId] = useState<number>()
   const [currentItemOwner, setCurrentItemOwner] = useState<string>()
   const [currentPrice, setCurrentPrice] = useState<any>()
 
   const fetchTokenData = async () => {
+    const fetchedData = []
     for (let token of filteredTokens) {
       const itemId = await context.marketplaceContract.getItemId(token)
       if (itemId.toNumber() !== 0) {
-        console.log('existing itemid: ', itemId)
+        const item = await context.marketplaceContract.getItemById(itemId)
+        const details = {
+          isListed: item.isListed,
+          owner: item.owner,
+          price: ethers.utils.formatUnits(item.price.toString(), 'ether'),
+          tokenId: item.tokenId.toNumber(),
+          itemId: item.itemId.toNumber(),
+          name: null,
+          description: null,
+          image: null,
+        }
+        const uri = await context.nftContract.tokenURI(details.tokenId)
+        const response = await fetch(uri)
+        const data = await response.json()
+        details.name = data.name
+        details.description = data.description
+        details.image = data.image
+        fetchedData.push(details)
       } else {
+        const uri = await context.nftContract.tokenURI(token)
+        const response = await fetch(uri)
+        const data = await response.json()
+        data.tokenId = token
+        data.listPrice = 0
+        const creator = await context.nftContract.tokenCreator(data.tokenId)
+        const creatorInfo = await fetchCreatorInfo(creator)
+        data.creator = creatorInfo[0].username
+        data.avatar = creatorInfo[0].avatar
+        fetchedData.push(data)
       }
     }
+    setTokenData(fetchedData)
+    setDataFetched(true)
   }
+
+  const renderCards = tokenData.map((item: any) => {
+    console.log('rendering item: ', item)
+    return (
+      <FeedCard
+        key={item.image}
+        name={item.name}
+        description={item.description}
+        image={item.image}
+        price={item.price}
+        itemId={item.itemId}
+        isListed={item.isListed}
+        owner={item.owner}
+        tokenId={item.tokenId}
+        buyModal={buyModal}
+        setBuyModal={setBuyModal}
+        setCurrentItemId={setCurrentItemId}
+        setCurrentTokenId={setCurrentTokenId}
+        setCurrentItemOwner={setCurrentItemOwner}
+        setCurrentPrice={setCurrentPrice}
+      />
+    )
+  })
 
   const filterTokens = async () => {
     const tempSet = new Set<any>()
@@ -84,6 +139,21 @@ const feed = () => {
     setOwnedLoaded(true)
   }
 
+  const fetchCreatorInfo = async (creator: string) => {
+    try {
+      const res = await fetch(`${process.env.API_ENDPOINT}/users/${creator}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const data = await res.json()
+      return data
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   const fetchUserInfo = async () => {
     try {
       const res = await fetch(`${process.env.API_ENDPOINT}/users/${context.walletAddress}`, {
@@ -93,6 +163,7 @@ const feed = () => {
         },
       })
       const data = await res.json()
+      console.log('creators followed: ', data[0].following)
       setCreatorsFollowed(data[0].following)
     } catch (err) {
       console.log(err)
@@ -173,6 +244,7 @@ const feed = () => {
           setBuyModal={setBuyModal}
         />
       )}
+      {dataFetched && renderCards}
     </div>
   )
 }
