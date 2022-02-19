@@ -8,7 +8,8 @@ import { ethers } from 'ethers'
 // get itemId from tokenId
 
 const feed = () => {
-  const context = useContext(globalContext)
+  const { marketplaceContract, nftContract, signer, walletAddress, setSigner, setWalletAddress } =
+    useContext(globalContext)
   const [buyModal, setBuyModal] = useState<boolean>(false)
   const [creatorsFollowed, setCreatorsFollowed] = useState<any>()
   const [ownedTokens, setOwnedTokens] = useState<any>(new Set())
@@ -27,9 +28,9 @@ const feed = () => {
   const fetchTokenData = async () => {
     const fetchedData = []
     for (let token of filteredTokens) {
-      const itemId = await context.marketplaceContract.getItemId(token)
+      const itemId = await marketplaceContract.getItemId(token)
       if (itemId.toNumber() !== 0) {
-        const item = await context.marketplaceContract.getItemById(itemId)
+        const item = await marketplaceContract.getItemById(itemId)
         const details = {
           isListed: item.isListed,
           owner: item.owner,
@@ -40,7 +41,7 @@ const feed = () => {
           description: null,
           image: null,
         }
-        const uri = await context.nftContract.tokenURI(details.tokenId)
+        const uri = await nftContract.tokenURI(details.tokenId)
         const response = await fetch(uri)
         const data = await response.json()
         details.name = data.name
@@ -48,12 +49,12 @@ const feed = () => {
         details.image = data.image
         fetchedData.push(details)
       } else {
-        const uri = await context.nftContract.tokenURI(token)
+        const uri = await nftContract.tokenURI(token)
         const response = await fetch(uri)
         const data = await response.json()
         data.tokenId = token
         data.listPrice = 0
-        const creator = await context.nftContract.tokenCreator(data.tokenId)
+        const creator = await nftContract.tokenCreator(data.tokenId)
         const creatorInfo = await fetchCreatorInfo(creator)
         console.log('creator info: ', creatorInfo)
         data.creator = creatorInfo[0].username
@@ -116,10 +117,10 @@ const feed = () => {
   }
 
   const fetchCreatorCreated = async () => {
-    const totalSupply = await context.nftContract.totalSupply()
+    const totalSupply = await nftContract.totalSupply()
     for (let creator of creatorsFollowed) {
       for (let i = 0; i < totalSupply; i++) {
-        const owner = await context.nftContract.tokenCreator(i)
+        const owner = await nftContract.tokenCreator(i)
         if (owner === creator) {
           setCreatedTokens((prev: any) => new Set(prev.add(i)))
         }
@@ -129,10 +130,10 @@ const feed = () => {
   }
 
   const fetchCreatorOwned = async () => {
-    const totalSupply = await context.nftContract.totalSupply()
+    const totalSupply = await nftContract.totalSupply()
     for (let creator of creatorsFollowed) {
       for (let i = 0; i < totalSupply; i++) {
-        const owner = await context.nftContract.ownerOf(i)
+        const owner = await nftContract.ownerOf(i)
         if (owner === creator) {
           setOwnedTokens((prev: any) => new Set(prev.add(i)))
         }
@@ -158,7 +159,7 @@ const feed = () => {
 
   const fetchUserInfo = async () => {
     try {
-      const res = await fetch(`${process.env.API_ENDPOINT}/users/${context.walletAddress}`, {
+      const res = await fetch(`${process.env.API_ENDPOINT}/users/${walletAddress}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -185,7 +186,7 @@ const feed = () => {
   }, [createdLoaded && ownedLoaded])
 
   useEffect(() => {
-    if (creatorsFollowed && context.nftContract) {
+    if (creatorsFollowed && nftContract) {
       fetchCreatorOwned()
       fetchCreatorCreated()
     }
@@ -193,7 +194,7 @@ const feed = () => {
 
   useEffect(() => {
     fetchUserInfo()
-  }, [context.walletAddress])
+  }, [walletAddress])
 
   //----------------Initialising Wallet----------------//
 
@@ -208,8 +209,8 @@ const feed = () => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         const connectedAddress = await signer.getAddress()
-        context.setSigner(signer)
-        context.setWalletAddress(connectedAddress)
+        setSigner(signer)
+        setWalletAddress(connectedAddress)
       }
     } else {
       alert('Please install Metamask')
@@ -229,7 +230,7 @@ const feed = () => {
   }
 
   useEffect(() => {
-    if (context.signer === null) {
+    if (signer === null) {
       connectWallet()
     }
   }, [])

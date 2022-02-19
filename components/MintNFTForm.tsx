@@ -10,7 +10,8 @@ const url: string | any = 'https://ipfs.infura.io:5001/api/v0'
 const client = create(url)
 
 const UploadNFTForm = () => {
-  const context = useContext(globalContext)
+  const { signer, nftContract, walletAddress, setSigner, setWalletAddress } =
+    useContext(globalContext)
   const router = useRouter()
   const [loggedIn, setLoggedIn] = useState<boolean>(false)
   const [fileName, setFileName] = useState('')
@@ -18,7 +19,7 @@ const UploadNFTForm = () => {
   const [metadata, setMetadata] = useState({ name: '', description: '', image: '' })
 
   const mintToken = async () => {
-    if (context.signer) {
+    if (signer) {
       if (await checkWhitelist()) {
         if (!metadata.name || !metadata.description || !metadata.image) {
           alert('Please do not leave any fields blank.')
@@ -27,7 +28,7 @@ const UploadNFTForm = () => {
         const { cid } = await client.add({ path: `${fileName}`, content: JSON.stringify(metadata) })
         const uri = `https://ipfs.infura.io/ipfs/${cid}`
         console.log('token URI: ', uri)
-        const mintTxn = await context.nftContract.mint(context.walletAddress, uri)
+        const mintTxn = await nftContract.mint(walletAddress, uri)
         const txn = await mintTxn.wait()
         console.log('txn: ', txn)
         const id = txn.events[0].args['tokenId']
@@ -44,8 +45,8 @@ const UploadNFTForm = () => {
   }
 
   const checkWhitelist = async () => {
-    if (context.nftContract) {
-      const whitelisted = await context.nftContract.isWhitelisted(context.walletAddress)
+    if (nftContract) {
+      const whitelisted = await nftContract.isWhitelisted(walletAddress)
       return whitelisted
     }
   }
@@ -101,8 +102,8 @@ const UploadNFTForm = () => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         const connectedAddress = await signer.getAddress()
-        context.setSigner(signer)
-        context.setWalletAddress(connectedAddress)
+        setSigner(signer)
+        setWalletAddress(connectedAddress)
       }
     } else {
       alert('Please install Metamask')
@@ -118,7 +119,7 @@ const UploadNFTForm = () => {
   }
 
   useEffect(() => {
-    if (context.signer === null) {
+    if (signer === null) {
       connectWallet()
     }
   }, [])

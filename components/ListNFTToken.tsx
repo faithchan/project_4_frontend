@@ -12,7 +12,7 @@ interface listingProps {
 }
 
 const ListNFTToken = (props: listingProps) => {
-  const context = useContext(globalContext)
+  const { nftContract, marketplaceContract } = useContext(globalContext)
   const router = useRouter()
   const [showRoyalty, setShowRoyalty] = useState(true)
   const [showList, setShowList] = useState(true)
@@ -27,8 +27,8 @@ const ListNFTToken = (props: listingProps) => {
 
   const setTokenRoyalty = async () => {
     console.log(`setting royalties of ${royaltyAmount} for token id ${props.tokenId}`)
-    if (context.nftContract) {
-      const txn = await context.nftContract.setTokenRoyalty(props.tokenId, royaltyAmount)
+    if (nftContract) {
+      const txn = await nftContract.setTokenRoyalty(props.tokenId, royaltyAmount)
       console.log('royalty txn: ', txn)
       setShowRoyalty(false)
       setShowList(true)
@@ -46,10 +46,10 @@ const ListNFTToken = (props: listingProps) => {
   //----------------Listing Token----------------//
 
   const listToken = async () => {
-    if (context.marketplaceContract) {
+    if (marketplaceContract) {
       const salePrice = ethers.utils.parseUnits(listPrice, 'ether')
       console.log(`setting price of ${salePrice} for token ${props.tokenId}`)
-      const txn = await context.marketplaceContract.listItem(nftaddress, props.tokenId, salePrice)
+      const txn = await marketplaceContract.listItem(nftaddress, props.tokenId, salePrice)
       await txn.wait()
       setShowList(false)
       props.setListNFTModal(false)

@@ -12,9 +12,7 @@ import AccNavigation from './AccNavigation'
 import TradesNavigation from './TradesNavigation'
 
 const Navbar = () => {
-  const context = useContext(globalContext)
-
-  // console.log('navbar context: ', context)
+  const { setSigner, setWalletAddress, signer, login } = useContext(globalContext)
 
   const connectWallet = async () => {
     if (typeof window.ethereum !== 'undefined') {
@@ -27,8 +25,8 @@ const Navbar = () => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         const connectedAddress = await signer.getAddress()
-        context.setSigner(signer)
-        context.setWalletAddress(connectedAddress)
+        setSigner(signer)
+        setWalletAddress(connectedAddress)
       }
     } else {
       alert('Please install Metamask')
@@ -44,7 +42,7 @@ const Navbar = () => {
   }
 
   useEffect(() => {
-    if (context.signer === null && context.login===true) {
+    if (signer === null && login === true) {
       connectWallet()
     }
   }, [])
@@ -62,16 +60,19 @@ const Navbar = () => {
         <span>
           <ul className="flex items-right mt-6 h-full tracking-widest">
             <li className="ml-10 mr-10 mt-2 ">
-            {context.login?<Link href="/feed">
-                <a>
-                  <Image src={homeImg}></Image>
-                </a>
-              </Link>:
-              <Link href="/login">
-                <a>
-                  <Image src={homeImg}></Image>
-                </a>
-              </Link>}
+              {login ? (
+                <Link href="/feed">
+                  <a>
+                    <Image src={homeImg}></Image>
+                  </a>
+                </Link>
+              ) : (
+                <Link href="/login">
+                  <a>
+                    <Image src={homeImg}></Image>
+                  </a>
+                </Link>
+              )}
             </li>
             {/* <li className="ml-10 mr-10 mt-2 ">
               <a onClick={connectWallet}>

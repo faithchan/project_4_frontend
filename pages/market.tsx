@@ -6,7 +6,8 @@ import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
 
 const Market = () => {
-  const context = useContext(globalContext)
+  const { signer, marketplaceContract, nftContract, setSigner, setWalletAddress } =
+    useContext(globalContext)
   const [buyModal, setBuyModal] = useState(false)
   const [tokenData, setTokenData] = useState<any>([])
   const [loaded, setLoaded] = useState(false)
@@ -16,7 +17,7 @@ const Market = () => {
   const [currentPrice, setCurrentPrice] = useState<any>()
 
   const fetchMarketItems = async () => {
-    const listed = await context.marketplaceContract.getListedItems()
+    const listed = await marketplaceContract.getListedItems()
     console.log('market items: ', listed)
     const allTokens = []
     for (let item of listed) {
@@ -32,7 +33,7 @@ const Market = () => {
         creator: null,
         avatar: null,
       }
-      const uri = await context.nftContract.tokenURI(details.tokenId)
+      const uri = await nftContract.tokenURI(details.tokenId)
       const response = await fetch(uri)
       const data = await response.json()
       details.name = data.name
@@ -64,10 +65,10 @@ const Market = () => {
   }
 
   useEffect(() => {
-    if (context.marketplaceContract) {
+    if (marketplaceContract) {
       fetchMarketItems()
     }
-  }, [context.marketplaceContract])
+  }, [marketplaceContract])
 
   const renderCards = tokenData.map((item: any) => {
     return (
@@ -105,8 +106,8 @@ const Market = () => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         const connectedAddress = await signer.getAddress()
-        context.setSigner(signer)
-        context.setWalletAddress(connectedAddress)
+        setSigner(signer)
+        setWalletAddress(connectedAddress)
       }
     } else {
       alert('Please install Metamask')
@@ -126,7 +127,7 @@ const Market = () => {
   }
 
   useEffect(() => {
-    if (context.signer === null) {
+    if (signer === null) {
       connectWallet()
     }
   }, [])

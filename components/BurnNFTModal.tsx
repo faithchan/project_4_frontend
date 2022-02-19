@@ -7,19 +7,19 @@ interface deleteProps {
   setBurnModal: (a: boolean) => void
 }
 const BurnNFTModal = (props: deleteProps) => {
-  const context = useContext(globalContext)
+  const { nftContract, walletAddress } = useContext(globalContext)
   console.log('burn modal props: ', props)
 
   const burnToken = async () => {
-    if (context.nftContract) {
-      const owner = await context.nftContract.ownerOf(props.tokenId)
-      const creator = await context.nftContract.tokenCreator(props.tokenId)
-      if (owner !== context.walletAddress || creator !== context.walletAddress) {
+    if (nftContract) {
+      const owner = await nftContract.ownerOf(props.tokenId)
+      const creator = await nftContract.tokenCreator(props.tokenId)
+      if (owner !== walletAddress || creator !== walletAddress) {
         alert('You do not have the permission to burn this token')
         return
       } else {
         console.log(`burning token ${props.tokenId}...`)
-        const txn = await context.nftContract.burn(props.tokenId)
+        const txn = await nftContract.burn(props.tokenId)
         await txn.wait()
         props.setBurnModal(false)
         console.log('token burned')

@@ -12,7 +12,6 @@ const wallet = () => {
   return (
     <div className="flex place-content-center">
       <div>
-        <Wallet setConnected={setConnected} isConnected={connected} />
         <Ellipsis />
       </div>
     </div>

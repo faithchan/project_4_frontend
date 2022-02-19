@@ -20,7 +20,7 @@ interface CardProps {
 }
 
 const TradeCard = (props: CardProps) => {
-  const context = useContext(globalContext)
+  const { nftContract, walletAddress, marketplaceContract } = useContext(globalContext)
   const router = useRouter()
   const [ListNFTModal, setListNFTModal] = useState(false)
   const [creator, setCreator] = useState() // creator's wallet address
@@ -29,9 +29,9 @@ const TradeCard = (props: CardProps) => {
   const [profileLoaded, setProfileLoaded] = useState<boolean>(false)
 
   const checkIfHolderIsCreator = async () => {
-    const creator = await context.nftContract.tokenCreator(props.tokenId)
+    const creator = await nftContract.tokenCreator(props.tokenId)
     setCreator(creator)
-    if (creator === context.walletAddress) {
+    if (creator === walletAddress) {
       setIsCreater(true)
     } else {
       setIsCreater(false)
@@ -39,7 +39,7 @@ const TradeCard = (props: CardProps) => {
   }
 
   const delistItem = async () => {
-    const txn = await context.marketplaceContract.delistItem(props.itemId)
+    const txn = await marketplaceContract.delistItem(props.itemId)
     const receipt = await txn.wait()
     console.log('delisted item: ', receipt)
     router.reload()
@@ -56,10 +56,10 @@ const TradeCard = (props: CardProps) => {
   }, [creatorProfile])
 
   useEffect(() => {
-    if (context.nftContract) {
+    if (nftContract) {
       checkIfHolderIsCreator()
     }
-  }, [context.nftContract])
+  }, [nftContract])
 
   useEffect(() => {
     props.setCurrentTokenId(props.tokenId)
@@ -122,7 +122,7 @@ const TradeCard = (props: CardProps) => {
             </span>
             <p className="text-gold text-sm font-header tracking-widest mt-2">Owned by</p>
             <p className="text-gold text-xs font-header tracking-widest mt-2">
-              {shortenAddress(context.walletAddress)}
+              {shortenAddress(walletAddress)}
             </p>
             <span className="flex justify-between">
               <span className="pt-2 cursor-pointer" onClick={() => props.setBurnModal(true)}>
