@@ -5,13 +5,13 @@ import globalContext from '../context/context'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
 
-// query tokensCreated
+// query tokensCreated & tokensOwned
 // fetch URI for creator tokens
 
 const feed = () => {
   const context = useContext(globalContext)
   const [userProfile, setUserProfile] = useState()
-  const [userFollowing, setUserFollowing] = useState<any>()
+  const [creatorsFollowed, setCreatorsFollowed] = useState<any>()
   const [ownedTokens, setOwnedTokens] = useState<any>(new Set())
   const [createdTokens, setCreatedTokens] = useState<any>(new Set())
 
@@ -19,15 +19,16 @@ const feed = () => {
 
   const fetchCreatorOwned = async () => {
     const totalSupply = await context.nftContract.totalSupply()
-    for (let creator of userFollowing) {
-      console.log('creator: ', creator)
+    console.log('creators followed: ', creatorsFollowed)
+    for (let creator of creatorsFollowed) {
+      // console.log('creator: ', creator)
+      for (let i = 0; i < totalSupply; i++) {
+        const owner = await context.nftContract.ownerOf(i)
+        if (owner === creator) {
+          setOwnedTokens((prev: any) => new Set(prev.add(i)))
+        }
+      }
     }
-    // for (let i = 0; i < totalSupply; i++) {
-    //   const owner = await context.nftContract.ownerOf(i)
-    //   if (owner === context.walletAddress) {
-    //     setOwnedTokens((prev: any) => new Set(prev.add(i)))
-    //   }
-    // }
   }
 
   const filterTokens = async () => {}
@@ -42,19 +43,19 @@ const feed = () => {
       })
       const data = await res.json()
       setUserProfile(data)
-      setUserFollowing(data[0].following)
-      console.log('user profile: ', data)
+      setCreatorsFollowed(data[0].following)
+      // console.log('user profile: ', data)
     } catch (err) {
       console.log(err)
     }
   }
 
   useEffect(() => {
-    if (userFollowing) {
+    if (creatorsFollowed && context.nftContract) {
       fetchCreatorOwned()
       fetchCreatorCreated()
     }
-  }, [userFollowing])
+  }, [creatorsFollowed])
 
   useEffect(() => {
     fetchUserInfo()
@@ -101,7 +102,22 @@ const feed = () => {
 
   return (
     <div>
-      <div className="text-white">feed</div>
+      <button
+        className="text-white mr-4"
+        onClick={() => {
+          console.log('owned tokens: ', ownedTokens)
+        }}
+      >
+        ownedTokens
+      </button>
+      <button
+        className="text-white mr-4"
+        onClick={() => {
+          console.log('created tokens: ', createdTokens)
+        }}
+      >
+        createdTokens
+      </button>
     </div>
   )
 }
