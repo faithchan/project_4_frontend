@@ -65,7 +65,6 @@ const feed = () => {
   }
 
   const renderCards = tokenData.map((item: any) => {
-    console.log('rendering item: ', item)
     return (
       <FeedCard
         key={item.image}
