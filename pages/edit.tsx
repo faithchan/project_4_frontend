@@ -18,7 +18,7 @@ type FormData = {
 }
 
 const Edit = () => {
-  const [userProfile, setUserProfile] = useState()
+  const [userProfile, setUserProfile] = useState<any>()
   const [userAddress, setUserAddress] = useState<string>()
 
   const {
@@ -27,9 +27,13 @@ const Edit = () => {
     setValue,
     formState: { errors },
   } = useForm<FormData>({
-    defaultValues: {
-      username: 'xxx',
-    },
+    // defaultValues: {
+    //   username: 'xxx',
+    //   email: 'xxx',
+    //   password: 'xxx',
+    //   walletAddress: '',
+    //   avatar: '',
+    // },
   })
 
   const onSubmit = async (data: any) => {
@@ -125,7 +129,6 @@ const Edit = () => {
     if (tempToken) {
       let decodedToken: any = jwtDecode(tempToken)
       setUserAddress(decodedToken.walletAddress)
-      console.log('decoded token: ', decodedToken)
     }
   }, [])
 
@@ -143,6 +146,7 @@ const Edit = () => {
                   type="text"
                   className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md w-full mt-2"
                   {...register('username', { required: true })}
+                  defaultValue={userProfile && userProfile[0].username}
                 />
                 {errors.username && (
                   <div className="text-white">Please do not leave this field blank</div>
@@ -154,6 +158,7 @@ const Edit = () => {
                   type="text"
                   className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
                   {...register('email', { required: true, validate: validateEmail })}
+                  defaultValue={userProfile && userProfile[0].email}
                 />
                 {errors.email && errors.email.type === 'validate' && (
                   <div className="text-white">Please enter a valid email address</div>
@@ -181,6 +186,7 @@ const Edit = () => {
                   id="walletAddress"
                   className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
                   {...register('walletAddress', { required: true, validate: validateAddress })}
+                  defaultValue={userProfile && userProfile[0].walletAddress}
                 />
                 {errors.walletAddress && errors.walletAddress.type === 'validate' && (
                   <div className="text-white">Please enter a valid wallet address</div>
@@ -188,7 +194,7 @@ const Edit = () => {
               </div>
               <div className="">
                 <label className="md:text-sm text-xs text-white font-body tracking-wider">
-                  Upload Profile Photo
+                  Profile Picture
                 </label>
                 <div className="flex items-center justify-center w-full mt-2">
                   <label className="flex flex-col border-2 border-dashed w-full rounded-lg h-32 group">

@@ -149,7 +149,7 @@ const SignUpForm = () => {
               </div>
               <div className="">
                 <label className="md:text-sm text-xs text-white font-body tracking-wider">
-                  Upload Profile Photo
+                  Upload Profile Picture
                 </label>
                 <div className="flex items-center justify-center w-full mt-2">
                   <label className="flex flex-col border-2 border-dashed w-full rounded-lg h-32 group">
