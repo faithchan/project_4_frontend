@@ -15,13 +15,21 @@ const feed = () => {
   const [ownedTokens, setOwnedTokens] = useState<any>(new Set())
   const [createdTokens, setCreatedTokens] = useState<any>(new Set())
 
-  const fetchCreatorCreated = async () => {}
+  const fetchCreatorCreated = async () => {
+    const totalSupply = await context.nftContract.totalSupply()
+    for (let creator of creatorsFollowed) {
+      for (let i = 0; i < totalSupply; i++) {
+        const owner = await context.nftContract.tokenCreator(i)
+        if (owner === creator) {
+          setCreatedTokens((prev: any) => new Set(prev.add(i)))
+        }
+      }
+    }
+  }
 
   const fetchCreatorOwned = async () => {
     const totalSupply = await context.nftContract.totalSupply()
-    console.log('creators followed: ', creatorsFollowed)
     for (let creator of creatorsFollowed) {
-      // console.log('creator: ', creator)
       for (let i = 0; i < totalSupply; i++) {
         const owner = await context.nftContract.ownerOf(i)
         if (owner === creator) {
