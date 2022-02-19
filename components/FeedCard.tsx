@@ -23,8 +23,6 @@ interface FeedProps {
 const FeedCard = (props: FeedProps) => {
   const context = useContext(globalContext)
 
-  console.log('feed card props: ', props)
-
   useEffect(() => {
     props.setCurrentItemId(props.itemId)
     props.setCurrentTokenId(props.tokenId)

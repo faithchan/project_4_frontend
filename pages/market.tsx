@@ -38,18 +38,17 @@ const Market = () => {
       details.name = data.name
       details.description = data.description
       details.image = data.image
-      const creator = await context.nftContract.tokenCreator(details.tokenId)
-      const creatorInfo = await fetchCreatorInfo(creator)
-      console.log('creator info: ', creatorInfo)
-      details.creator = creatorInfo[0].username
-      details.avatar = creatorInfo[0].avatar
+      const ownerInfo = await fetchProfileInfo(details.owner)
+      console.log('creator info: ', ownerInfo)
+      details.creator = ownerInfo[0].username
+      details.avatar = ownerInfo[0].avatar
       allTokens.push(details)
       setTokenData(allTokens)
     }
     setLoaded(true)
   }
 
-  const fetchCreatorInfo = async (creator: string) => {
+  const fetchProfileInfo = async (creator: string) => {
     try {
       const res = await fetch(`${process.env.API_ENDPOINT}/users/${creator}`, {
         method: 'GET',
