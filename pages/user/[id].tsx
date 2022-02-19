@@ -23,7 +23,6 @@ const Username = () => {
         },
       })
       const data = await res.json()
-      console.log('fetching artist data: ', data)
       if (data.length === 0) {
         console.log('artist does not exist')
         // router.push('/404')

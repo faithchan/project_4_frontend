@@ -70,7 +70,7 @@ const profile = () => {
         const owner = await context.nftContract.ownerOf(i)
         if (owner === context.walletAddress) {
           setOwnerTokens((prev: any) => new Set(prev.add(i)))
-          console.log(ownerTokens)
+          // console.log(ownerTokens)
         }
       }
       console.log('total supply', totalSupply)

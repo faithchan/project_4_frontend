@@ -62,7 +62,6 @@ const UploadNFTForm = () => {
           hashAlg: 'sha2-256',
         }
       )
-      console.log('cid: ', cid)
       const url = `https://ipfs.infura.io/ipfs/${cid}`
       console.log('ipfs url: ', url)
       setImageURL(url)
@@ -123,14 +122,6 @@ const UploadNFTForm = () => {
       connectWallet()
     }
   }, [])
-
-  //   if (!loggedIn) {
-  //     return (
-  //       <div className="flex items-center justify-center mt-10 mb-20">
-  //         <div className="text-white">Please Log In</div>
-  //       </div>
-  //     )
-  //   }
 
   return (
     <div className="flex items-center justify-center mt-10 mb-20">

@@ -10,6 +10,8 @@ interface FeedProps {
   isListed: boolean
   owner: string
   tokenId: number
+  creator: string
+  avatar: string
   buyModal: boolean
   setBuyModal: (a: boolean) => void
   setCurrentItemId: (a: number) => void
@@ -35,11 +37,13 @@ const FeedCard = (props: FeedProps) => {
           <span className="flex space-x-4 mr-6">
             <img
               className="w-10 h-10 object-cover rounded-full mr-2  mb-4"
-              src="https://api.lorem.space/image/face?w=200&h=200&hash=bart89fe"
+              src={props.avatar}
               alt=""
             />
             <span className="mt-3">
-              <p className="text-center text-gold font-header text-xs tracking-widest">FAKURIAN</p>
+              <p className="text-center text-gold font-header text-xs tracking-widest">
+                {props.creator}
+              </p>
             </span>
           </span>
           <span className="font-MT font-semibold text-left leading-loose">

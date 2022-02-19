@@ -20,10 +20,10 @@ const admin = () => {
       for (let user of allUsers) {
         const txn = await context.nftContract.isWhitelisted(user.walletAddress)
         if (txn) {
-          console.log(`${user.username} is whitelisted`)
+          // console.log(`${user.username} is whitelisted`)
           setWhitelistedAddrs([...whitelistedAddrs, user.walletAddress])
         } else {
-          console.log(`${user.username} is not whitelisted`)
+          // console.log(`${user.username} is not whitelisted`)
         }
       }
     } else {
@@ -168,11 +168,7 @@ const admin = () => {
         className="md:text-sm text-xs text-white font-body tracking-wider my-4 flex items-center"
         key={user._id}
       >
-        <img
-          src={user.avatar}
-          alt={user.username}
-          className="mr-5 w-16 h-16 rounded-full"
-        />
+        <img src={user.avatar} alt={user.username} className="mr-5 w-16 h-16 rounded-full" />
         {user.username}
         <button
           className="border-2 border-gold hover:bg-blue-450 text-gold font-semibold font-header py-2 px-6 rounded-full text-xs ml-5"

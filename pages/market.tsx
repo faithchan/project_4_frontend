@@ -29,6 +29,8 @@ const Market = () => {
         name: null,
         description: null,
         image: null,
+        creator: null,
+        avatar: null,
       }
       const uri = await context.nftContract.tokenURI(details.tokenId)
       const response = await fetch(uri)
@@ -36,10 +38,30 @@ const Market = () => {
       details.name = data.name
       details.description = data.description
       details.image = data.image
+      const creator = await context.nftContract.tokenCreator(details.tokenId)
+      const creatorInfo = await fetchCreatorInfo(creator)
+      console.log('creator info: ', creatorInfo)
+      details.creator = creatorInfo[0].username
+      details.avatar = creatorInfo[0].avatar
       allTokens.push(details)
       setTokenData(allTokens)
     }
     setLoaded(true)
+  }
+
+  const fetchCreatorInfo = async (creator: string) => {
+    try {
+      const res = await fetch(`${process.env.API_ENDPOINT}/users/${creator}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const data = await res.json()
+      return data
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   useEffect(() => {
@@ -60,6 +82,8 @@ const Market = () => {
         isListed={item.isListed}
         owner={item.owner}
         tokenId={item.tokenId}
+        creator={item.creator}
+        avatar={item.avatar}
         buyModal={buyModal}
         setBuyModal={setBuyModal}
         setCurrentItemId={setCurrentItemId}
