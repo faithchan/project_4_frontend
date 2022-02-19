@@ -221,7 +221,7 @@ const getAllWhitelistees = async () => {
   }, [])
 
     return (
-        <div className="bg-white p-8 rounded-xl mx-32 mt-10">
+        <div className="bg-white p-8 rounded-xl mx-32 my-20">
 	<div className=" flex items-center justify-between pb-6">
 		<div>
 			<h2 className="text-gray-600 font-semibold">Manage All Users</h2>
