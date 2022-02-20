@@ -29,6 +29,13 @@ const getAllWhitelistees = async () => {
       console.log('no users in database')
     }
   }
+
+  const check = async (x:any) => {
+    const txn = await context.nftContract.isWhitelisted(x)
+    if(txn){return true}
+    else{return false}}
+
+    console.log(whitelistedAddrs)
   
   const addToWhitelist = async () => {
     if (context.nftContract) {
@@ -88,6 +95,8 @@ const getAllWhitelistees = async () => {
       alert('Please connect your Metamask wallet')
     }
   }
+
+  
   
   const fetchAllUsers = async () => {
     try {
@@ -103,6 +112,16 @@ const getAllWhitelistees = async () => {
       console.error(err)
     }
   }
+
+  const validateAddress = (input: any) => {
+    const prefix = input.slice(0, 2)
+    if (input.length === 42 && prefix === '0x') {
+      return true
+    }
+    return false
+  }
+
+ 
   
   const removeUser = async (userId: string) => {
     console.log(`trying to remove user with id ${userId}`)
@@ -125,13 +144,6 @@ const getAllWhitelistees = async () => {
     setWhitelistAddress(value)
   }
   
-  const validateAddress = (input: string) => {
-    const prefix = input.slice(0, 2)
-    if (input.length === 42 && prefix === '0x') {
-      return true
-    }
-    return false
-  }
   
   useEffect(() => {
     getAllWhitelistees()
@@ -155,7 +167,7 @@ const getAllWhitelistees = async () => {
   
   const renderWhitelist = whitelistedAddrs.map((address: any) => {
     return (
-      <div className="md:text-sm text-xs text-white font-body tracking-wider mb-4" key={address}>
+      <div className="md:text-sm text-xs  text-white font-body tracking-wider mb-4" key={address}>
         {address}
       </div>
     )
@@ -184,7 +196,7 @@ const getAllWhitelistees = async () => {
       </div>
     )
   })
-  
+  console.log(allUsers)
   //----------------Initialising Wallet----------------//
   
   const connectWallet = async () => {
@@ -221,7 +233,7 @@ const getAllWhitelistees = async () => {
   }, [])
 
     return (
-        <div className="bg-purple p-8 rounded-xl mx-32 my-20">
+        <div className="bg-purple opacity-80 p-8 rounded-xl mx-32 my-20">
 	
     <div className="text-center my-8 font-header tracking-widest text-gold text-2xl">
           MANAGE WHITELIST
@@ -287,27 +299,28 @@ const getAllWhitelistees = async () => {
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
+                        {/* //.map here */}
+							{allUsers.map((user:any)=><tr>
 								<td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
 									<div className="flex items-center">
 										<div className="flex-shrink-0 w-10 h-10">
 											<img className="w-full h-full rounded-full"
-                                                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
+                                                src={user.avatar}
                                                 alt="" />
                                         </div>
 											<div className="ml-3">
 												<p className="text-gray-900 whitespace-no-wrap">
-													Vera Carpenter
+													{user.username}
 												</p>
 											</div>
 										</div>
 								</td>
 								<td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-									<p className="text-gray-900 whitespace-no-wrap">Admin</p>
+									<p className="text-gray-900 whitespace-no-wrap">{user.type}</p>
 								</td>
 								<td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
 									<p className="text-gray-900 whitespace-no-wrap">
-										0x8126736dhjefe232
+										{user.walletAddress}
 									</p>
 								</td>
 								<td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -315,10 +328,12 @@ const getAllWhitelistees = async () => {
                                         className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
                                         <span aria-hidden
                                             className="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-									<span className="relative">Activo</span>
+									<span className="relative">{
+                                    whitelistedAddrs.find((add:string) =>add ===user.walletAddress)?"Active":"Unlisted"}</span>
 									</span>
 								</td>
-							</tr>
+							</tr>)}
+                            {/* // end of array render */}
 							
 							
 						</tbody>
