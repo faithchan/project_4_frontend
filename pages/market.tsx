@@ -4,6 +4,7 @@ import BuyNFTModal from '../components/BuyNFTModal'
 import globalContext from '../context/context'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
+import Ellipsis from '../components/Spinner'
 
 const Market = () => {
   const { signer, marketplaceContract, nftContract, setSigner, setWalletAddress } =
@@ -145,6 +146,7 @@ const Market = () => {
         />
       )}
       {loaded && renderCards}
+      <Ellipsis />
     </div>
   )
 }

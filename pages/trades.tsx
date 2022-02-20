@@ -4,6 +4,7 @@ import { ethers } from 'ethers'
 import TradeCard from '../components/TradeCard'
 import globalContext from '../context/context'
 import BurnNFTModal from '../components/BurnNFTModal'
+import Ellipsis from '../components/Spinner'
 
 const Trades = () => {
   const { nftContract, marketplaceContract, signer, walletAddress, setSigner, setWalletAddress } =
@@ -275,6 +276,7 @@ const Trades = () => {
         ''
       )}
       <div className="flex flex-wrap gap-10 justify-center my-20 mx-32">
+        <Ellipsis />
         {loaded ? renderListedItems : ''}
         {loaded ? renderUnlistedItems : ''}
         {loaded ? renderTokens : ''}

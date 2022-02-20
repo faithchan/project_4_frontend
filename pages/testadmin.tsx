@@ -5,8 +5,6 @@ import jwtDecode from 'jwt-decode'
 import globalContext from '../context/context'
 import { useRouter } from 'next/router'
 
-// console.log('admin context: ', context)
-
 const testadmin = () => {
   const prevState = useRef()
   const context = useContext(globalContext)
@@ -15,6 +13,7 @@ const testadmin = () => {
   const [whitelistedAddrs, setWhitelistedAddrs] = useState<any>(new Set())
   const [allUsers, setAllUsers] = useState([])
   const router = useRouter()
+
   const getAllWhitelistees = async () => {
     if (allUsers && context.nftContract) {
       for (let user of allUsers) {
@@ -227,7 +226,6 @@ const testadmin = () => {
       <div className="text-center my-8 font-header tracking-widest text-gold text-2xl">
         MANAGE WHITELIST
       </div>
-
       <div className="mx-56">
         <div className="grid grid-cols-1 ">
           <label className="md:text-sm text-xs text-white font-body tracking-wider">

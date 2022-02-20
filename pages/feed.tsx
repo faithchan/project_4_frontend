@@ -4,8 +4,7 @@ import BuyNFTModal from '../components/BuyNFTModal'
 import globalContext from '../context/context'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
-
-// get itemId from tokenId
+import Ellipsis from '../components/Spinner'
 
 const feed = () => {
   const { marketplaceContract, nftContract, signer, walletAddress, setSigner, setWalletAddress } =
@@ -248,6 +247,7 @@ const feed = () => {
         />
       )}
       {dataFetched && renderCards}
+      {/* <Ellipsis /> */}
     </div>
   )
 }
