@@ -14,15 +14,15 @@ interface buyProps {
   setBuyModal: (a: boolean) => void
 }
 
-const BuyNFTModal = (props: buyProps) => {
+const BuyNFTModal = ({ itemId, tokenId, owner, price, buyModal, setBuyModal }: buyProps) => {
+  const { nftContract, marketplaceContract } = useContext(globalContext)
   const router = useRouter()
   const [showPurchase, setShowPurchase] = useState(true)
   const [success, setSuccess] = useState(false)
-  const context = useContext(globalContext)
 
   const checkOwnership = async () => {
-    const txn = await context.nftContract.ownerOf(props.tokenId)
-    if (txn === props.owner) {
+    const txn = await nftContract.ownerOf(tokenId)
+    if (txn === owner) {
       return true
     } else {
       return false
@@ -32,9 +32,9 @@ const BuyNFTModal = (props: buyProps) => {
   const buyItem = async () => {
     const isOwner = await checkOwnership()
     if (isOwner === true) {
-      const priceInWei = ethers.utils.parseUnits(props.price, 'ether')
+      const priceInWei = ethers.utils.parseUnits(price, 'ether')
       console.log('price in wei: ', priceInWei.toString())
-      const txn = await context.marketplaceContract.purchaseItem(nftaddress, props.itemId, {
+      const txn = await marketplaceContract.purchaseItem(nftaddress, itemId, {
         value: priceInWei,
       })
       const receipt = await txn.wait()
@@ -57,9 +57,8 @@ const BuyNFTModal = (props: buyProps) => {
       id="modal-id"
     >
       <div className="absolute bg-black opacity-80 inset-0 z-0"></div>
-
       <div className="w-full  max-w-lg p-5 relative mx-auto my-auto rounded-xl shadow-lg  bg-purple">
-        {showPurchase ? (
+        {showPurchase && (
           <form className="" onSubmit={purchaseHandler}>
             <div className="text-center p-5 flex-auto justify-center">
               <p className="text-2xl text-gold font-header px-8">Purchase NFT</p>
@@ -76,14 +75,14 @@ const BuyNFTModal = (props: buyProps) => {
                   Designed by Fakurian
                 </p>
                 <p className="text-left text-sm font-body text-gray-300 mt-2">
-                  List Price {props.price} ETH
+                  List Price {price} ETH
                 </p>
               </span>
             </div>
             <div className="p-3 mt-2 text-center space-x-4 md:block">
               <button
                 className="mb-2 md:mb-0 bg-white px-5 py-2 text-xs shadow-sm font-header tracking-wider border text-gold rounded-full hover:shadow-lg hover:bg-gray-100"
-                onClick={() => props.setBuyModal(false)}
+                onClick={() => setBuyModal(false)}
               >
                 Cancel
               </button>
@@ -94,18 +93,10 @@ const BuyNFTModal = (props: buyProps) => {
               >
                 Confirm Purchase
               </button>
-              {/* <button
-                className="mb-2 md:mb-0 bg-gold px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg "
-                onClick={checkOwnership}
-              >
-                Check Owner
-              </button> */}
             </div>
           </form>
-        ) : (
-          ''
         )}
-        {success ? (
+        {success && (
           <div>
             <div className="text-center p-5 flex-auto justify-center">
               <p className="text-2xl text-gold font-header px-8">Success!</p>
@@ -135,8 +126,6 @@ const BuyNFTModal = (props: buyProps) => {
               </button>
             </div>
           </div>
-        ) : (
-          ''
         )}
       </div>
     </div>

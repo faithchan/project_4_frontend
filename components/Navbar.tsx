@@ -14,9 +14,11 @@ import uploadImg from '../public/upload.svg'
 import tradeImg from '../public/trade.svg'
 
 const Navbar = () => {
-  const context = useContext(globalContext)
+  const { setSigner, setWalletAddress, signer, login, walletAddress, designerState } =
+    useContext(globalContext)
   const [type, setType] = useState('user')
-  const userDataURL = `${process.env.API_ENDPOINT}/users/${context.walletAddress}`
+
+  const userDataURL = `${process.env.API_ENDPOINT}/users/${walletAddress}`
   const userInfo = async () => {
     try {
       const response = await fetch(userDataURL)
@@ -41,8 +43,8 @@ const Navbar = () => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         const connectedAddress = await signer.getAddress()
-        context.setSigner(signer)
-        context.setWalletAddress(connectedAddress)
+        setSigner(signer)
+        setWalletAddress(connectedAddress)
       }
     } else {
       alert('Please install Metamask')
@@ -59,7 +61,7 @@ const Navbar = () => {
 
   useEffect(() => {
     userInfo()
-    if (context.signer === null && context.login === true) {
+    if (signer === null && login === true) {
       connectWallet()
     }
   }, [])
@@ -77,7 +79,7 @@ const Navbar = () => {
         <span>
           <ul className="flex items-right mt-6 h-full tracking-widest">
             <li className="ml-10 mr-10 mt-2 ">
-              {context.login ? (
+              {login ? (
                 <Link href="/feed">
                   <a>
                     <Image src={homeImg}></Image>
@@ -97,7 +99,7 @@ const Navbar = () => {
               </a>
             </li> */}
             <li className="ml-10 mr-10 mt-2 ">
-              {context.login && context.designerState ? (
+              {login && designerState ? (
                 <Link href="/upload">
                   <a onClick={connectWallet}>
                     <Image src={uploadImg}></Image>
@@ -112,7 +114,7 @@ const Navbar = () => {
               )}
             </li>
             <li className="ml-10 mr-20 mt-2 ">
-              {context.login ? (
+              {login ? (
                 <Link href="/trades">
                   <a onClick={connectWallet}>
                     <Image src={tradeImg}></Image>

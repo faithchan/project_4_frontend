@@ -1,10 +1,13 @@
+import { useContext, useState, useEffect } from 'react'
+import jwtDecode from 'jwt-decode'
 import { useForm } from 'react-hook-form'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { create } from 'ipfs-http-client'
-
 const url: string | any = 'https://ipfs.infura.io:5001/api/v0'
 const client = create(url)
+
+// redirect to login page if not logged in
+// username, email, password, wallet address, avatar
 
 type FormData = {
   username: string
@@ -14,8 +17,9 @@ type FormData = {
   avatar: string
 }
 
-const SignUpForm = () => {
-  const router = useRouter()
+const Edit = () => {
+  const [userProfile, setUserProfile] = useState<any>()
+  const [userAddress, setUserAddress] = useState<string>()
 
   const {
     register,
@@ -23,10 +27,13 @@ const SignUpForm = () => {
     setValue,
     formState: { errors },
   } = useForm<FormData>({
-    defaultValues: {
-      avatar:
-        'https://bafkreigj5xab3lrgu7nty4r2sqwbfqkudeed7pz2w7fvajnflgphyw6nlu.ipfs.infura-ipfs.io/',
-    },
+    // defaultValues: {
+    //   username: 'xxx',
+    //   email: 'xxx',
+    //   password: 'xxx',
+    //   walletAddress: '',
+    //   avatar: '',
+    // },
   })
 
   const onSubmit = async (data: any) => {
@@ -34,7 +41,7 @@ const SignUpForm = () => {
     console.log('data: ', data)
     try {
       const response = await fetch(`${process.env.API_ENDPOINT}/users`, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -51,6 +58,26 @@ const SignUpForm = () => {
       }
       if (walletAddress) {
         alert('Wallet address already registered. Please try again.')
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const fetchUserProfile = async () => {
+    try {
+      const res = await fetch(`${process.env.API_ENDPOINT}/users/${userAddress}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const data = await res.json()
+      console.log('user data:', data)
+      if (data.length === 0) {
+        console.log('user does not exist')
+      } else {
+        setUserProfile(data)
       }
     } catch (err) {
       console.log(err)
@@ -90,11 +117,26 @@ const SignUpForm = () => {
     return re.test(String(email).toLowerCase())
   }
 
+  useEffect(() => {
+    if (userAddress) {
+      fetchUserProfile()
+    }
+  }, [userAddress])
+
+  useEffect(() => {
+    let token = localStorage.getItem('token')
+    let tempToken: any = token
+    if (tempToken) {
+      let decodedToken: any = jwtDecode(tempToken)
+      setUserAddress(decodedToken.walletAddress)
+    }
+  }, [])
+
   return (
     <div className="flex justify-center items-center w-full mt-4 mb-32">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <div className="px-10 pt-8 rounded-xl w-screen shadow-md max-w-sm">
+          <div className=" px-10 pt-8 rounded-xl w-screen shadow-md max-w-sm">
             <div className="space-y-6">
               <div>
                 <label className="block mb-1 md:text-sm text-xs text-white font-body">
@@ -104,6 +146,7 @@ const SignUpForm = () => {
                   type="text"
                   className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md w-full mt-2"
                   {...register('username', { required: true })}
+                  defaultValue={userProfile && userProfile[0].username}
                 />
                 {errors.username && (
                   <div className="text-white">Please do not leave this field blank</div>
@@ -115,6 +158,7 @@ const SignUpForm = () => {
                   type="text"
                   className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
                   {...register('email', { required: true, validate: validateEmail })}
+                  defaultValue={userProfile && userProfile[0].email}
                 />
                 {errors.email && errors.email.type === 'validate' && (
                   <div className="text-white">Please enter a valid email address</div>
@@ -142,6 +186,7 @@ const SignUpForm = () => {
                   id="walletAddress"
                   className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
                   {...register('walletAddress', { required: true, validate: validateAddress })}
+                  defaultValue={userProfile && userProfile[0].walletAddress}
                 />
                 {errors.walletAddress && errors.walletAddress.type === 'validate' && (
                   <div className="text-white">Please enter a valid wallet address</div>
@@ -149,7 +194,7 @@ const SignUpForm = () => {
               </div>
               <div className="">
                 <label className="md:text-sm text-xs text-white font-body tracking-wider">
-                  Upload Profile Picture
+                  Profile Picture
                 </label>
                 <div className="flex items-center justify-center w-full mt-2">
                   <label className="flex flex-col border-2 border-dashed w-full rounded-lg h-32 group">
@@ -184,16 +229,11 @@ const SignUpForm = () => {
               </div>
             </div>
             <div className="flex justify-center">
-              <Link href="/login">
-                <button className="border-2 border-gold hover:bg-blue-450 text-gold font-semibold tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8 mr-4">
-                  LOGIN
-                </button>
-              </Link>
               <button
                 className="bg-gold hover:bg-blue-450 text-white font-semibold tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-8"
                 type="submit"
               >
-                CREATE ACCOUNT
+                SUBMIT
               </button>
             </div>
           </div>
@@ -203,4 +243,4 @@ const SignUpForm = () => {
   )
 }
 
-export default SignUpForm
+export default Edit

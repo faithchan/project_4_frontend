@@ -6,7 +6,7 @@ import Image from 'next/image'
 
 const Username = () => {
   const router = useRouter()
-  const context = useContext(globalContext)
+  const { walletAddress, nftContract } = useContext(globalContext)
   const { id } = router.query
   const [verified, setVerified] = useState(true)
   const [artistProfile, setArtistProfile] = useState<any>()
@@ -23,12 +23,11 @@ const Username = () => {
         },
       })
       const data = await res.json()
-      console.log('fetching artist data: ', data)
       if (data.length === 0) {
         console.log('artist does not exist')
         // router.push('/404')
       } else {
-        console.log('artist profile: ', data)
+        // console.log('artist profile: ', data)
         setArtistProfile(data)
       }
     } catch (err) {
@@ -38,7 +37,7 @@ const Username = () => {
 
   const fetchUserProfile = async () => {
     try {
-      const res = await fetch(`${process.env.API_ENDPOINT}/users/${context.walletAddress}`, {
+      const res = await fetch(`${process.env.API_ENDPOINT}/users/${walletAddress}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -59,7 +58,7 @@ const Username = () => {
   const checkWhitelistStatus = async () => {
     if (artistProfile) {
       const address = artistProfile[0].walletAddress
-      const txn = await context.nftContract.isWhitelisted(address)
+      const txn = await nftContract.isWhitelisted(address)
       setVerified(txn)
     }
   }
@@ -77,7 +76,7 @@ const Username = () => {
     usersFollowing.push(artistAddress)
     const userObject = { following: usersFollowing }
     try {
-      const res = await fetch(`${process.env.API_ENDPOINT}/users/${context.walletAddress}`, {
+      const res = await fetch(`${process.env.API_ENDPOINT}/users/${walletAddress}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -88,7 +87,7 @@ const Username = () => {
       console.log('error adding followers: ', err)
     }
     const artistFollowers = artistProfile[0].followers
-    artistFollowers.push(context.walletAddress)
+    artistFollowers.push(walletAddress)
     console.log('updated artist followers: ', artistFollowers)
     const artistObject = { followers: artistFollowers }
     try {
@@ -114,7 +113,7 @@ const Username = () => {
     console.log('unfollowed array: ', usersFollowing)
     const userObject = { following: usersFollowing }
     try {
-      const res = await fetch(`${process.env.API_ENDPOINT}/users/${context.walletAddress}`, {
+      const res = await fetch(`${process.env.API_ENDPOINT}/users/${walletAddress}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -126,7 +125,7 @@ const Username = () => {
       console.log('error adding followers: ', err)
     }
     let artistFollowers = artistProfile[0].followers
-    artistFollowers = artistFollowers.filter((x: any) => x !== context.walletAddress)
+    artistFollowers = artistFollowers.filter((x: any) => x !== walletAddress)
     console.log('updated artist followers: ', artistFollowers)
     const artistObject = { followers: artistFollowers }
     try {
@@ -148,22 +147,22 @@ const Username = () => {
 
   const fetchTokenCount = async () => {
     const address = artistProfile[0].walletAddress
-    const txn = await context.nftContract.balanceOf(address)
+    const txn = await nftContract.balanceOf(address)
     const num = txn.toNumber()
     setTokenCount(num)
   }
 
   useEffect(() => {
-    if (artistProfile && context.nftContract) {
+    if (artistProfile && nftContract) {
       fetchTokenCount()
     }
-  }, [context.nftContract, artistProfile])
+  }, [nftContract, artistProfile])
 
   useEffect(() => {
-    if (context.nftContract) {
+    if (nftContract) {
       checkWhitelistStatus()
     }
-  }, [context.nftContract, artistProfile])
+  }, [nftContract, artistProfile])
 
   useEffect(() => {
     if (artistProfile && userProfile) {
@@ -179,10 +178,10 @@ const Username = () => {
   }, [id, isFollowing])
 
   useEffect(() => {
-    if (context.walletAddress) {
+    if (walletAddress) {
       fetchUserProfile()
     }
-  }, [context.walletAddress, isFollowing])
+  }, [walletAddress, isFollowing])
 
   return (
     <div>

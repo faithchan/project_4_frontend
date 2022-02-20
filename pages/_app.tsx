@@ -7,7 +7,6 @@ import GlobalContext from '../context/context'
 import { useState, useContext, useEffect } from 'react'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const context = useContext(GlobalContext)
   const [login, setLogin] = useState(false)
   const [isDesigner, setDesigner] = useState(false)
   const [walletAddress, setWalletAddress] = useState('')

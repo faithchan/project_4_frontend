@@ -5,38 +5,196 @@ import globalContext from '../context/context'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
 
-// query tokensCreated
-// fetch URI for creator tokens
+// get itemId from tokenId
 
 const feed = () => {
-  const context = useContext(globalContext)
-  const [userProfile, setUserProfile] = useState()
-  const [userFollowing, setUserFollowing] = useState()
+  const { marketplaceContract, nftContract, signer, walletAddress, setSigner, setWalletAddress } =
+    useContext(globalContext)
+  const [buyModal, setBuyModal] = useState<boolean>(false)
+  const [creatorsFollowed, setCreatorsFollowed] = useState<any>()
+  const [ownedTokens, setOwnedTokens] = useState<any>(new Set())
+  const [createdTokens, setCreatedTokens] = useState<any>(new Set())
+  const [filteredTokens, setFilteredTokens] = useState<any>(new Set())
+  const [tokenData, setTokenData] = useState<any>([])
+  const [createdLoaded, setCreatedLoaded] = useState<boolean>(false)
+  const [ownedLoaded, setOwnedLoaded] = useState<boolean>(false)
+  const [dataFetched, setDataFetched] = useState<boolean>(false)
 
-  const filterTokens = async () => {}
-  const fetchCreatorCreated = async () => {}
-  const fetchCreatorOwned = async () => {}
+  const [currentItemId, setCurrentItemId] = useState<number>()
+  const [currentTokenId, setCurrentTokenId] = useState<number>()
+  const [currentItemOwner, setCurrentItemOwner] = useState<string>()
+  const [currentPrice, setCurrentPrice] = useState<any>()
 
-  const fetchUserInfo = async () => {
+  const fetchTokenData = async () => {
+    const fetchedData = []
+    for (let token of filteredTokens) {
+      const itemId = await marketplaceContract.getItemId(token)
+      if (itemId.toNumber() !== 0) {
+        const item = await marketplaceContract.getItemById(itemId)
+        const details = {
+          isListed: item.isListed,
+          owner: item.owner,
+          price: ethers.utils.formatUnits(item.price.toString(), 'ether'),
+          tokenId: item.tokenId.toNumber(),
+          itemId: item.itemId.toNumber(),
+          name: null,
+          description: null,
+          image: null,
+        }
+        const uri = await nftContract.tokenURI(details.tokenId)
+        const response = await fetch(uri)
+        const data = await response.json()
+        details.name = data.name
+        details.description = data.description
+        details.image = data.image
+        fetchedData.push(details)
+      } else {
+        const uri = await nftContract.tokenURI(token)
+        const response = await fetch(uri)
+        const data = await response.json()
+        data.tokenId = token
+        data.listPrice = 0
+        const creator = await nftContract.tokenCreator(data.tokenId)
+        const creatorInfo = await fetchCreatorInfo(creator)
+        console.log('creator info: ', creatorInfo)
+        data.creator = creatorInfo[0].username
+        data.avatar = creatorInfo[0].avatar
+        fetchedData.push(data)
+      }
+    }
+    setTokenData(fetchedData)
+    setDataFetched(true)
+  }
+
+  const renderCards = tokenData.map((item: any) => {
+    return (
+      <FeedCard
+        key={item.image}
+        name={item.name}
+        description={item.description}
+        image={item.image}
+        price={item.price}
+        itemId={item.itemId}
+        isListed={item.isListed}
+        owner={item.owner}
+        tokenId={item.tokenId}
+        creator={item.creator}
+        avatar={item.avatar}
+        buyModal={buyModal}
+        setBuyModal={setBuyModal}
+        setCurrentItemId={setCurrentItemId}
+        setCurrentTokenId={setCurrentTokenId}
+        setCurrentItemOwner={setCurrentItemOwner}
+        setCurrentPrice={setCurrentPrice}
+      />
+    )
+  })
+
+  const filterTokens = async () => {
+    const tempSet = new Set<any>()
+    for (let owned of ownedTokens) {
+      for (let created of createdTokens) {
+        if (owned === created) {
+          tempSet.add(owned)
+        }
+      }
+    }
+    for (let owned of ownedTokens) {
+      for (let token of tempSet) {
+        if (owned !== token) {
+          tempSet.add(owned)
+        }
+      }
+    }
+    for (let created of createdTokens) {
+      for (let token of tempSet) {
+        if (created !== token) {
+          tempSet.add(created)
+        }
+      }
+    }
+    setFilteredTokens(tempSet)
+  }
+
+  const fetchCreatorCreated = async () => {
+    const totalSupply = await nftContract.totalSupply()
+    for (let creator of creatorsFollowed) {
+      for (let i = 0; i < totalSupply; i++) {
+        const owner = await nftContract.tokenCreator(i)
+        if (owner === creator) {
+          setCreatedTokens((prev: any) => new Set(prev.add(i)))
+        }
+      }
+    }
+    setCreatedLoaded(true)
+  }
+
+  const fetchCreatorOwned = async () => {
+    const totalSupply = await nftContract.totalSupply()
+    for (let creator of creatorsFollowed) {
+      for (let i = 0; i < totalSupply; i++) {
+        const owner = await nftContract.ownerOf(i)
+        if (owner === creator) {
+          setOwnedTokens((prev: any) => new Set(prev.add(i)))
+        }
+      }
+    }
+    setOwnedLoaded(true)
+  }
+
+  const fetchCreatorInfo = async (creator: string) => {
     try {
-      const res = await fetch(`${process.env.API_ENDPOINT}/users/${context.walletAddress}`, {
+      const res = await fetch(`${process.env.API_ENDPOINT}/users/${creator}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
       })
       const data = await res.json()
-      setUserProfile(data)
-      setUserFollowing(data[0].following)
-      console.log('user profile: ', data)
+      return data
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const fetchUserInfo = async () => {
+    try {
+      const res = await fetch(`${process.env.API_ENDPOINT}/users/${walletAddress}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const data = await res.json()
+      console.log('creators followed: ', data[0].following)
+      setCreatorsFollowed(data[0].following)
     } catch (err) {
       console.log(err)
     }
   }
 
   useEffect(() => {
+    if (filteredTokens) {
+      fetchTokenData()
+    }
+  }, [filteredTokens])
+
+  useEffect(() => {
+    if (createdLoaded && ownedLoaded) {
+      filterTokens()
+    }
+  }, [createdLoaded && ownedLoaded])
+
+  useEffect(() => {
+    if (creatorsFollowed && nftContract) {
+      fetchCreatorOwned()
+      fetchCreatorCreated()
+    }
+  }, [creatorsFollowed])
+
+  useEffect(() => {
     fetchUserInfo()
-  }, [context.walletAddress])
+  }, [walletAddress])
 
   //----------------Initialising Wallet----------------//
 
@@ -51,8 +209,8 @@ const feed = () => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         const connectedAddress = await signer.getAddress()
-        context.setSigner(signer)
-        context.setWalletAddress(connectedAddress)
+        setSigner(signer)
+        setWalletAddress(connectedAddress)
       }
     } else {
       alert('Please install Metamask')
@@ -72,14 +230,24 @@ const feed = () => {
   }
 
   useEffect(() => {
-    if (context.signer === null) {
+    if (signer === null) {
       connectWallet()
     }
   }, [])
 
   return (
     <div>
-      <div className="text-white">feed</div>
+      {buyModal && (
+        <BuyNFTModal
+          itemId={currentItemId}
+          tokenId={currentTokenId}
+          owner={currentItemOwner}
+          price={currentPrice}
+          buyModal={buyModal}
+          setBuyModal={setBuyModal}
+        />
+      )}
+      {dataFetched && renderCards}
     </div>
   )
 }
