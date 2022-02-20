@@ -219,7 +219,7 @@ const getAllWhitelistees = async () => {
     if (context.signer === null) {
       connectWallet()
     }
-  }, [])
+  }, [whitelistedAddrs])
 
 
     return (

@@ -80,7 +80,14 @@ const AccNavigation = (props:connectWalletProps) => {
                     Admin
                   </a>
                 </Link>
-              </Menu.Item>:""}      
+              </Menu.Item>:""}     
+              {props.type==="Admin" && context.login?<Menu.Item>
+                <Link href="/testadmin">
+                  <a className="group flex items-center px-4 py-1  text-gray-300 hover:text-gold">
+                    Test Admin
+                  </a>
+                </Link>
+              </Menu.Item>:""}   
 
               {context.login? <Menu.Item>
                 <Link href="/">
