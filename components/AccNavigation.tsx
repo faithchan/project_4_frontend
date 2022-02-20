@@ -7,6 +7,7 @@ import { ChevronDownIcon } from '@heroicons/react/solid'
 import globalContext from '../context/context'
 interface connectWalletProps {
   connectWallet: (a: any) => void
+  type: string
 }
 
 const AccNavigation = (props: connectWalletProps) => {
@@ -73,12 +74,33 @@ const AccNavigation = (props: connectWalletProps) => {
               ) : (
                 ''
               )}
-
               {!context.login ? (
                 <Menu.Item>
                   <Link href="/signup">
                     <a className="group flex items-center px-4 py-1 text-gray-300 hover:text-gold">
                       Sign Up
+                    </a>
+                  </Link>
+                </Menu.Item>
+              ) : (
+                ''
+              )}
+              {props.type === 'Admin' && context.login ? (
+                <Menu.Item>
+                  <Link href="/admin">
+                    <a className="group flex items-center px-4 py-1  text-gray-300 hover:text-gold">
+                      Admin
+                    </a>
+                  </Link>
+                </Menu.Item>
+              ) : (
+                ''
+              )}
+              {props.type === 'Admin' && context.login ? (
+                <Menu.Item>
+                  <Link href="/testadmin">
+                    <a className="group flex items-center px-4 py-1  text-gray-300 hover:text-gold">
+                      Test Admin
                     </a>
                   </Link>
                 </Menu.Item>
@@ -99,8 +121,7 @@ const AccNavigation = (props: connectWalletProps) => {
               ) : (
                 ''
               )}
-
-              {context.login ? (
+              {context.login && props.type !== 'Admin' ? (
                 <Menu.Item>
                   <Link href="/edit">
                     <a className="group flex items-center px-4 py-1 text-gray-300 hover:text-gold">
