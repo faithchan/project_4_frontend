@@ -63,6 +63,30 @@ const profile = () => {
   //       console.log("error:", err)
   //   }
   // }
+  const fetchNFTsOwned = async () => {
+    try{
+    const totalSupply = await context.nftContract.totalSupply()
+    for (let i = 0; i < totalSupply; i++) {
+      const owner = await context.nftContract.ownerOf(i)
+      if (owner === context.walletAddress) {
+        setOwnerTokens((prev: any) => new Set(prev.add(i)))
+        console.log(ownerTokens)
+      }
+    }
+    console.log('total supply', totalSupply)
+  }
+  catch(err){console.log('error', err)}}
+
+  const fetchOwnedTokens = async () => {
+    try{
+    const owned = await context.marketplaceContract.getItemsOwned()
+    console.log(owned[0].length)
+    setTokensOwned(owned[0].length)}
+    catch(err){
+      console.log("error", err)
+    }
+  }
+
 
   // const fetchOwnedTokens = async () => {
   //   try {
@@ -93,6 +117,7 @@ const profile = () => {
       console.log(err)
     }
   }
+
   console.log(userProfile)
   //get tokens of user
   const fetchTokenCount = async () => {
@@ -102,6 +127,7 @@ const profile = () => {
     console.log(num)
     setTokensOwned(num)
   }
+
 
   const fetchTokensMetadata = async () => {
     for (let i of tokensOwned) {
