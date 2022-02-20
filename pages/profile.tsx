@@ -64,29 +64,30 @@ const profile = () => {
   //   }
   // }
   const fetchNFTsOwned = async () => {
-    try{
-    const totalSupply = await context.nftContract.totalSupply()
-    for (let i = 0; i < totalSupply; i++) {
-      const owner = await context.nftContract.ownerOf(i)
-      if (owner === context.walletAddress) {
-        setOwnerTokens((prev: any) => new Set(prev.add(i)))
-        console.log(ownerTokens)
+    try {
+      const totalSupply = await context.nftContract.totalSupply()
+      for (let i = 0; i < totalSupply; i++) {
+        const owner = await context.nftContract.ownerOf(i)
+        if (owner === context.walletAddress) {
+          setOwnerTokens((prev: any) => new Set(prev.add(i)))
+          console.log(ownerTokens)
+        }
       }
+      console.log('total supply', totalSupply)
+    } catch (err) {
+      console.log('error', err)
     }
-    console.log('total supply', totalSupply)
   }
-  catch(err){console.log('error', err)}}
 
   const fetchOwnedTokens = async () => {
-    try{
-    const owned = await context.marketplaceContract.getItemsOwned()
-    console.log(owned[0].length)
-    setTokensOwned(owned[0].length)}
-    catch(err){
-      console.log("error", err)
+    try {
+      const owned = await context.marketplaceContract.getItemsOwned()
+      console.log(owned[0].length)
+      setTokensOwned(owned[0].length)
+    } catch (err) {
+      console.log('error', err)
     }
   }
-
 
   // const fetchOwnedTokens = async () => {
   //   try {
@@ -119,6 +120,7 @@ const profile = () => {
   }
 
   console.log(userProfile)
+
   //get tokens of user
   const fetchTokenCount = async () => {
     const address = userProfile[0].walletAddress
@@ -127,7 +129,6 @@ const profile = () => {
     console.log(num)
     setTokensOwned(num)
   }
-
 
   const fetchTokensMetadata = async () => {
     for (let i of tokensOwned) {
@@ -141,13 +142,18 @@ const profile = () => {
   }
 
   useEffect(() => {
-    fetchTokenCount()
     fetchTokensMetadata()
     fetchUserProfile()
     // filterItems();
     // getOwnedTokens()
     userInfo()
   }, [])
+
+  useEffect(() => {
+    if (userProfile && context.nftContract) {
+      fetchTokenCount()
+    }
+  }, [userProfile, context.nftContract])
 
   return (
     <div>
