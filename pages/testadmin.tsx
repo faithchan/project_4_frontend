@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react'
+import { useEffect, useState, useContext, useRef } from 'react'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
 import jwtDecode from 'jwt-decode'
@@ -8,6 +8,7 @@ import { useRouter } from 'next/router'
 // console.log('admin context: ', context)
 
 const testadmin = () => {
+const prevState = useRef()
 const context = useContext(globalContext)
 const [whitelistAddress, setWhitelistAddress] = useState('')
 const [connected, setConnected] = useState<boolean>(false)
@@ -19,6 +20,7 @@ const getAllWhitelistees = async () => {
       for (let user of allUsers) {
         const txn = await context.nftContract.isWhitelisted(user.walletAddress)
         if (txn) {
+            prevState.current = whitelistedAddrs
           console.log(`${user.username} is whitelisted`)
           setWhitelistedAddrs([...whitelistedAddrs, user.walletAddress])
         } else {
@@ -137,6 +139,8 @@ const getAllWhitelistees = async () => {
   useEffect(() => {
     getAllWhitelistees()
   }, [context.nftContract])
+
+ 
   
   useEffect(() => {
     let token = localStorage.getItem('token')
@@ -219,7 +223,7 @@ const getAllWhitelistees = async () => {
     if (context.signer === null) {
       connectWallet()
     }
-  }, [whitelistedAddrs])
+  }, [])
 
 
     return (
@@ -331,9 +335,17 @@ const getAllWhitelistees = async () => {
 
 								</td>
                                 <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-									<p className="text-gray-900 whitespace-no-wrap">
-										Action required
-									</p>
+                                {whitelistedAddrs.find((add:string) =>add ===user.walletAddress)?
+                                (<button
+                                className="bg-gray-400 text-white tracking-widest font-body py-2 px-4 rounded-full text-xs mx-auto"
+                                >
+                                Delist
+                                </button>):
+                                (<button
+                                    className="bg-gray-500 text-white tracking-widest font-body py-2 px-4 rounded-full text-xs mx-auto"
+                                    >
+                                    List
+                                    </button>)}
 								</td>
 							</tr>)}
                             {/* // end of array render */}
