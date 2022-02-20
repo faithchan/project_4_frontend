@@ -29,13 +29,6 @@ const getAllWhitelistees = async () => {
       console.log('no users in database')
     }
   }
-
-  const check = async (x:any) => {
-    const txn = await context.nftContract.isWhitelisted(x)
-    if(txn){return true}
-    else{return false}}
-
-    console.log(whitelistedAddrs)
   
   const addToWhitelist = async () => {
     if (context.nftContract) {
@@ -96,8 +89,6 @@ const getAllWhitelistees = async () => {
     }
   }
 
-  
-  
   const fetchAllUsers = async () => {
     try {
       const response = await fetch(`${process.env.API_ENDPOINT}/users`, {
@@ -121,8 +112,6 @@ const getAllWhitelistees = async () => {
     return false
   }
 
- 
-  
   const removeUser = async (userId: string) => {
     console.log(`trying to remove user with id ${userId}`)
     try {
@@ -191,7 +180,7 @@ const getAllWhitelistees = async () => {
             removeUser(user._id)
           }}
         >
-          Remove
+          Delete User
         </button>
       </div>
     )
@@ -232,8 +221,9 @@ const getAllWhitelistees = async () => {
     }
   }, [])
 
+
     return (
-        <div className="bg-purple opacity-80 p-8 rounded-xl mx-32 my-20">
+        <div className="bg-purple opacity-80 py-8 px-14 rounded-xl mx-32 my-20">
 	
     <div className="text-center my-8 font-header tracking-widest text-gold text-2xl">
           MANAGE WHITELIST
@@ -263,7 +253,7 @@ const getAllWhitelistees = async () => {
               className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto"
               onClick={removeFromWhitelist}
             >
-              REMOVE
+              Delete User
             </button>
             <button
               className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto"
@@ -275,13 +265,13 @@ const getAllWhitelistees = async () => {
         </div>
 		
 		<div>
-			<div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
+			<div className="sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
 				<div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
 					<table className="min-w-full leading-normal">
 						<thead>
 							<tr>
 								<th
-									className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+									className="px-5 pl-10 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
 									User
 								</th>
 								<th
@@ -294,14 +284,18 @@ const getAllWhitelistees = async () => {
 								</th>
 								<th
 									className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-									Whitelisted Status
+									Verified
+								</th>
+                                <th
+									className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+									Action
 								</th>
 							</tr>
 						</thead>
 						<tbody>
                         {/* //.map here */}
 							{allUsers.map((user:any)=><tr>
-								<td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+								<td className="px-5 py-5 pl-10 border-b border-gray-200 bg-white text-sm">
 									<div className="flex items-center">
 										<div className="flex-shrink-0 w-10 h-10">
 											<img className="w-full h-full rounded-full"
@@ -324,13 +318,22 @@ const getAllWhitelistees = async () => {
 									</p>
 								</td>
 								<td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-									<span
-                                        className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+                                {whitelistedAddrs.find((add:string) =>add ===user.walletAddress)?(<span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
                                         <span aria-hidden
                                             className="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-									<span className="relative">{
-                                    whitelistedAddrs.find((add:string) =>add ===user.walletAddress)?"Active":"Unlisted"}</span>
-									</span>
+									<span className="relative">Yes</span>
+									</span>):
+                                    (<span className="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
+                                    <span aria-hidden
+                                        className="absolute inset-0 bg-red-200 opacity-50 rounded-full"></span>
+                                <span className="relative">No</span>
+                                </span>)}
+
+								</td>
+                                <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+									<p className="text-gray-900 whitespace-no-wrap">
+										Action required
+									</p>
 								</td>
 							</tr>)}
                             {/* // end of array render */}
@@ -338,23 +341,7 @@ const getAllWhitelistees = async () => {
 							
 						</tbody>
 					</table>
-					<div
-						className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between          ">
-						<span className="text-xs xs:text-sm text-gray-900">
-                            Showing 1 to 4 of 50 Entries
-                        </span>
-						<div className="inline-flex mt-2 xs:mt-0">
-							<button
-                                className="text-sm text-indigo-50 transition duration-150 hover:bg-indigo-500 bg-indigo-600 font-semibold py-2 px-4 rounded-l">
-                                Prev
-                            </button>
-							&nbsp; &nbsp;
-							<button
-                                className="text-sm text-indigo-50 transition duration-150 hover:bg-indigo-500 bg-indigo-600 font-semibold py-2 px-4 rounded-r">
-                                Next
-                            </button>
-						</div>
-					</div>
+					
 				</div>
 			</div>
 		</div>
