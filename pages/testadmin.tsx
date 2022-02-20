@@ -247,19 +247,19 @@ const getAllWhitelistees = async () => {
               className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto"
               onClick={addToWhitelist}
             >
-              ADD
+              ADD USER
             </button>
             <button
               className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto"
               onClick={removeFromWhitelist}
             >
-              Delete User
+              DELETE USER
             </button>
             <button
               className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto"
               onClick={checkWhitelistStatus}
             >
-              VERIFY
+              VERIFY USER
             </button>
           </div>
         </div>
