@@ -6,7 +6,7 @@ import globalContext from '../context/context'
 import BurnNFTModal from '../components/BurnNFTModal'
 
 const Trades = () => {
-  const { nftContract, marketplaceContract, signer, setSigner, setWalletAddress } =
+  const { nftContract, marketplaceContract, signer, walletAddress, setSigner, setWalletAddress } =
     useContext(globalContext)
   const [tokenData, setTokenData] = useState<any>([])
   const [listedItemData, setListedItemData] = useState<any>([])
