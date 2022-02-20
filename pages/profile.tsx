@@ -11,6 +11,7 @@ import { ethers } from 'ethers'
 
 const profile = () => {
   const context = useContext(globalContext)
+  const [userProfile, setUserProfile] = useState<any>()
   const [tokenData, setTokenData] = useState<any>([])
   const [userData, setUserData] = useState({})
   const [tokensOwned, setTokensOwned] = useState([])
@@ -62,7 +63,6 @@ const profile = () => {
   //       console.log("error:", err)
   //   }
   // }
-
   const fetchNFTsOwned = async () => {
     try{
     const totalSupply = await context.nftContract.totalSupply()
@@ -87,32 +87,47 @@ const profile = () => {
     }
   }
 
-  const filterItems = () => {
-    // console.log('owner tokens: ', ownerTokens)
-    if (ownerTokens.length === 0) {
-      console.log('no tokens in wallet')
-      return
-    }
-    if (ownedItems.length === 0) {
-      setUnregistered(ownerTokens)
-      console.log('no items owned in marketplace')
-      return
-    }
-    setUnregistered(ownerTokens)
-    for (let id of ownerTokens) {
-      for (let item of ownedItems) {
-        const tokenId = item.tokenId.toString()
-        if (tokenId === id.toString() && item.isListed === true) {
-          setListedItems((prev: any) => new Set(prev.add(item.itemId)))
-          setUnregistered((prev: any) => new Set([...prev].filter((x) => x !== id)))
-        } else if (tokenId === id.toString() && item.isListed === false) {
-          setNotListed((prev: any) => new Set(prev.add(item.itemId)))
-          setUnregistered((prev: any) => new Set([...prev].filter((x) => x !== id)))
-        }
+
+  // const fetchOwnedTokens = async () => {
+  //   try {
+  //     const owned = await context.marketplaceContract.getItemsOwned()
+  //     console.log(owned[0].length)
+  //     setTokensOwned(owned[0].length)
+  //   } catch (err) {
+  //     console.log('error', err)
+  //   }
+  // }
+  //fetch user profile
+  const fetchUserProfile = async () => {
+    try {
+      const res = await fetch(`${process.env.API_ENDPOINT}/users/${context.walletAddress}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const data = await res.json()
+      if (data.length === 0) {
+        console.log('user does not exist')
+      } else {
+        // console.log('user profile: ', data)
+        setUserProfile(data)
       }
+    } catch (err) {
+      console.log(err)
     }
-    return
   }
+
+  console.log(userProfile)
+  //get tokens of user
+  const fetchTokenCount = async () => {
+    const address = userProfile[0].walletAddress
+    const txn = await context.nftContract.balanceOf(address)
+    const num = txn.toNumber()
+    console.log(num)
+    setTokensOwned(num)
+  }
+
 
   const fetchTokensMetadata = async () => {
     for (let i of tokensOwned) {
@@ -126,16 +141,14 @@ const profile = () => {
   }
 
   useEffect(() => {
-    fetchNFTsOwned()
-    fetchOwnedTokens()
+    fetchTokenCount()
     fetchTokensMetadata()
+    fetchUserProfile()
     // filterItems();
     // getOwnedTokens()
     userInfo()
   }, [])
 
-  console.log(tokenData)
-  console.log(tokensOwned)
   return (
     <div>
       <ViewNFTCard viewNFTModal={viewNFTModal} setViewNFTModal={setViewNFTModal} />
