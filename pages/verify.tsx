@@ -39,34 +39,36 @@ const verify = () => {
 
     return (
       
-        <div className="max-w-xs w-full p-10 bg-gray-50 rounded-xl m-auto sm:max-w-xs md:max-w-lg ">
+        <div className="max-w-xs w-full p-10 my-20 rounded-xl m-auto sm:max-w-xs md:max-w-lg ">
 		<div className="text-center ">
-        <h1 className="text-blue-400 font-serif text-4xl">Get in touch!</h1>
-			<p className="mt-2 text-sm font-sanserif text-blue-400 tracking-wider">Submit your details to get verified</p>
+        <div className="text-center font-header tracking-widest text-gold text-2xl">
+          Get Verified Today
+        </div>
+			<p className="text-xs font-body mt-4 text-gold tracking-wider">Successful applicants will be notified via email</p>
 		</div>
         <form className="mt-6 space-y-3" action="#" method="POST ">
                     <div className="grid grid-cols-1 space-y-2">
 
-                            <label className="text-sm font-bold text-gray-500 tracking-wide">Your Name</label>
-                            <input className="text-base p-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 focus:bg-white" type="text" placeholder="John Doe" value={name} onChange={e=>setName(e.target.value)}/>
+                            <label className="text-sm font-body text-gray-300 tracking-wide">Your Name</label>
+                            <input className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md w-full" type="text" placeholder="John Doe" value={name} onChange={e=>setName(e.target.value)}/>
                         
-                            <label className="text-sm bg-gray-100font-bold text-gray-500 tracking-wide">Your Email</label>
-                            <input className="text-base p-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 focus:bg-white" type="email" placeholder="mail@gmail.com" value={email} onChange={e => setEmail(e.target.value)}/>
+                            <label className="text-sm  font-body text-gray-300 tracking-wide">Your Email</label>
+                            <input className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md w-full" type="email" placeholder="mail@gmail.com" value={email} onChange={e => setEmail(e.target.value)}/>
                             
-                            <label className="text-sm font-bold text-gray-500 tracking-wide">Wallet Address</label>
-                            <input className="text-base p-2 border bg-gray-50 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 focus:bg-white" type="url" placeholder="0x" value={wallet} onChange={e => setWallet(e.target.value)}/>
+                            <label className="text-sm font-body text-gray-300 tracking-wide">Wallet Address</label>
+                            <input className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md w-full" type="url" placeholder="0x" value={wallet} onChange={e => setWallet(e.target.value)}/>
                             
-                            <label className="text-sm font-bold text-gray-500 tracking-wide ">Description</label>
-                            <textarea className="w-full min-h-[100px] max-h-[300px] bg-gray-50 h-28 appearance-none block bg-grey-lighter text-grey-darker border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 focus:bg-white py-4 px-4" placeholder="Brief write up of your recipe ..." spellCheck="false" value={description} onChange={e => setDescription(e.target.value)} ></textarea>
+                            <label className="text-sm font-body text-gray-300 tracking-wide ">Description</label>
+                            <textarea className="w-full min-h-[100px] max-h-[300px] bg-gray-800 h-28 appearance-none block text-white border border-gray-400 rounded-lg py-4 px-4" placeholder="Brief write up of yourself and include portfolio link" spellCheck="false" value={description} onChange={e => setDescription(e.target.value)} ></textarea>
                     
                     </div>
                     
-                            <p className="text-sm text-gray-300">
+                            <p className="text-xs text-center text-gray-300">
                                 <span>By submitting, you agree to sharing of personal information.</span>
                             </p>
-                    <div className="justify-center">
-                    <button className="my-5 w-full flex justify-center bg-blue-400 hover:bg-blue-450 text-white tracking-widest font-sanserif py-2 px-4 rounded-full text-xs mt-4 mb-2" onClick={submit}>
-                           Submit
+                    <div className="flex justify-center">
+                    <button className="bg-gold hover:bg-blue-450 text-white font-semibold tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto mt-4" onClick={submit}>
+                           SUBMIT
                         </button>
                         {formSent ? <h2 className="text-sm text-blue-400">Thank you for your message, we will be in touch in no time!</h2> : ""}
                     </div>

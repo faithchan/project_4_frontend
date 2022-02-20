@@ -99,7 +99,7 @@ const Navbar = () => {
             <a onClick={connectWallet}>
               <Image src={uploadImg}></Image>
             </a>
-              </Link>:<Link href="/404">
+              </Link>:<Link href="/verify">
             <a>
               <Image src={uploadImg}></Image>
             </a>
