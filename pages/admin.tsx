@@ -6,7 +6,7 @@ import globalContext from '../context/context'
 import { useRouter } from 'next/router'
 
 const admin = () => {
-  const context = useContext(globalContext)
+  const { nftContract, signer, setSigner, setWalletAddress } = useContext(globalContext)
   const [whitelistAddress, setWhitelistAddress] = useState('')
   const [connected, setConnected] = useState<boolean>(false)
   const [whitelistedAddrs, setWhitelistedAddrs] = useState<any>([])
@@ -16,14 +16,14 @@ const admin = () => {
   // console.log('admin context: ', context)
 
   const getAllWhitelistees = async () => {
-    if (allUsers && context.nftContract) {
+    if (allUsers && nftContract) {
       for (let user of allUsers) {
-        const txn = await context.nftContract.isWhitelisted(user.walletAddress)
+        const txn = await nftContract.isWhitelisted(user.walletAddress)
         if (txn) {
-          console.log(`${user.username} is whitelisted`)
+          // console.log(`${user.username} is whitelisted`)
           setWhitelistedAddrs([...whitelistedAddrs, user.walletAddress])
         } else {
-          console.log(`${user.username} is not whitelisted`)
+          // console.log(`${user.username} is not whitelisted`)
         }
       }
     } else {
@@ -32,11 +32,11 @@ const admin = () => {
   }
 
   const addToWhitelist = async () => {
-    if (context.nftContract) {
+    if (nftContract) {
       if (validateAddress(whitelistAddress) === true) {
         console.log(`adding ${whitelistAddress} to whitelist`)
         try {
-          const txn = await context.nftContract.addToWhitelist(whitelistAddress)
+          const txn = await nftContract.addToWhitelist(whitelistAddress)
           const receipt = await txn.wait()
           console.log('whitelist txn: ', receipt)
           setWhitelistAddress('')
@@ -52,11 +52,11 @@ const admin = () => {
   }
 
   const removeFromWhitelist = async () => {
-    if (context.nftContract) {
+    if (nftContract) {
       if (validateAddress(whitelistAddress) === true) {
         console.log(`removing ${whitelistAddress} from whitelist`)
         try {
-          const txn = await context.nftContract.removeFromWhitelist(whitelistAddress)
+          const txn = await nftContract.removeFromWhitelist(whitelistAddress)
           const receipt = await txn.wait()
           console.log('whitelist txn: ', receipt)
           setWhitelistAddress('')
@@ -72,11 +72,11 @@ const admin = () => {
   }
 
   const checkWhitelistStatus = async () => {
-    if (context.nftContract) {
+    if (nftContract) {
       if (validateAddress(whitelistAddress) === true) {
         console.log(`checking ${whitelistAddress} whitelist status`)
         try {
-          const txn = await context.nftContract.isWhitelisted(whitelistAddress)
+          const txn = await nftContract.isWhitelisted(whitelistAddress)
           console.log('whitelist txn: ', txn)
           setWhitelistAddress('')
         } catch (err) {
@@ -136,7 +136,7 @@ const admin = () => {
 
   useEffect(() => {
     getAllWhitelistees()
-  }, [context.nftContract])
+  }, [nftContract])
 
   useEffect(() => {
     let token = localStorage.getItem('token')
@@ -168,11 +168,7 @@ const admin = () => {
         className="md:text-sm text-xs text-white font-body tracking-wider my-4 flex items-center"
         key={user._id}
       >
-        <img
-          src={user.avatar}
-          alt={user.username}
-          className="mr-5 w-16 h-16 rounded-full"
-        />
+        <img src={user.avatar} alt={user.username} className="mr-5 w-16 h-16 rounded-full" />
         {user.username}
         <button
           className="border-2 border-gold hover:bg-blue-450 text-gold font-semibold font-header py-2 px-6 rounded-full text-xs ml-5"
@@ -199,8 +195,8 @@ const admin = () => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         const connectedAddress = await signer.getAddress()
-        context.setSigner(signer)
-        context.setWalletAddress(connectedAddress)
+        setSigner(signer)
+        setWalletAddress(connectedAddress)
       }
     } else {
       alert('Please install Metamask')
@@ -216,7 +212,7 @@ const admin = () => {
   }
 
   useEffect(() => {
-    if (context.signer === null) {
+    if (signer === null) {
       connectWallet()
     }
   }, [])

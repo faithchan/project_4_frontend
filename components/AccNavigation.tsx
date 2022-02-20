@@ -74,7 +74,6 @@ const AccNavigation = (props: connectWalletProps) => {
               ) : (
                 ''
               )}
-
               {!context.login ? (
                 <Menu.Item>
                   <Link href="/signup">
@@ -86,7 +85,6 @@ const AccNavigation = (props: connectWalletProps) => {
               ) : (
                 ''
               )}
-
               {props.type === 'Admin' && context.login ? (
                 <Menu.Item>
                   <Link href="/admin">
@@ -109,7 +107,6 @@ const AccNavigation = (props: connectWalletProps) => {
               ) : (
                 ''
               )}
-
               {context.login ? (
                 <Menu.Item>
                   <Link href="/">
@@ -124,7 +121,6 @@ const AccNavigation = (props: connectWalletProps) => {
               ) : (
                 ''
               )}
-
               {context.login && props.type !== 'Admin' ? (
                 <Menu.Item>
                   <Link href="/edit">

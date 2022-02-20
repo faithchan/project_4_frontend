@@ -6,7 +6,8 @@ import globalContext from '../context/context'
 import BurnNFTModal from '../components/BurnNFTModal'
 
 const Trades = () => {
-  const context = useContext(globalContext)
+  const { nftContract, marketplaceContract, signer, walletAddress, setSigner, setWalletAddress } =
+    useContext(globalContext)
   const [tokenData, setTokenData] = useState<any>([])
   const [listedItemData, setListedItemData] = useState<any>([])
   const [unlistedItemData, setUnlistedItemData] = useState<any>([])
@@ -20,16 +21,13 @@ const Trades = () => {
   const [currentTokenId, setCurrentTokenId] = useState<any>()
 
   const filterItems = () => {
-    console.log('owner tokens: ', ownerTokens)
-    console.log('owner items: ', ownedItems)
-
     if (ownerTokens.length === 0) {
       console.log('no tokens in wallet')
       return
     }
     if (ownedItems.length === 0) {
       setUnregistered(ownerTokens)
-      console.log('no items owned in marketplace')
+      // console.log('no items owned in marketplace')
       return
     }
     setUnregistered(ownerTokens)
@@ -51,15 +49,15 @@ const Trades = () => {
   }
 
   const fetchMarketItems = async () => {
-    const owned = await context.marketplaceContract.getItemsOwned()
+    const owned = await marketplaceContract.getItemsOwned()
     setOwnedItems(owned)
   }
 
   const fetchNFTsOwned = async () => {
-    const totalSupply = await context.nftContract.totalSupply()
+    const totalSupply = await nftContract.totalSupply()
     for (let i = 0; i < totalSupply; i++) {
-      const owner = await context.nftContract.ownerOf(i)
-      if (owner === context.walletAddress) {
+      const owner = await nftContract.ownerOf(i)
+      if (owner === walletAddress) {
         setOwnerTokens((prev: any) => new Set(prev.add(i)))
       }
     }
@@ -68,12 +66,12 @@ const Trades = () => {
   const fetchTokensMetadata = async () => {
     const unregisteredData = []
     for (let i of unregistered) {
-      const uri = await context.nftContract.tokenURI(i)
+      const uri = await nftContract.tokenURI(i)
       const response = await fetch(uri)
       const data = await response.json()
       data.tokenId = i
       data.listPrice = 0
-      const creator = await context.nftContract.tokenCreator(data.tokenId)
+      const creator = await nftContract.tokenCreator(data.tokenId)
       const creatorInfo = await fetchCreatorInfo(creator)
       data.creator = creatorInfo[0].username
       data.avatar = creatorInfo[0].avatar
@@ -85,7 +83,7 @@ const Trades = () => {
   const fetchListedItemsMetadata = async () => {
     const listedData = []
     for (let i of listedItems) {
-      const item = await context.marketplaceContract.getItemById(i)
+      const item = await marketplaceContract.getItemById(i)
       const details = {
         isListed: item.isListed,
         owner: item.owner,
@@ -98,13 +96,13 @@ const Trades = () => {
         creator: null,
         avatar: null,
       }
-      const uri = await context.nftContract.tokenURI(details.tokenId)
+      const uri = await nftContract.tokenURI(details.tokenId)
       const response = await fetch(uri)
       const data = await response.json()
       details.name = data.name
       details.description = data.description
       details.image = data.image
-      const creator = await context.nftContract.tokenCreator(details.tokenId)
+      const creator = await nftContract.tokenCreator(details.tokenId)
       const creatorInfo = await fetchCreatorInfo(creator)
       details.creator = creatorInfo[0].username
       details.avatar = creatorInfo[0].avatar
@@ -116,7 +114,7 @@ const Trades = () => {
   const fetchUnlistedItemsMetadata = async () => {
     const unlistedData = []
     for (let i of notListed) {
-      const item = await context.marketplaceContract.getItemById(i)
+      const item = await marketplaceContract.getItemById(i)
       const details = {
         isListed: item.isListed,
         owner: item.owner,
@@ -129,13 +127,13 @@ const Trades = () => {
         creator: null,
         avatar: null,
       }
-      const uri = await context.nftContract.tokenURI(details.tokenId)
+      const uri = await nftContract.tokenURI(details.tokenId)
       const response = await fetch(uri)
       const data = await response.json()
       details.name = data.name
       details.description = data.description
       details.image = data.image
-      const creator = await context.nftContract.tokenCreator(details.tokenId)
+      const creator = await nftContract.tokenCreator(details.tokenId)
       const creatorInfo = await fetchCreatorInfo(creator)
       details.creator = creatorInfo[0].username
       details.avatar = creatorInfo[0].avatar
@@ -224,11 +222,11 @@ const Trades = () => {
   }, [unregistered, listedItems, notListed])
 
   useEffect(() => {
-    if (context.nftContract && context.marketplaceContract) {
+    if (nftContract && marketplaceContract) {
       fetchNFTsOwned()
       fetchMarketItems()
     }
-  }, [context.nftContract, context.marketplaceContract])
+  }, [nftContract, marketplaceContract])
 
   useEffect(() => {
     filterItems()
@@ -247,8 +245,8 @@ const Trades = () => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         const connectedAddress = await signer.getAddress()
-        context.setSigner(signer)
-        context.setWalletAddress(connectedAddress)
+        setSigner(signer)
+        setWalletAddress(connectedAddress)
       }
     } else {
       alert('Please install Metamask')
@@ -264,7 +262,7 @@ const Trades = () => {
   }
 
   useEffect(() => {
-    if (context.signer === null) {
+    if (signer === null) {
       connectWallet()
     }
   }, [])

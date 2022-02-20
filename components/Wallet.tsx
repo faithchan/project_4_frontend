@@ -12,7 +12,8 @@ interface WalletProps {
 }
 
 const Wallet = (props: WalletProps) => {
-  const context = useContext(globalContext)
+  const { signer, setSigner, setWalletAddress, setNftContract, setMarketplaceContract } =
+    useContext(globalContext)
 
   const connectWallet = async () => {
     if (typeof window.ethereum !== 'undefined') {
@@ -26,8 +27,8 @@ const Wallet = (props: WalletProps) => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         const connectedAddress = await signer.getAddress()
-        context.setSigner(signer)
-        context.setWalletAddress(connectedAddress)
+        setSigner(signer)
+        setWalletAddress(connectedAddress)
         props.setConnected(true)
         console.log('signer ', provider)
       }
@@ -49,27 +50,23 @@ const Wallet = (props: WalletProps) => {
   }
 
   const disconnectWallet = async () => {
-    context.setWalletAddress('')
-    context.setSigner(null)
+    setWalletAddress('')
+    setSigner(null)
     props.setConnected(false)
   }
 
   const initialiseContracts = async () => {
-    if (context.signer != null) {
-      const nftContract = new ethers.Contract(nftaddress, NFT.abi, context.signer)
-      const marketplaceContract = new ethers.Contract(
-        marketplaceaddress,
-        Marketplace.abi,
-        context.signer
-      )
-      context.setNftContract(nftContract)
-      context.setMarketplaceContract(marketplaceContract)
+    if (signer != null) {
+      const nftContract = new ethers.Contract(nftaddress, NFT.abi, signer)
+      const marketplaceContract = new ethers.Contract(marketplaceaddress, Marketplace.abi, signer)
+      setNftContract(nftContract)
+      setMarketplaceContract(marketplaceContract)
     }
   }
 
   useEffect(() => {
     initialiseContracts()
-  }, [context.signer])
+  }, [signer])
 
   return (
     <>

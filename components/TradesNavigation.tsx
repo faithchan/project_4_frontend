@@ -14,10 +14,10 @@ const TradesNavigation = (props: connectWalletProps) => {
     if (context.signer === null && context.login === true) {
       props.connectWallet
     } else {
-      console.log('You are not authorised')
+      // console.log('You are not authorised')
     }
   }
-  console.log(context)
+  // console.log(context)
   return (
     <div className="text-right font-body">
       <Menu as="div" className="relative inline-block text-left">
