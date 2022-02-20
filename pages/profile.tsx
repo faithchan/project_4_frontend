@@ -120,6 +120,7 @@ const profile = () => {
   }
 
   console.log(userProfile)
+
   //get tokens of user
   const fetchTokenCount = async () => {
     const address = userProfile[0].walletAddress
@@ -141,13 +142,18 @@ const profile = () => {
   }
 
   useEffect(() => {
-    fetchTokenCount()
     fetchTokensMetadata()
     fetchUserProfile()
     // filterItems();
     // getOwnedTokens()
     userInfo()
   }, [])
+
+  useEffect(() => {
+    if (userProfile && context.nftContract) {
+      fetchTokenCount()
+    }
+  }, [userProfile, context.nftContract])
 
   return (
     <div>
