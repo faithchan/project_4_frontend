@@ -10,24 +10,23 @@ import walletImg from '../public/wallet.svg'
 import homeImg from '../public/home.svg'
 import AccNavigation from './AccNavigation'
 import TradesNavigation from './TradesNavigation'
-import uploadImg from "../public/upload.svg"
+import uploadImg from '../public/upload.svg'
 import tradeImg from '../public/trade.svg'
 
 const Navbar = () => {
   const context = useContext(globalContext)
-  const [type, setType]= useState("user")
+  const [type, setType] = useState('user')
   const userDataURL = `${process.env.API_ENDPOINT}/users/${context.walletAddress}`
-  const userInfo = async() => {
+  const userInfo = async () => {
     try {
-        const response = await fetch (userDataURL); 
-        const data = await response.json(); 
-        console.log(data)
-        setType(data[0].type) 
-    } 
-    catch (err) {
-        console.log("error:", err)
+      const response = await fetch(userDataURL)
+      const data = await response.json()
+      console.log(data)
+      setType(data[0].type)
+    } catch (err) {
+      console.log('error:', err)
     }
-}
+  }
 
   // console.log('navbar context: ', context)
 
@@ -60,7 +59,7 @@ const Navbar = () => {
 
   useEffect(() => {
     userInfo()
-    if (context.signer === null && context.login===true) {
+    if (context.signer === null && context.login === true) {
       connectWallet()
     }
   }, [])
@@ -78,16 +77,19 @@ const Navbar = () => {
         <span>
           <ul className="flex items-right mt-6 h-full tracking-widest">
             <li className="ml-10 mr-10 mt-2 ">
-            {context.login?<Link href="/feed">
-                <a>
-                  <Image src={homeImg}></Image>
-                </a>
-              </Link>:
-              <Link href="/login">
-                <a>
-                  <Image src={homeImg}></Image>
-                </a>
-              </Link>}
+              {context.login ? (
+                <Link href="/feed">
+                  <a>
+                    <Image src={homeImg}></Image>
+                  </a>
+                </Link>
+              ) : (
+                <Link href="/login">
+                  <a>
+                    <Image src={homeImg}></Image>
+                  </a>
+                </Link>
+              )}
             </li>
             {/* <li className="ml-10 mr-10 mt-2 ">
               <a onClick={connectWallet}>
@@ -95,27 +97,37 @@ const Navbar = () => {
               </a>
             </li> */}
             <li className="ml-10 mr-10 mt-2 ">
-            {context.login && context.designerState?<Link href="/upload">
-            <a onClick={connectWallet}>
-              <Image src={uploadImg}></Image>
-            </a>
-              </Link>:<Link href="/verify">
-            <a>
-              <Image src={uploadImg}></Image>
-            </a>
-              </Link>}
+              {context.login && context.designerState ? (
+                <Link href="/upload">
+                  <a onClick={connectWallet}>
+                    <Image src={uploadImg}></Image>
+                  </a>
+                </Link>
+              ) : (
+                <Link href="/verify">
+                  <a>
+                    <Image src={uploadImg}></Image>
+                  </a>
+                </Link>
+              )}
             </li>
-            <li className="ml-10 mr-20 mt-2 ">{context.login?<Link href="/trades">
-              <a onClick={connectWallet}>
-                <Image src={tradeImg}></Image>
-              </a>
-            </Link>:<Link href="/login">
-              <a>
-                <Image src={tradeImg}></Image>
-              </a>
-            </Link>}</li>
+            <li className="ml-10 mr-20 mt-2 ">
+              {context.login ? (
+                <Link href="/trades">
+                  <a onClick={connectWallet}>
+                    <Image src={tradeImg}></Image>
+                  </a>
+                </Link>
+              ) : (
+                <Link href="/login">
+                  <a>
+                    <Image src={tradeImg}></Image>
+                  </a>
+                </Link>
+              )}
+            </li>
             <li className="mr-10 mt-2">
-              <AccNavigation connectWallet={connectWallet} type={type}/>
+              <AccNavigation connectWallet={connectWallet} type={type} />
             </li>
 
             <Search />

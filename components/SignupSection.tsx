@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React, { useContext } from 'react'
 import Image from 'next/image'
 import aboutImg from '../public/aboutImg.png'
 import { useRouter } from 'next/router'
@@ -23,12 +23,16 @@ const SignupSection = () => {
             A platform for verified designers to showcase and sell NFTs.
             <br /> Sign up now and get connected with our growing network.{' '}
           </p>
-          {context.login?"":<button
-            className="bg-gold hover:bg-blue-450 text-white font-semibold tracking-widest font-header py-2 px-4 rounded-full text-xs mx-auto mt-6"
-            onClick={() => router.push('/signup')}
-          >
-            SIGN UP
-          </button>}
+          {context.login ? (
+            ''
+          ) : (
+            <button
+              className="bg-gold hover:bg-blue-450 text-white font-semibold tracking-widest font-header py-2 px-4 rounded-full text-xs mx-auto mt-6"
+              onClick={() => router.push('/signup')}
+            >
+              SIGN UP
+            </button>
+          )}
         </span>
       </div>
     </div>
