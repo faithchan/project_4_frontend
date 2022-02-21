@@ -2,8 +2,10 @@ import React, { useEffect } from 'react'
 import { useState, Fragment, useContext } from 'react'
 import { Combobox, Transition } from '@headlessui/react'
 import globalContext from '../context/context'
+import { useRouter } from 'next/router'
 
 const Search = () => {
+  const router = useRouter()
   const { setSigner, setWalletAddress, signer, login, walletAddress, designerState } =
     useContext(globalContext)
 
@@ -57,9 +59,13 @@ const Search = () => {
         leaveFrom="opacity-100"
         leaveTo="opacity-0"
       >
-        <Combobox.Options>
+        <Combobox.Options className="bg-black rounded-md p-2 origin-top-right absolute  mt-2 w-32  shadow-lg bg-opacity-20 focus:outline-none cursor-pointer">
           {filteredPeople.map((person) => (
-            <Combobox.Option key={person} value={person}>
+            <Combobox.Option
+              key={person}
+              value={person}
+              className="group flex items-center px-4 py-1  text-gray-300 hover:text-gold"
+            >
               {person}
             </Combobox.Option>
           ))}

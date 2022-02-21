@@ -67,7 +67,7 @@ const Navbar = () => {
     if (signer === null && login === true) {
       connectWallet()
     }
-  }, [])
+  }, [walletAddress])
 
   return (
     <div className="text-gold font-header text-xs">
@@ -135,7 +135,7 @@ const Navbar = () => {
               <AccNavigation connectWallet={connectWallet} type={type} />
             </li>
           </ul>
-          <span className="mt-8 font-body ">
+          <span className="mt-6 ">
             <Search />
           </span>
         </span>
