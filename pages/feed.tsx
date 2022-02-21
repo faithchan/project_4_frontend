@@ -40,6 +40,8 @@ const Feed: NextPage = () => {
           name: null,
           description: null,
           image: null,
+          username: null,
+          avatar: null,
         }
         const uri = await nftContract.tokenURI(details.tokenId)
         const response = await fetch(uri)
@@ -47,6 +49,10 @@ const Feed: NextPage = () => {
         details.name = data.name
         details.description = data.description
         details.image = data.image
+        const ownerInfo = await fetchCreatorInfo(details.owner)
+        console.log('owner: ', ownerInfo)
+        details.username = ownerInfo[0].username
+        details.avatar = ownerInfo[0].avatar
         fetchedData.push(details)
       } else {
         const uri = await nftContract.tokenURI(token)
@@ -56,8 +62,8 @@ const Feed: NextPage = () => {
         data.listPrice = 0
         const creator = await nftContract.tokenCreator(data.tokenId)
         const creatorInfo = await fetchCreatorInfo(creator)
-        console.log('creator info: ', creatorInfo)
-        data.creator = creatorInfo[0].username
+        // console.log('creator info: ', creatorInfo)
+        data.username = creatorInfo[0].username
         data.avatar = creatorInfo[0].avatar
         fetchedData.push(data)
       }
@@ -78,7 +84,7 @@ const Feed: NextPage = () => {
         isListed={item.isListed}
         owner={item.owner}
         tokenId={item.tokenId}
-        creator={item.creator}
+        username={item.username}
         avatar={item.avatar}
         buyModal={buyModal}
         setBuyModal={setBuyModal}
@@ -247,8 +253,7 @@ const Feed: NextPage = () => {
           setBuyModal={setBuyModal}
         />
       )}
-      {dataFetched && renderCards}
-      {/* <Ellipsis /> */}
+      {dataFetched ? renderCards : <Ellipsis />}
     </div>
   )
 }

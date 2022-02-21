@@ -10,7 +10,7 @@ interface FeedProps {
   isListed: boolean
   owner: string
   tokenId: number
-  creator: string
+  username: string
   avatar: string
   buyModal: boolean
   setBuyModal: (a: boolean) => void
@@ -42,7 +42,7 @@ const FeedCard = (props: FeedProps) => {
             />
             <span className="mt-3">
               <p className="text-center text-gold font-header text-xs tracking-widest">
-                {props.creator}
+                {props.username}
               </p>
             </span>
           </span>

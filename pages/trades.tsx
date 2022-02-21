@@ -271,16 +271,14 @@ const Trades: NextPage = () => {
 
   return (
     <div>
-      {burnModal ? (
+      {burnModal && (
         <BurnNFTModal tokenId={currentTokenId} burnModal={burnModal} setBurnModal={setBurnModal} />
-      ) : (
-        ''
       )}
       <div className="flex flex-wrap gap-10 justify-center my-20 mx-32">
-        <Ellipsis />
-        {loaded ? renderListedItems : ''}
-        {loaded ? renderUnlistedItems : ''}
-        {loaded ? renderTokens : ''}
+        {!loaded && <Ellipsis />}
+        {loaded && renderListedItems}
+        {loaded && renderUnlistedItems}
+        {loaded && renderTokens}
       </div>
     </div>
   )
