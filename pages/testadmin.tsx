@@ -1,3 +1,4 @@
+import type { NextPage } from 'next'
 import { useEffect, useState, useContext, useRef } from 'react'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
@@ -5,7 +6,7 @@ import jwtDecode from 'jwt-decode'
 import globalContext from '../context/context'
 import { useRouter } from 'next/router'
 
-const testadmin = () => {
+const TestAdmin: NextPage = () => {
   const prevState = useRef()
   const context = useContext(globalContext)
   const [whitelistAddress, setWhitelistAddress] = useState('')
@@ -356,4 +357,4 @@ const testadmin = () => {
   )
 }
 
-export default testadmin
+export default TestAdmin

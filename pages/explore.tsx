@@ -1,6 +1,6 @@
-import React from 'react'
+import type { NextPage } from 'next'
 
-const explore = () => {
+const Explore: NextPage = () => {
   return (
     <div>
       <h1>test</h1>
@@ -8,4 +8,4 @@ const explore = () => {
   )
 }
 
-export default explore
+export default Explore

@@ -1,9 +1,10 @@
-import React, { useContext, useEffect } from 'react'
+import type { NextPage } from 'next'
+import { useContext } from 'react'
 import SignupSection from '../components/SignupSection'
 import FeaturedCard from '../components/FeaturedCard'
 import userContext from '../context/context'
 
-const about = () => {
+const About: NextPage = () => {
   const context = useContext(userContext)
   // console.log('context: ', context)
 
@@ -36,4 +37,4 @@ const about = () => {
   )
 }
 
-export default about
+export default About

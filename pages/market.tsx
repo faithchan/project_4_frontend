@@ -1,3 +1,4 @@
+import type { NextPage } from 'next'
 import { useState, useEffect, useContext } from 'react'
 import FeedCard from '../components/FeedCard'
 import BuyNFTModal from '../components/BuyNFTModal'
@@ -6,7 +7,7 @@ import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
 import Ellipsis from '../components/Spinner'
 
-const Market = () => {
+const Market: NextPage = () => {
   const { signer, marketplaceContract, nftContract, setSigner, setWalletAddress } =
     useContext(globalContext)
   const [buyModal, setBuyModal] = useState(false)

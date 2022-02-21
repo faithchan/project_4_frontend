@@ -1,3 +1,4 @@
+import type { NextPage } from 'next'
 import { useEffect, useState, useContext } from 'react'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
@@ -6,7 +7,7 @@ import globalContext from '../context/context'
 import BurnNFTModal from '../components/BurnNFTModal'
 import Ellipsis from '../components/Spinner'
 
-const Trades = () => {
+const Trades: NextPage = () => {
   const { nftContract, marketplaceContract, signer, walletAddress, setSigner, setWalletAddress } =
     useContext(globalContext)
   const [tokenData, setTokenData] = useState<any>([])

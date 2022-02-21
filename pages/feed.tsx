@@ -1,3 +1,4 @@
+import type { NextPage } from 'next'
 import { useState, useEffect, useContext } from 'react'
 import FeedCard from '../components/FeedCard'
 import BuyNFTModal from '../components/BuyNFTModal'
@@ -6,7 +7,7 @@ import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
 import Ellipsis from '../components/Spinner'
 
-const feed = () => {
+const Feed: NextPage = () => {
   const { marketplaceContract, nftContract, signer, walletAddress, setSigner, setWalletAddress } =
     useContext(globalContext)
   const [buyModal, setBuyModal] = useState<boolean>(false)
@@ -252,4 +253,4 @@ const feed = () => {
   )
 }
 
-export default feed
+export default Feed

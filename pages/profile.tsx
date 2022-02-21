@@ -1,3 +1,4 @@
+import type { NextPage } from 'next'
 import Image from 'next/image'
 import { useEffect, useState, useContext } from 'react'
 import verifiedImg from '../public/verified.svg'
@@ -9,7 +10,7 @@ import { ethers } from 'ethers'
 
 // fetch tokens from currently logged in and connected wallet addresses
 
-const profile = () => {
+const Profile: NextPage = () => {
   const context = useContext(globalContext)
   const [userProfile, setUserProfile] = useState<any>()
   const [tokenData, setTokenData] = useState<any>([])
@@ -219,4 +220,4 @@ const profile = () => {
   )
 }
 
-export default profile
+export default Profile

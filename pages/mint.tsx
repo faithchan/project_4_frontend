@@ -1,8 +1,9 @@
+import type { NextPage } from 'next'
 import { useState, useEffect, useContext } from 'react'
 import MintNFTForm from '../components/MintNFTForm'
 import globalContext from '../context/context'
 
-const uploadnft = () => {
+const MintNFT: NextPage = () => {
   const context = useContext(globalContext)
   const [ListModal, setListModal] = useState<boolean>(false)
 
@@ -14,4 +15,4 @@ const uploadnft = () => {
   )
 }
 
-export default uploadnft
+export default MintNFT

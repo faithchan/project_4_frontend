@@ -1,7 +1,7 @@
-import { useContext, useState, useEffect } from 'react'
+import type { NextPage } from 'next'
+import { useState, useEffect } from 'react'
 import jwtDecode from 'jwt-decode'
 import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/router'
 import { create } from 'ipfs-http-client'
 const url: string | any = 'https://ipfs.infura.io:5001/api/v0'
 const client = create(url)
@@ -17,7 +17,7 @@ type FormData = {
   avatar: string
 }
 
-const Edit = () => {
+const Edit: NextPage = () => {
   const [userProfile, setUserProfile] = useState<any>()
   const [userAddress, setUserAddress] = useState<string>()
 

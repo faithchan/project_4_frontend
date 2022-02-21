@@ -1,6 +1,7 @@
 import Error from '../components/404Section'
+import type { NextPage } from 'next'
 
-const error = () => {
+const error: NextPage = () => {
   return (
     <div>
       <Error />

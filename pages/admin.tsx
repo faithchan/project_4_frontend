@@ -1,3 +1,4 @@
+import type { NextPage } from 'next'
 import { useEffect, useState, useContext } from 'react'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
@@ -5,7 +6,7 @@ import jwtDecode from 'jwt-decode'
 import globalContext from '../context/context'
 import { useRouter } from 'next/router'
 
-const admin = () => {
+const Admin: NextPage = () => {
   const { nftContract, signer, setSigner, setWalletAddress } = useContext(globalContext)
   const [whitelistAddress, setWhitelistAddress] = useState('')
   const [connected, setConnected] = useState<boolean>(false)
@@ -279,4 +280,4 @@ const admin = () => {
   )
 }
 
-export default admin
+export default Admin
