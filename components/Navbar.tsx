@@ -135,9 +135,8 @@ const Navbar = () => {
               <AccNavigation connectWallet={connectWallet} type={type} />
             </li>
           </ul>
-          <span className="mt-6 ">
-            <Search />
-          </span>
+          <span className="ml-5"></span>
+          <Search />
         </span>
       </nav>
     </div>

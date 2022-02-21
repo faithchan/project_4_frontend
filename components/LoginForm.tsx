@@ -19,6 +19,7 @@ const LoginForm = () => {
   } = useForm<FormData>()
 
   const onSubmit = async (data: any) => {
+    console.log('submit clciked')
     try {
       const response = await fetch(`${process.env.API_ENDPOINT}/sessions`, {
         method: 'POST',

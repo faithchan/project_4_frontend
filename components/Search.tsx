@@ -3,6 +3,7 @@ import { useState, Fragment, useContext } from 'react'
 import { Combobox, Transition } from '@headlessui/react'
 import globalContext from '../context/context'
 import { useRouter } from 'next/router'
+import { SearchIcon } from '@heroicons/react/solid'
 
 const Search = () => {
   const router = useRouter()
@@ -27,6 +28,7 @@ const Search = () => {
       } else {
         let newArray = []
         await data.map((user: any) => newArray.push(user.username))
+        console.log(data)
         setAllUsers(newArray)
       }
     } catch (err) {
@@ -42,36 +44,53 @@ const Search = () => {
           return person.toLowerCase().includes(query.toLowerCase())
         })
 
+  const searchHandler = () => router.push(`/user/${selectedPerson}`)
+
+  console.log(query)
+  console.log(selectedPerson)
   return (
-    <Combobox value={selectedPerson} onChange={setSelectedPerson}>
-      {/* Render a `Fragment` instead of an `input` */}
-      <Combobox.Input
-        className="w-40 border-none focus:ring-0 py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 rounded-lg"
-        as={Fragment}
-        onChange={(event) => setQuery(event.target.value)}
-        displayValue={(person: any) => person}
-      >
-        <input />
-      </Combobox.Input>
-      <Transition
-        as={Fragment}
-        leave="transition ease-in duration-100"
-        leaveFrom="opacity-100"
-        leaveTo="opacity-0"
-      >
-        <Combobox.Options className="bg-black rounded-md p-2 origin-top-right absolute  mt-2 w-32  shadow-lg bg-opacity-20 focus:outline-none cursor-pointer">
-          {filteredPeople.map((person) => (
-            <Combobox.Option
-              key={person}
-              value={person}
-              className="group flex items-center px-4 py-1  text-gray-300 hover:text-gold"
+    <div className="mt-7 ">
+      <Combobox value={selectedPerson} onChange={setSelectedPerson}>
+        {/* Render a `Fragment` instead of an `input` */}
+        <div className="">
+          <div className="rounded-full text-xs font-body focus:outline-none flex bg-white">
+            <div>
+              <Combobox.Input
+                onChange={(event) => setQuery(event.target.value)}
+                displayValue={(person: any) => person}
+                className=" h-9 w-32 px-4  rounded-full text-sm focus:outline-none"
+                placeholder="Search User"
+              ></Combobox.Input>
+            </div>
+            <div className="">
+              <button className="mr-2 pb-1 pr-1" onClick={searchHandler}>
+                <SearchIcon className="w-5 h-5 mt-2 text-gray-300" />
+              </button>
+            </div>
+          </div>
+          <span>
+            <Transition
+              as={Fragment}
+              leave="transition ease-in duration-100"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
             >
-              {person}
-            </Combobox.Option>
-          ))}
-        </Combobox.Options>
-      </Transition>
-    </Combobox>
+              <Combobox.Options className="">
+                {filteredPeople.map((person) => (
+                  <Combobox.Option
+                    key={person}
+                    value={person}
+                    className="group flex items-center px-4 py-1  text-gray-300 "
+                  >
+                    {person}
+                  </Combobox.Option>
+                ))}
+              </Combobox.Options>
+            </Transition>
+          </span>
+        </div>
+      </Combobox>
+    </div>
   )
 }
 
