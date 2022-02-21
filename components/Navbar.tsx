@@ -76,7 +76,7 @@ const Navbar = () => {
             </a>
           </Link>
         </span>
-        <span>
+        <span className="flex items-right  h-full tracking-widest">
           <ul className="flex items-right mt-6 h-full tracking-widest">
             <li className="ml-10 mr-10 mt-2 ">
               {login ? (
@@ -131,9 +131,10 @@ const Navbar = () => {
             <li className="mr-10 mt-2">
               <AccNavigation connectWallet={connectWallet} type={type} />
             </li>
-
-            <Search />
           </ul>
+          <span className="mt-8">
+            <Search />
+          </span>
         </span>
       </nav>
     </div>
