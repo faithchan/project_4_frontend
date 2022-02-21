@@ -78,12 +78,12 @@ const Search = () => {
               leaveTo="transform scale-95 opacity-0"
             >
               <div className="bg-black absolute bg-opacity-20 w-40 mt-4 rounded-lg py-1">
-                <Combobox.Options className="font-body">
+                <Combobox.Options className="font-body ">
                   {filteredPeople.map((person) => (
                     <Combobox.Option
                       key={person}
                       value={person}
-                      className="group flex items-center px-4 py-1  text-gray-300 "
+                      className="group flex items-center px-4 py-1 cursor-pointer text-gray-300 hover:text-gold "
                     >
                       {person}
                     </Combobox.Option>
