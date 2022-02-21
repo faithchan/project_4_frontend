@@ -253,7 +253,13 @@ const Feed: NextPage = () => {
           setBuyModal={setBuyModal}
         />
       )}
-      {dataFetched ? renderCards : <Ellipsis />}
+      {dataFetched ? (
+        renderCards
+      ) : (
+        <div>
+          <Ellipsis />
+        </div>
+      )}
     </div>
   )
 }
