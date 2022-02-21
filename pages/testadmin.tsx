@@ -7,10 +7,8 @@ import globalContext from '../context/context'
 import { useRouter } from 'next/router'
 
 const TestAdmin: NextPage = () => {
-  const prevState = useRef()
   const context = useContext(globalContext)
   const [whitelistAddress, setWhitelistAddress] = useState('')
-  const [connected, setConnected] = useState<boolean>(false)
   const [whitelistedAddrs, setWhitelistedAddrs] = useState<any>(new Set())
   const [allUsers, setAllUsers] = useState([])
   const router = useRouter()
@@ -20,11 +18,10 @@ const TestAdmin: NextPage = () => {
       for (let user of allUsers) {
         const txn = await context.nftContract.isWhitelisted(user.walletAddress)
         if (txn) {
-          console.log(`${user.username} is whitelisted`)
+          // console.log(`${user.username} is whitelisted`)
           setWhitelistedAddrs((prev: any) => new Set(prev.add(user.walletAddress)))
-          // setWhitelistedAddrs([...whitelistedAddrs, user.walletAddress])
         } else {
-          console.log(`${user.username} is not whitelisted`)
+          // console.log(`${user.username} is not whitelisted`)
         }
       }
     } else {
@@ -141,22 +138,18 @@ const TestAdmin: NextPage = () => {
 
   useEffect(() => {
     getAllWhitelistees()
-  }, [context.nftContract])
+  }, [context.nftContract, context.signer])
 
   useEffect(() => {
     console.log('whitelist: ', whitelistedAddrs)
   }, [whitelistedAddrs])
 
   useEffect(() => {
-    getAllWhitelistees()
-  }, [])
-
-  useEffect(() => {
     let token = localStorage.getItem('token')
     let tempToken: any = token
     if (tempToken) {
       let decodedToken: any = jwtDecode(tempToken)
-      console.log('decoded token: ', decodedToken)
+      // console.log('decoded token: ', decodedToken)
       if (decodedToken.role !== 'Admin') {
         router.push('/404')
       } else {
@@ -166,36 +159,6 @@ const TestAdmin: NextPage = () => {
       router.push('/404')
     }
   }, [])
-
-  // const renderWhitelist = whitelistedAddrs.map((address: any) => {
-  //   return (
-  //     <div className="md:text-sm text-xs  text-white font-body tracking-wider mb-4" key={address}>
-  //       {address}
-  //     </div>
-  //   )
-  // })
-
-  const renderUsers = allUsers.map((user: any) => {
-    return (
-      <div
-        className="md:text-sm text-xs text-white font-body tracking-wider my-4 flex items-center"
-        key={user._id}
-      >
-        <img src={user.avatar} alt={user.username} className="mr-5 w-16 h-16 rounded-full" />
-        {user.username}
-        <button
-          className="border-2 border-gold hover:bg-blue-450 text-gold font-semibold font-header py-2 px-6 rounded-full text-xs ml-5"
-          onClick={() => {
-            removeUser(user._id)
-          }}
-        >
-          Delete User
-        </button>
-      </div>
-    )
-  })
-
-  // console.log('all users', allUsers)
 
   //----------------Initialising Wallet----------------//
 
@@ -271,7 +234,9 @@ const TestAdmin: NextPage = () => {
           </button>
         </div>
       </div>
-
+      <button className="text-white" onClick={getAllWhitelistees}>
+        Get whitelistees
+      </button>
       <div>
         <div className="sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
           <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">

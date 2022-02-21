@@ -1,5 +1,6 @@
 import type { NextPage } from 'next'
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import jwtDecode from 'jwt-decode'
 import { useForm } from 'react-hook-form'
 import { create } from 'ipfs-http-client'
@@ -15,6 +16,7 @@ type FormData = {
 }
 
 const Edit: NextPage = () => {
+  const router = useRouter()
   const [userProfile, setUserProfile] = useState<any>()
   const [userAddress, setUserAddress] = useState<string>()
   const [displayPicture, setDisplayPicture] = useState<string>('')
@@ -24,7 +26,7 @@ const Edit: NextPage = () => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<FormData>({})
+  } = useForm<FormData>()
 
   const onSubmit = async (data: any) => {
     data.username = data.username.toLowerCase()
@@ -39,18 +41,13 @@ const Edit: NextPage = () => {
       })
       const res = await response.json()
       console.log('response:', res)
-      const { username, email, walletAddress } = res.keyValue
-      if (username) {
-        alert('Username already registered. Please try again.')
-      }
-      if (email) {
-        alert('Email already registered. Please try again.')
-      }
-      if (walletAddress) {
-        alert('Wallet address already registered. Please try again.')
-      }
+      alert('Update success! Please wait while we redirect you to the login page....')
+      setTimeout(() => {
+        router.push('/login')
+      }, 1000)
     } catch (err) {
       console.log(err)
+      alert('Error updating profile, please try again')
     }
   }
 
@@ -136,7 +133,7 @@ const Edit: NextPage = () => {
                 <input
                   type="text"
                   className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md w-full mt-2"
-                  {...register('username', { required: true })}
+                  {...register('username')}
                   defaultValue={userProfile && userProfile[0].username}
                 />
                 {errors.username && (
@@ -148,7 +145,7 @@ const Edit: NextPage = () => {
                 <input
                   type="text"
                   className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
-                  {...register('email', { required: true, validate: validateEmail })}
+                  {...register('email', { validate: validateEmail })}
                   defaultValue={userProfile && userProfile[0].email}
                 />
                 {errors.email && errors.email.type === 'validate' && (
@@ -163,7 +160,7 @@ const Edit: NextPage = () => {
                   type="text"
                   id="walletAddress"
                   className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
-                  {...register('walletAddress', { required: true, validate: validateAddress })}
+                  {...register('walletAddress', { validate: validateAddress })}
                   defaultValue={userProfile && userProfile[0].walletAddress}
                 />
                 {errors.walletAddress && errors.walletAddress.type === 'validate' && (
@@ -174,10 +171,10 @@ const Edit: NextPage = () => {
                 <label className="md:text-sm text-xs text-white font-body tracking-wider">
                   Profile Picture
                 </label>
-                {!displayPicture ? (
-                  <img src={userProfile[0].avatar} width="250px" height="250px" />
-                ) : (
+                {displayPicture ? (
                   <img src={displayPicture} width="250px" height="250px" />
+                ) : (
+                  <img src={userProfile[0].avatar} width="250px" height="250px" />
                 )}
                 <div className="flex items-center justify-center w-full mt-2">
                   <label className="flex flex-col border-2 border-dashed w-full rounded-lg h-32 group">
@@ -206,6 +203,7 @@ const Edit: NextPage = () => {
                       accept=".jpeg,.jpg,.png,.gif"
                       {...register('avatar')}
                       onChange={onFileUpload}
+                      defaultValue={userProfile ? userProfile[0].avatar : ''}
                     />
                   </label>
                 </div>

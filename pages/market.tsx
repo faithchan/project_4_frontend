@@ -84,7 +84,7 @@ const Market: NextPage = () => {
         isListed={item.isListed}
         owner={item.owner}
         tokenId={item.tokenId}
-        creator={item.creator}
+        username={item.creator}
         avatar={item.avatar}
         buyModal={buyModal}
         setBuyModal={setBuyModal}
