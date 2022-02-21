@@ -6,9 +6,6 @@ import { create } from 'ipfs-http-client'
 const url: string | any = 'https://ipfs.infura.io:5001/api/v0'
 const client = create(url)
 
-// redirect to login page if not logged in
-// username, email, password, wallet address, avatar
-
 type FormData = {
   username: string
   email: string
@@ -20,6 +17,7 @@ type FormData = {
 const Edit: NextPage = () => {
   const [userProfile, setUserProfile] = useState<any>()
   const [userAddress, setUserAddress] = useState<string>()
+  const [displayPicture, setDisplayPicture] = useState<string>('')
 
   const {
     register,
@@ -32,7 +30,7 @@ const Edit: NextPage = () => {
     data.username = data.username.toLowerCase()
     console.log('data: ', data)
     try {
-      const response = await fetch(`${process.env.API_ENDPOINT}/users`, {
+      const response = await fetch(`${process.env.API_ENDPOINT}/users/edit/${userProfile[0]._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -89,6 +87,7 @@ const Edit: NextPage = () => {
       )
       const url = `https://ipfs.infura.io/ipfs/${cid}`
       console.log('ipfs url: ', url)
+      setDisplayPicture(url)
       setValue('avatar', url)
     } catch (e) {
       console.error('Error uploading file: ', e)
@@ -156,19 +155,6 @@ const Edit: NextPage = () => {
                   <div className="text-white">Please enter a valid email address</div>
                 )}
               </div>
-              {/* <div>
-                <label className="block mb-1 md:text-sm text-xs text-white font-body">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
-                  {...register('password', { required: true })}
-                />
-                {errors.password && (
-                  <div className="text-white">Please do not leave this field blank</div>
-                )}
-              </div> */}
               <div>
                 <label className="block mb-1 md:text-sm text-xs text-white font-body">
                   Metamask Wallet
@@ -184,44 +170,45 @@ const Edit: NextPage = () => {
                   <div className="text-white">Please enter a valid wallet address</div>
                 )}
               </div>
-              <div className="">
+              <div>
                 <label className="md:text-sm text-xs text-white font-body tracking-wider">
                   Profile Picture
                 </label>
-                {userProfile ? (
-                  <img src={userProfile[0].avatar} />
+                {!displayPicture ? (
+                  <img src={userProfile[0].avatar} width="250px" height="250px" />
                 ) : (
-                  <div className="flex items-center justify-center w-full mt-2">
-                    <label className="flex flex-col border-2 border-dashed w-full rounded-lg h-32 group">
-                      <div className="flex flex-col items-center justify-center pt-7 cursor-pointer">
-                        <svg
-                          className="w-10 h-10 text-purple-400 group-hover:text-purple-600"
-                          fill="none"
-                          stroke="white"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          ></path>
-                        </svg>
-                        <p className="lowercase text-sm text-white group-hover:text-purple-600 pt-1 tracking-wider">
-                          Select a photo
-                        </p>
-                      </div>
-                      <input
-                        type="file"
-                        className="hidden"
-                        accept=".jpeg,.jpg,.png,.gif"
-                        {...register('avatar')}
-                        onChange={onFileUpload}
-                      />
-                    </label>
-                  </div>
+                  <img src={displayPicture} width="250px" height="250px" />
                 )}
+                <div className="flex items-center justify-center w-full mt-2">
+                  <label className="flex flex-col border-2 border-dashed w-full rounded-lg h-32 group">
+                    <div className="flex flex-col items-center justify-center pt-7 cursor-pointer">
+                      <svg
+                        className="w-10 h-10 text-purple-400 group-hover:text-purple-600"
+                        fill="none"
+                        stroke="white"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        ></path>
+                      </svg>
+                      <p className="lowercase text-sm text-white group-hover:text-purple-600 pt-1 tracking-wider">
+                        Update Display Picture
+                      </p>
+                    </div>
+                    <input
+                      type="file"
+                      className="hidden"
+                      accept=".jpeg,.jpg,.png,.gif"
+                      {...register('avatar')}
+                      onChange={onFileUpload}
+                    />
+                  </label>
+                </div>
               </div>
             </div>
             <div className="flex justify-center">
