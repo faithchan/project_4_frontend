@@ -12,19 +12,22 @@ import AccNavigation from './AccNavigation'
 import TradesNavigation from './TradesNavigation'
 import uploadImg from '../public/upload.svg'
 import tradeImg from '../public/trade.svg'
+import { AnyARecord } from 'node:dns'
 
 const Navbar = () => {
   const { setSigner, setWalletAddress, signer, login, walletAddress, designerState } =
     useContext(globalContext)
   const [type, setType] = useState('user')
 
-  const userDataURL = `${process.env.API_ENDPOINT}/users/${walletAddress}`
+  const userDataURL = `${process.env.API_ENDPOINT}/users`
   const userInfo = async () => {
     try {
       const response = await fetch(userDataURL)
       const data = await response.json()
       console.log(data)
-      setType(data[0].type)
+      const index = data.findIndex((wallet: any) => wallet.walletAddress === walletAddress)
+      const role = data[index].type
+      setType(role)
     } catch (err) {
       console.log('error:', err)
     }
@@ -132,7 +135,7 @@ const Navbar = () => {
               <AccNavigation connectWallet={connectWallet} type={type} />
             </li>
           </ul>
-          <span className="mt-8">
+          <span className="mt-8 font-body ">
             <Search />
           </span>
         </span>
