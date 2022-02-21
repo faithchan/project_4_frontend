@@ -10,6 +10,7 @@ interface connectWalletProps {
 }
 const TradesNavigation = (props: connectWalletProps) => {
   const context = useContext(globalContext)
+
   const connectWalletHandler = () => {
     if (context.signer === null && context.login === true) {
       props.connectWallet

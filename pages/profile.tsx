@@ -29,7 +29,7 @@ const profile = () => {
   const [unregistered, setUnregistered] = useState<any>(new Set()) // tokenIds
   const [ownedItems, setOwnedItems] = useState<any>([])
   const [verified, setVerified] = useState(true)
-  console.log(context.login)
+  // console.log(context.login)
 
   //Get user details - image, followers, following, type of user,
   const userDataURL = `${process.env.API_ENDPOINT}/users/${context.walletAddress}`
@@ -119,7 +119,7 @@ const profile = () => {
     }
   }
 
-  console.log(userProfile)
+  // console.log(userProfile)
 
   //get tokens of user
   const fetchTokenCount = async () => {
