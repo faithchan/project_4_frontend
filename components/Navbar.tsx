@@ -12,24 +12,27 @@ import AccNavigation from './AccNavigation'
 import TradesNavigation from './TradesNavigation'
 import uploadImg from '../public/upload.svg'
 import tradeImg from '../public/trade.svg'
+import { AnyARecord } from 'node:dns'
 
 const Navbar = () => {
   const { setSigner, setWalletAddress, signer, login, walletAddress, designerState } =
     useContext(globalContext)
   const [type, setType] = useState('user')
 
-  const userDataURL = `${process.env.API_ENDPOINT}/users/${walletAddress}`
+  const userDataURL = `${process.env.API_ENDPOINT}/users`
   const userInfo = async () => {
     try {
       const response = await fetch(userDataURL)
       const data = await response.json()
       console.log(data)
-      setType(data[0].type)
+      const index = data.findIndex((wallet: any) => wallet.walletAddress === walletAddress)
+      const role = data[index].type
+      setType(role)
     } catch (err) {
       console.log('error:', err)
     }
   }
-
+  console.log(type)
   // console.log('navbar context: ', context)
 
   const connectWallet = async () => {
@@ -64,7 +67,7 @@ const Navbar = () => {
     if (signer === null && login === true) {
       connectWallet()
     }
-  }, [])
+  }, [walletAddress])
 
   return (
     <div className="text-gold font-header text-xs">
@@ -76,7 +79,7 @@ const Navbar = () => {
             </a>
           </Link>
         </span>
-        <span>
+        <span className="flex items-right  h-full tracking-widest">
           <ul className="flex items-right mt-6 h-full tracking-widest">
             <li className="ml-10 mr-10 mt-2 ">
               {login ? (
@@ -131,9 +134,9 @@ const Navbar = () => {
             <li className="mr-10 mt-2">
               <AccNavigation connectWallet={connectWallet} type={type} />
             </li>
-
-            <Search />
           </ul>
+          <span className="ml-5"></span>
+          <Search />
         </span>
       </nav>
     </div>
