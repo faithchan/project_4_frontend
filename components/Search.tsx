@@ -64,30 +64,34 @@ const Search = () => {
             </div>
             <div className="">
               <button className="mr-2 pb-1 pr-1" onClick={searchHandler}>
-                <SearchIcon className="w-5 h-5 mt-2 text-gray-300" />
+                <SearchIcon className="w-5 h-5 mt-2 text-gray-400" />
               </button>
             </div>
           </div>
-          <span>
+          <div>
             <Transition
-              as={Fragment}
-              leave="transition ease-in duration-100"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
+              enter="transition duration-100 ease-out"
+              enterFrom="transform scale-95 opacity-0"
+              enterTo="transform scale-100 opacity-100"
+              leave="transition duration-75 ease-out"
+              leaveFrom="transform scale-100 opacity-100"
+              leaveTo="transform scale-95 opacity-0"
             >
-              <Combobox.Options className="">
-                {filteredPeople.map((person) => (
-                  <Combobox.Option
-                    key={person}
-                    value={person}
-                    className="group flex items-center px-4 py-1  text-gray-300 "
-                  >
-                    {person}
-                  </Combobox.Option>
-                ))}
-              </Combobox.Options>
+              <div className="bg-black absolute bg-opacity-20 w-40 mt-4 rounded-lg py-1">
+                <Combobox.Options className="font-body">
+                  {filteredPeople.map((person) => (
+                    <Combobox.Option
+                      key={person}
+                      value={person}
+                      className="group flex items-center px-4 py-1  text-gray-300 "
+                    >
+                      {person}
+                    </Combobox.Option>
+                  ))}
+                </Combobox.Options>
+              </div>
             </Transition>
-          </span>
+          </div>
         </div>
       </Combobox>
     </div>
