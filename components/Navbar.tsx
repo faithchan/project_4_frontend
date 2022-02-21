@@ -32,7 +32,7 @@ const Navbar = () => {
       console.log('error:', err)
     }
   }
-
+  console.log(type)
   // console.log('navbar context: ', context)
 
   const connectWallet = async () => {

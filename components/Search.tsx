@@ -1,22 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState, Fragment, useContext } from 'react'
 import { Combobox, Transition } from '@headlessui/react'
 import globalContext from '../context/context'
 
-const people = [
-  { id: 1, name: 'Durward Reynolds' },
-  { id: 2, name: 'Kenton Towne' },
-  { id: 3, name: 'Therese Wunsch' },
-  { id: 4, name: 'Benedict Kessler' },
-  { id: 5, name: 'Katelyn Rohan' },
-]
-
 const Search = () => {
   const { setSigner, setWalletAddress, signer, login, walletAddress, designerState } =
     useContext(globalContext)
-  const [selectedPerson, setSelectedPerson] = useState(people[0])
+
   const [query, setQuery] = useState('')
   const [allUsers, setAllUsers] = useState([])
+  const [selectedPerson, setSelectedPerson] = useState(allUsers[0])
 
   const fetchAllUsers = async () => {
     try {
@@ -38,12 +31,13 @@ const Search = () => {
       console.log(err)
     }
   }
-  console.log(allUsers)
+  useEffect(() => fetchAllUsers(), [])
+
   const filteredPeople =
     query === ''
-      ? people
-      : people.filter((person) => {
-          return person.name.toLowerCase().includes(query.toLowerCase())
+      ? allUsers
+      : allUsers.filter((person) => {
+          return person.toLowerCase().includes(query.toLowerCase())
         })
 
   return (
@@ -53,7 +47,7 @@ const Search = () => {
         className="w-40 border-none focus:ring-0 py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 rounded-lg"
         as={Fragment}
         onChange={(event) => setQuery(event.target.value)}
-        displayValue={(person: any) => person.name}
+        displayValue={(person: any) => person}
       >
         <input />
       </Combobox.Input>
@@ -65,8 +59,8 @@ const Search = () => {
       >
         <Combobox.Options>
           {filteredPeople.map((person) => (
-            <Combobox.Option key={person.id} value={person}>
-              {person.name}
+            <Combobox.Option key={person} value={person}>
+              {person}
             </Combobox.Option>
           ))}
         </Combobox.Options>
