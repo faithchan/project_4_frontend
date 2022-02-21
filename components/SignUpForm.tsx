@@ -42,16 +42,19 @@ const SignUpForm = () => {
       })
       const res = await response.json()
       console.log('response:', res)
-      const { username, email, walletAddress } = res.keyValue
-      if (username) {
-        alert('Username already registered. Please try again.')
-      }
-      if (email) {
-        alert('Email already registered. Please try again.')
-      }
-      if (walletAddress) {
-        alert('Wallet address already registered. Please try again.')
-      }
+      setTimeout(() => {
+        router.push('/login')
+      }, 1000)
+      // const { username, email, walletAddress } = res.keyValue
+      // if (username) {
+      //   alert('Username already registered. Please try again.')
+      // }
+      // if (email) {
+      //   alert('Email already registered. Please try again.')
+      // }
+      // if (walletAddress) {
+      //   alert('Wallet address already registered. Please try again.')
+      // }
     } catch (err) {
       console.log(err)
     }

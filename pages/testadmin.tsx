@@ -258,6 +258,9 @@ const TestAdmin: NextPage = () => {
                   <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Action
                   </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Delete User
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -301,14 +304,28 @@ const TestAdmin: NextPage = () => {
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       {whitelistedAddrs.has(user.walletAddress) ? (
-                        <button className="bg-gray-400 text-white tracking-widest font-body py-2 px-4 rounded-full text-xs mx-auto">
-                          Delist
+                        <button
+                          className="bg-gray-400 text-white tracking-widest font-body py-2 px-4 rounded-full text-xs mx-auto"
+                          onClick={removeFromWhitelist}
+                        >
+                          Remove
                         </button>
                       ) : (
-                        <button className="bg-gray-500 text-white tracking-widest font-body py-2 px-4 rounded-full text-xs mx-auto">
-                          List
+                        <button
+                          className="bg-gray-500 text-white tracking-widest font-body py-2 px-4 rounded-full text-xs mx-auto"
+                          onClick={addToWhitelist}
+                        >
+                          Add
                         </button>
                       )}
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      <button
+                        className="bg-gray-400 text-white tracking-widest font-body py-2 px-4 rounded-full text-xs mx-auto"
+                        onClick={() => removeUser(user._id)}
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))}

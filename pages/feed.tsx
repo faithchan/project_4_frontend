@@ -19,7 +19,6 @@ const Feed: NextPage = () => {
   const [createdLoaded, setCreatedLoaded] = useState<boolean>(false)
   const [ownedLoaded, setOwnedLoaded] = useState<boolean>(false)
   const [dataFetched, setDataFetched] = useState<boolean>(false)
-
   const [currentItemId, setCurrentItemId] = useState<number>()
   const [currentTokenId, setCurrentTokenId] = useState<number>()
   const [currentItemOwner, setCurrentItemOwner] = useState<string>()
@@ -253,13 +252,8 @@ const Feed: NextPage = () => {
           setBuyModal={setBuyModal}
         />
       )}
-      {dataFetched ? (
-        renderCards
-      ) : (
-        <div>
-          <Ellipsis />
-        </div>
-      )}
+      {!dataFetched && <Ellipsis color="grey" />}
+      {dataFetched && renderCards}
     </div>
   )
 }

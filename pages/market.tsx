@@ -146,8 +146,12 @@ const Market: NextPage = () => {
           setBuyModal={setBuyModal}
         />
       )}
+      {!loaded && (
+        <div className="flex justify-center">
+          <Ellipsis />
+        </div>
+      )}
       {loaded && renderCards}
-      <Ellipsis />
     </div>
   )
 }
