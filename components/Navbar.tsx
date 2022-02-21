@@ -23,7 +23,7 @@ const Navbar = () => {
     try {
       const response = await fetch(userDataURL)
       const data = await response.json()
-      console.log(data)
+      // console.log(data)
       setType(data[0].type)
     } catch (err) {
       console.log('error:', err)

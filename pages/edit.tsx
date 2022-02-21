@@ -26,15 +26,7 @@ const Edit = () => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<FormData>({
-    // defaultValues: {
-    //   username: 'xxx',
-    //   email: 'xxx',
-    //   password: 'xxx',
-    //   walletAddress: '',
-    //   avatar: '',
-    // },
-  })
+  } = useForm<FormData>({})
 
   const onSubmit = async (data: any) => {
     data.username = data.username.toLowerCase()

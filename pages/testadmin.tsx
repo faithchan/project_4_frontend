@@ -143,6 +143,14 @@ const testadmin = () => {
   }, [context.nftContract])
 
   useEffect(() => {
+    console.log('whitelist: ', whitelistedAddrs)
+  }, [whitelistedAddrs])
+
+  useEffect(() => {
+    getAllWhitelistees()
+  }, [])
+
+  useEffect(() => {
     let token = localStorage.getItem('token')
     let tempToken: any = token
     if (tempToken) {
@@ -185,7 +193,9 @@ const testadmin = () => {
       </div>
     )
   })
-  console.log(allUsers)
+
+  // console.log('all users', allUsers)
+
   //----------------Initialising Wallet----------------//
 
   const connectWallet = async () => {

@@ -5,7 +5,7 @@ import userContext from '../context/context'
 
 const about = () => {
   const context = useContext(userContext)
-  console.log(context)
+  // console.log('context: ', context)
 
   return (
     <div className="mx-32">
