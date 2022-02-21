@@ -15,7 +15,7 @@ const Profile: NextPage = () => {
   const [userProfile, setUserProfile] = useState<any>()
   const [tokenData, setTokenData] = useState<any>([])
   const [userData, setUserData] = useState({})
-  const [tokensOwned, setTokensOwned] = useState([])
+  const [tokensCount, setTokensCount] = useState([])
   const [tokensCreated, setTokensCreated] = useState([])
   const [viewNFTModal, setViewNFTModal] = useState(false)
   const [username, setUsername] = useState('')
@@ -51,55 +51,6 @@ const Profile: NextPage = () => {
       console.log('error:', err)
     }
   }
-
-  // const ownedTokensUrl = `${process.env.API_ENDPOINT}/tokens/${id}`
-
-  // const getOwnedTokens = async () => {
-  //   try {
-  //     const response = await fetch (ownedTokensUrl);
-  //     const data = await response.json();
-  //     setTokensOwned(data)
-  //   }
-  //     catch (err) {
-  //       console.log("error:", err)
-  //   }
-  // }
-  const fetchNFTsOwned = async () => {
-    try {
-      const totalSupply = await context.nftContract.totalSupply()
-      for (let i = 0; i < totalSupply; i++) {
-        const owner = await context.nftContract.ownerOf(i)
-        if (owner === context.walletAddress) {
-          setOwnerTokens((prev: any) => new Set(prev.add(i)))
-          console.log(ownerTokens)
-        }
-      }
-      console.log('total supply', totalSupply)
-    } catch (err) {
-      console.log('error', err)
-    }
-  }
-
-  const fetchOwnedTokens = async () => {
-    try {
-      const owned = await context.marketplaceContract.getItemsOwned()
-      console.log(owned[0].length)
-      setTokensOwned(owned[0].length)
-    } catch (err) {
-      console.log('error', err)
-    }
-  }
-
-  // const fetchOwnedTokens = async () => {
-  //   try {
-  //     const owned = await context.marketplaceContract.getItemsOwned()
-  //     console.log(owned[0].length)
-  //     setTokensOwned(owned[0].length)
-  //   } catch (err) {
-  //     console.log('error', err)
-  //   }
-  // }
-  //fetch user profile
   const fetchUserProfile = async () => {
     try {
       const res = await fetch(`${process.env.API_ENDPOINT}/users/${context.walletAddress}`, {
@@ -128,11 +79,21 @@ const Profile: NextPage = () => {
     const txn = await context.nftContract.balanceOf(address)
     const num = txn.toNumber()
     console.log(num)
-    setTokensOwned(num)
+    setTokensCount(num)
   }
-
+  //get nfts
+  const fetchNFTsOwned = async () => {
+    const totalSupply = await context.nftContract.totalSupply()
+    for (let i = 0; i < totalSupply; i++) {
+      const owner = await context.nftContract.ownerOf(i)
+      if (owner === context.walletAddress) {
+        setOwnerTokens((prev: any) => new Set(prev.add(i)))
+      }
+    }
+  }
+  //get nft data - image
   const fetchTokensMetadata = async () => {
-    for (let i of tokensOwned) {
+    for (let i of ownerTokens) {
       const uri = await context.nftContract.tokenURI(i)
       const response = await fetch(uri)
       const data = await response.json()
@@ -143,18 +104,24 @@ const Profile: NextPage = () => {
   }
 
   useEffect(() => {
-    fetchTokensMetadata()
     fetchUserProfile()
-    // filterItems();
-    // getOwnedTokens()
     userInfo()
   }, [])
 
   useEffect(() => {
     if (userProfile && context.nftContract) {
+      fetchNFTsOwned()
       fetchTokenCount()
     }
   }, [userProfile, context.nftContract])
+
+  useEffect(() => {
+    if (ownerTokens) {
+      fetchTokensMetadata()
+    }
+  }, [ownerTokens])
+
+  console.log(tokenData)
 
   return (
     <div>
@@ -177,7 +144,7 @@ const Profile: NextPage = () => {
 
           <div className="flex justify-center items-center gap-2 my-4">
             <div className="text-center mx-4">
-              <p className="text-gold text-sm font-header">{tokensOwned ? tokensOwned : 0}</p>
+              <p className="text-gold text-sm font-header">{tokensCount ? tokensCount : 0}</p>
               <span className="text-gray-300 font-body ">Tokens</span>
             </div>
             <div className=" text-center mx-4">
@@ -208,11 +175,15 @@ const Profile: NextPage = () => {
             </button>
           </div>
           <div className="grid grid-cols-3 gap-6 mt-3 mb-6">
-            <img
-              className="block bg-center  bg-cover h-48 w-48 rounded-lg cursor-pointer"
-              src={avatar}
-              onClick={() => setViewNFTModal(true)}
-            ></img>
+            {tokenData
+              ? tokenData.map((data: any) => (
+                  <img
+                    className="block bg-center  bg-cover h-48 w-48 rounded-lg cursor-pointer"
+                    src={data.image}
+                    onClick={() => setViewNFTModal(true)}
+                  ></img>
+                ))
+              : ''}
           </div>
         </div>
       </div>

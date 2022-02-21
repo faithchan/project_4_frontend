@@ -49,7 +49,7 @@ const TestAdmin: NextPage = () => {
       alert('Please connect your Metamask wallet')
     }
   }
-
+  console.log(whitelistedAddrs)
   const removeFromWhitelist = async () => {
     if (context.nftContract) {
       if (validateAddress(whitelistAddress) === true) {
