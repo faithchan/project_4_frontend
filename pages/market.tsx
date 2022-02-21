@@ -1,11 +1,13 @@
+import type { NextPage } from 'next'
 import { useState, useEffect, useContext } from 'react'
 import FeedCard from '../components/FeedCard'
 import BuyNFTModal from '../components/BuyNFTModal'
 import globalContext from '../context/context'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
+import Ellipsis from '../components/Spinner'
 
-const Market = () => {
+const Market: NextPage = () => {
   const { signer, marketplaceContract, nftContract, setSigner, setWalletAddress } =
     useContext(globalContext)
   const [buyModal, setBuyModal] = useState(false)
@@ -82,7 +84,7 @@ const Market = () => {
         isListed={item.isListed}
         owner={item.owner}
         tokenId={item.tokenId}
-        creator={item.creator}
+        username={item.creator}
         avatar={item.avatar}
         buyModal={buyModal}
         setBuyModal={setBuyModal}
@@ -143,6 +145,11 @@ const Market = () => {
           buyModal={buyModal}
           setBuyModal={setBuyModal}
         />
+      )}
+      {!loaded && (
+        <div className="flex justify-center">
+          <Ellipsis />
+        </div>
       )}
       {loaded && renderCards}
     </div>

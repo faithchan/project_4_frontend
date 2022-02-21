@@ -4,7 +4,7 @@ import type { AppProps } from 'next/app'
 import Static from '../components/Static'
 import Head from 'next/head'
 import GlobalContext from '../context/context'
-import { useState, useContext, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [login, setLogin] = useState(false)

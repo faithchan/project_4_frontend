@@ -1,11 +1,13 @@
+import type { NextPage } from 'next'
 import { useEffect, useState, useContext } from 'react'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
 import TradeCard from '../components/TradeCard'
 import globalContext from '../context/context'
 import BurnNFTModal from '../components/BurnNFTModal'
+import Ellipsis from '../components/Spinner'
 
-const Trades = () => {
+const Trades: NextPage = () => {
   const { nftContract, marketplaceContract, signer, walletAddress, setSigner, setWalletAddress } =
     useContext(globalContext)
   const [tokenData, setTokenData] = useState<any>([])
@@ -269,15 +271,14 @@ const Trades = () => {
 
   return (
     <div>
-      {burnModal ? (
+      {burnModal && (
         <BurnNFTModal tokenId={currentTokenId} burnModal={burnModal} setBurnModal={setBurnModal} />
-      ) : (
-        ''
       )}
       <div className="flex flex-wrap gap-10 justify-center my-20 mx-32">
-        {loaded ? renderListedItems : ''}
-        {loaded ? renderUnlistedItems : ''}
-        {loaded ? renderTokens : ''}
+        {!loaded && <Ellipsis />}
+        {loaded && renderListedItems}
+        {loaded && renderUnlistedItems}
+        {loaded && renderTokens}
       </div>
     </div>
   )

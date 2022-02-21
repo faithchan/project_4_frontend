@@ -11,7 +11,7 @@ interface listingProps {
   setListNFTModal: (a: boolean) => void
 }
 
-const ListNFTToken = (props: listingProps) => {
+const ListNFTToken = ({ tokenId, isCreator, setListNFTModal }: listingProps) => {
   const { nftContract, marketplaceContract } = useContext(globalContext)
   const router = useRouter()
   const [showRoyalty, setShowRoyalty] = useState(true)
@@ -21,14 +21,14 @@ const ListNFTToken = (props: listingProps) => {
   const [royaltyAmount, setRoyaltyAmount] = useState<any>() // convert % to number between 0-10000
   const [listPrice, setListPrice] = useState('')
 
-  // console.log('list card tokenId: ', props.tokenId)
+  // console.log('list card tokenId: ', tokenId)
 
   //----------------Setting Royalties----------------//
 
   const setTokenRoyalty = async () => {
-    console.log(`setting royalties of ${royaltyAmount} for token id ${props.tokenId}`)
+    console.log(`setting royalties of ${royaltyAmount} for token id ${tokenId}`)
     if (nftContract) {
-      const txn = await nftContract.setTokenRoyalty(props.tokenId, royaltyAmount)
+      const txn = await nftContract.setTokenRoyalty(tokenId, royaltyAmount)
       console.log('royalty txn: ', txn)
       setShowRoyalty(false)
       setShowList(true)
@@ -48,11 +48,11 @@ const ListNFTToken = (props: listingProps) => {
   const listToken = async () => {
     if (marketplaceContract) {
       const salePrice = ethers.utils.parseUnits(listPrice, 'ether')
-      console.log(`setting price of ${salePrice} for token ${props.tokenId}`)
-      const txn = await marketplaceContract.listItem(nftaddress, props.tokenId, salePrice)
+      console.log(`setting price of ${salePrice} for token ${tokenId}`)
+      const txn = await marketplaceContract.listItem(nftaddress, tokenId, salePrice)
       await txn.wait()
       setShowList(false)
-      props.setListNFTModal(false)
+      setListNFTModal(false)
       setTimeout(() => {
         router.push('/market')
       }, 1000)
@@ -72,7 +72,7 @@ const ListNFTToken = (props: listingProps) => {
   }
 
   useEffect(() => {
-    if (props.isCreator) {
+    if (isCreator) {
       setShowRoyalty(true)
       setShowList(false)
     } else {
@@ -88,7 +88,7 @@ const ListNFTToken = (props: listingProps) => {
     >
       <div className="absolute bg-black opacity-80 inset-0 z-0"></div>
       <div className="w-full  max-w-lg p-5 relative mx-auto my-auto rounded-xl shadow-lg  bg-purple">
-        {props.isCreator && showRoyalty ? (
+        {isCreator && showRoyalty ? (
           <form className="" onSubmit={royaltyHandler}>
             <div className="text-center p-5 flex-auto justify-center">
               <p className="text-2xl text-gold font-header px-8">Set Royalty</p>
@@ -111,7 +111,7 @@ const ListNFTToken = (props: listingProps) => {
             <div className="p-3 mt-2 text-center space-x-4 md:block">
               <button
                 className="mb-2 md:mb-0 bg-white px-5 py-2 text-xs shadow-sm font-header tracking-wider border text-gold rounded-full hover:shadow-lg hover:bg-gray-100"
-                onClick={() => props.setListNFTModal(false)}
+                onClick={() => setListNFTModal(false)}
               >
                 Cancel
               </button>
@@ -163,7 +163,7 @@ const ListNFTToken = (props: listingProps) => {
             <div className="p-3 mt-2 text-center space-x-4 md:block">
               <button
                 className="mb-2 md:mb-0 bg-white px-5 py-2 text-xs shadow-sm font-header tracking-wider border text-gold rounded-full hover:shadow-lg hover:bg-gray-100"
-                onClick={() => props.setListNFTModal(false)}
+                onClick={() => setListNFTModal(false)}
               >
                 Cancel
               </button>

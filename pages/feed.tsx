@@ -1,13 +1,13 @@
+import type { NextPage } from 'next'
 import { useState, useEffect, useContext } from 'react'
 import FeedCard from '../components/FeedCard'
 import BuyNFTModal from '../components/BuyNFTModal'
 import globalContext from '../context/context'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
+import Ellipsis from '../components/Spinner'
 
-// get itemId from tokenId
-
-const feed = () => {
+const Feed: NextPage = () => {
   const { marketplaceContract, nftContract, signer, walletAddress, setSigner, setWalletAddress } =
     useContext(globalContext)
   const [buyModal, setBuyModal] = useState<boolean>(false)
@@ -19,7 +19,6 @@ const feed = () => {
   const [createdLoaded, setCreatedLoaded] = useState<boolean>(false)
   const [ownedLoaded, setOwnedLoaded] = useState<boolean>(false)
   const [dataFetched, setDataFetched] = useState<boolean>(false)
-
   const [currentItemId, setCurrentItemId] = useState<number>()
   const [currentTokenId, setCurrentTokenId] = useState<number>()
   const [currentItemOwner, setCurrentItemOwner] = useState<string>()
@@ -40,6 +39,8 @@ const feed = () => {
           name: null,
           description: null,
           image: null,
+          username: null,
+          avatar: null,
         }
         const uri = await nftContract.tokenURI(details.tokenId)
         const response = await fetch(uri)
@@ -47,6 +48,10 @@ const feed = () => {
         details.name = data.name
         details.description = data.description
         details.image = data.image
+        const ownerInfo = await fetchCreatorInfo(details.owner)
+        console.log('owner: ', ownerInfo)
+        details.username = ownerInfo[0].username
+        details.avatar = ownerInfo[0].avatar
         fetchedData.push(details)
       } else {
         const uri = await nftContract.tokenURI(token)
@@ -56,8 +61,8 @@ const feed = () => {
         data.listPrice = 0
         const creator = await nftContract.tokenCreator(data.tokenId)
         const creatorInfo = await fetchCreatorInfo(creator)
-        console.log('creator info: ', creatorInfo)
-        data.creator = creatorInfo[0].username
+        // console.log('creator info: ', creatorInfo)
+        data.username = creatorInfo[0].username
         data.avatar = creatorInfo[0].avatar
         fetchedData.push(data)
       }
@@ -78,7 +83,7 @@ const feed = () => {
         isListed={item.isListed}
         owner={item.owner}
         tokenId={item.tokenId}
-        creator={item.creator}
+        username={item.username}
         avatar={item.avatar}
         buyModal={buyModal}
         setBuyModal={setBuyModal}
@@ -247,9 +252,10 @@ const feed = () => {
           setBuyModal={setBuyModal}
         />
       )}
+      {!dataFetched && <Ellipsis color="grey" />}
       {dataFetched && renderCards}
     </div>
   )
 }
 
-export default feed
+export default Feed

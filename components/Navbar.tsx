@@ -103,7 +103,7 @@ const Navbar = () => {
             </li> */}
             <li className="ml-10 mr-10 mt-2 ">
               {login && designerState ? (
-                <Link href="/upload">
+                <Link href="/mint">
                   <a onClick={connectWallet}>
                     <Image src={uploadImg}></Image>
                   </a>

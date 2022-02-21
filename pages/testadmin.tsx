@@ -1,3 +1,4 @@
+import type { NextPage } from 'next'
 import { useEffect, useState, useContext, useRef } from 'react'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
@@ -5,26 +6,22 @@ import jwtDecode from 'jwt-decode'
 import globalContext from '../context/context'
 import { useRouter } from 'next/router'
 
-// console.log('admin context: ', context)
-
-const testadmin = () => {
-  const prevState = useRef()
+const TestAdmin: NextPage = () => {
   const context = useContext(globalContext)
   const [whitelistAddress, setWhitelistAddress] = useState('')
-  const [connected, setConnected] = useState<boolean>(false)
   const [whitelistedAddrs, setWhitelistedAddrs] = useState<any>(new Set())
   const [allUsers, setAllUsers] = useState([])
   const router = useRouter()
+
   const getAllWhitelistees = async () => {
     if (allUsers && context.nftContract) {
       for (let user of allUsers) {
         const txn = await context.nftContract.isWhitelisted(user.walletAddress)
         if (txn) {
-          console.log(`${user.username} is whitelisted`)
+          // console.log(`${user.username} is whitelisted`)
           setWhitelistedAddrs((prev: any) => new Set(prev.add(user.walletAddress)))
-          // setWhitelistedAddrs([...whitelistedAddrs, user.walletAddress])
         } else {
-          console.log(`${user.username} is not whitelisted`)
+          // console.log(`${user.username} is not whitelisted`)
         }
       }
     } else {
@@ -141,14 +138,18 @@ const testadmin = () => {
 
   useEffect(() => {
     getAllWhitelistees()
-  }, [context.nftContract])
+  }, [context.nftContract, context.signer])
+
+  useEffect(() => {
+    console.log('whitelist: ', whitelistedAddrs)
+  }, [whitelistedAddrs])
 
   useEffect(() => {
     let token = localStorage.getItem('token')
     let tempToken: any = token
     if (tempToken) {
       let decodedToken: any = jwtDecode(tempToken)
-      console.log('decoded token: ', decodedToken)
+      // console.log('decoded token: ', decodedToken)
       if (decodedToken.role !== 'Admin') {
         router.push('/404')
       } else {
@@ -159,34 +160,6 @@ const testadmin = () => {
     }
   }, [])
 
-  // const renderWhitelist = whitelistedAddrs.map((address: any) => {
-  //   return (
-  //     <div className="md:text-sm text-xs  text-white font-body tracking-wider mb-4" key={address}>
-  //       {address}
-  //     </div>
-  //   )
-  // })
-
-  const renderUsers = allUsers.map((user: any) => {
-    return (
-      <div
-        className="md:text-sm text-xs text-white font-body tracking-wider my-4 flex items-center"
-        key={user._id}
-      >
-        <img src={user.avatar} alt={user.username} className="mr-5 w-16 h-16 rounded-full" />
-        {user.username}
-        <button
-          className="border-2 border-gold hover:bg-blue-450 text-gold font-semibold font-header py-2 px-6 rounded-full text-xs ml-5"
-          onClick={() => {
-            removeUser(user._id)
-          }}
-        >
-          Delete User
-        </button>
-      </div>
-    )
-  })
-  console.log(allUsers)
   //----------------Initialising Wallet----------------//
 
   const connectWallet = async () => {
@@ -227,7 +200,6 @@ const testadmin = () => {
       <div className="text-center my-8 font-header tracking-widest text-gold text-2xl">
         MANAGE WHITELIST
       </div>
-
       <div className="mx-56">
         <div className="grid grid-cols-1 ">
           <label className="md:text-sm text-xs text-white font-body tracking-wider">
@@ -262,7 +234,9 @@ const testadmin = () => {
           </button>
         </div>
       </div>
-
+      <button className="text-white" onClick={getAllWhitelistees}>
+        Get whitelistees
+      </button>
       <div>
         <div className="sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
           <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
@@ -283,6 +257,9 @@ const testadmin = () => {
                   </th>
                   <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Action
+                  </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Delete User
                   </th>
                 </tr>
               </thead>
@@ -327,14 +304,28 @@ const testadmin = () => {
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       {whitelistedAddrs.has(user.walletAddress) ? (
-                        <button className="bg-gray-400 text-white tracking-widest font-body py-2 px-4 rounded-full text-xs mx-auto">
-                          Delist
+                        <button
+                          className="bg-gray-400 text-white tracking-widest font-body py-2 px-4 rounded-full text-xs mx-auto"
+                          onClick={removeFromWhitelist}
+                        >
+                          Remove
                         </button>
                       ) : (
-                        <button className="bg-gray-500 text-white tracking-widest font-body py-2 px-4 rounded-full text-xs mx-auto">
-                          List
+                        <button
+                          className="bg-gray-500 text-white tracking-widest font-body py-2 px-4 rounded-full text-xs mx-auto"
+                          onClick={addToWhitelist}
+                        >
+                          Add
                         </button>
                       )}
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      <button
+                        className="bg-gray-400 text-white tracking-widest font-body py-2 px-4 rounded-full text-xs mx-auto"
+                        onClick={() => removeUser(user._id)}
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -348,4 +339,4 @@ const testadmin = () => {
   )
 }
 
-export default testadmin
+export default TestAdmin

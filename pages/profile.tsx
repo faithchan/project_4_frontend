@@ -1,3 +1,4 @@
+import type { NextPage } from 'next'
 import Image from 'next/image'
 import { useEffect, useState, useContext } from 'react'
 import verifiedImg from '../public/verified.svg'
@@ -9,7 +10,7 @@ import { ethers } from 'ethers'
 
 // fetch tokens from currently logged in and connected wallet addresses
 
-const profile = () => {
+const Profile: NextPage = () => {
   const context = useContext(globalContext)
   const [userProfile, setUserProfile] = useState<any>()
   const [tokenData, setTokenData] = useState<any>([])
@@ -29,7 +30,7 @@ const profile = () => {
   const [unregistered, setUnregistered] = useState<any>(new Set()) // tokenIds
   const [ownedItems, setOwnedItems] = useState<any>([])
   const [verified, setVerified] = useState(true)
-  console.log(context.login)
+  // console.log(context.login)
 
   //Get user details - image, followers, following, type of user,
   const userDataURL = `${process.env.API_ENDPOINT}/users/${context.walletAddress}`
@@ -70,7 +71,7 @@ const profile = () => {
     }
   }
 
-  console.log(userProfile)
+  // console.log(userProfile)
 
   //get tokens of user
   const fetchTokenCount = async () => {
@@ -190,4 +191,4 @@ const profile = () => {
   )
 }
 
-export default profile
+export default Profile

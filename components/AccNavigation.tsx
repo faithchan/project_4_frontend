@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/solid'
 import globalContext from '../context/context'
+
 interface connectWalletProps {
   connectWallet: (a: any) => void
   type: string

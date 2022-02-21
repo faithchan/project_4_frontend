@@ -1,9 +1,10 @@
+import type { NextPage } from 'next'
+
 import React from 'react'
 import LoginForm from '../components/LoginForm'
 import Link from 'next/link'
 
-const login = () => {
-  
+const Login: NextPage = () => {
   return (
     <div>
       <h1 className="text-center mt-28 font-header tracking-widest text-gold text-2xl">
@@ -20,4 +21,4 @@ const login = () => {
   )
 }
 
-export default login
+export default Login

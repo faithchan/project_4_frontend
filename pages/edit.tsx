@@ -1,13 +1,11 @@
-import { useContext, useState, useEffect } from 'react'
+import type { NextPage } from 'next'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import jwtDecode from 'jwt-decode'
 import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/router'
 import { create } from 'ipfs-http-client'
 const url: string | any = 'https://ipfs.infura.io:5001/api/v0'
 const client = create(url)
-
-// redirect to login page if not logged in
-// username, email, password, wallet address, avatar
 
 type FormData = {
   username: string
@@ -17,30 +15,24 @@ type FormData = {
   avatar: string
 }
 
-const Edit = () => {
+const Edit: NextPage = () => {
+  const router = useRouter()
   const [userProfile, setUserProfile] = useState<any>()
   const [userAddress, setUserAddress] = useState<string>()
+  const [displayPicture, setDisplayPicture] = useState<string>('')
 
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<FormData>({
-    // defaultValues: {
-    //   username: 'xxx',
-    //   email: 'xxx',
-    //   password: 'xxx',
-    //   walletAddress: '',
-    //   avatar: '',
-    // },
-  })
+  } = useForm<FormData>()
 
   const onSubmit = async (data: any) => {
     data.username = data.username.toLowerCase()
     console.log('data: ', data)
     try {
-      const response = await fetch(`${process.env.API_ENDPOINT}/users`, {
+      const response = await fetch(`${process.env.API_ENDPOINT}/users/edit/${userProfile[0]._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -49,18 +41,13 @@ const Edit = () => {
       })
       const res = await response.json()
       console.log('response:', res)
-      const { username, email, walletAddress } = res.keyValue
-      if (username) {
-        alert('Username already registered. Please try again.')
-      }
-      if (email) {
-        alert('Email already registered. Please try again.')
-      }
-      if (walletAddress) {
-        alert('Wallet address already registered. Please try again.')
-      }
+      alert('Update success! Please wait while we redirect you to the login page....')
+      setTimeout(() => {
+        router.push('/login')
+      }, 1000)
     } catch (err) {
       console.log(err)
+      alert('Error updating profile, please try again')
     }
   }
 
@@ -97,6 +84,7 @@ const Edit = () => {
       )
       const url = `https://ipfs.infura.io/ipfs/${cid}`
       console.log('ipfs url: ', url)
+      setDisplayPicture(url)
       setValue('avatar', url)
     } catch (e) {
       console.error('Error uploading file: ', e)
@@ -136,7 +124,7 @@ const Edit = () => {
     <div className="flex justify-center items-center w-full mt-4 mb-32">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <div className=" px-10 pt-8 rounded-xl w-screen shadow-md max-w-sm">
+          <div className=" px-10 pt-8 rounded-xl w-screen max-w-sm">
             <div className="space-y-6">
               <div>
                 <label className="block mb-1 md:text-sm text-xs text-white font-body">
@@ -145,7 +133,7 @@ const Edit = () => {
                 <input
                   type="text"
                   className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md w-full mt-2"
-                  {...register('username', { required: true })}
+                  {...register('username')}
                   defaultValue={userProfile && userProfile[0].username}
                 />
                 {errors.username && (
@@ -157,24 +145,11 @@ const Edit = () => {
                 <input
                   type="text"
                   className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
-                  {...register('email', { required: true, validate: validateEmail })}
+                  {...register('email', { validate: validateEmail })}
                   defaultValue={userProfile && userProfile[0].email}
                 />
                 {errors.email && errors.email.type === 'validate' && (
                   <div className="text-white">Please enter a valid email address</div>
-                )}
-              </div>
-              <div>
-                <label className="block mb-1 md:text-sm text-xs text-white font-body">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
-                  {...register('password', { required: true })}
-                />
-                {errors.password && (
-                  <div className="text-white">Please do not leave this field blank</div>
                 )}
               </div>
               <div>
@@ -185,17 +160,22 @@ const Edit = () => {
                   type="text"
                   id="walletAddress"
                   className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
-                  {...register('walletAddress', { required: true, validate: validateAddress })}
+                  {...register('walletAddress', { validate: validateAddress })}
                   defaultValue={userProfile && userProfile[0].walletAddress}
                 />
                 {errors.walletAddress && errors.walletAddress.type === 'validate' && (
                   <div className="text-white">Please enter a valid wallet address</div>
                 )}
               </div>
-              <div className="">
+              <div>
                 <label className="md:text-sm text-xs text-white font-body tracking-wider">
                   Profile Picture
                 </label>
+                {displayPicture ? (
+                  <img src={displayPicture} width="250px" height="250px" />
+                ) : (
+                  <img src={userProfile[0].avatar} width="250px" height="250px" />
+                )}
                 <div className="flex items-center justify-center w-full mt-2">
                   <label className="flex flex-col border-2 border-dashed w-full rounded-lg h-32 group">
                     <div className="flex flex-col items-center justify-center pt-7 cursor-pointer">
@@ -214,7 +194,7 @@ const Edit = () => {
                         ></path>
                       </svg>
                       <p className="lowercase text-sm text-white group-hover:text-purple-600 pt-1 tracking-wider">
-                        Select a photo
+                        Update Display Picture
                       </p>
                     </div>
                     <input
@@ -223,6 +203,7 @@ const Edit = () => {
                       accept=".jpeg,.jpg,.png,.gif"
                       {...register('avatar')}
                       onChange={onFileUpload}
+                      defaultValue={userProfile ? userProfile[0].avatar : ''}
                     />
                   </label>
                 </div>
