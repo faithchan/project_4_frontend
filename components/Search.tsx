@@ -28,7 +28,7 @@ const Search = () => {
       } else {
         let newArray = []
         await data.map((user: any) => newArray.push(user.username))
-        console.log(data)
+        // console.log(data)
         setAllUsers(newArray)
       }
     } catch (err) {
@@ -46,7 +46,7 @@ const Search = () => {
 
   const searchHandler = () => router.push(`/user/${selectedPerson}`)
 
-  console.log(query)
+  // console.log(query)
   console.log(selectedPerson)
   return (
     <div className="mt-7 ">
@@ -84,6 +84,7 @@ const Search = () => {
                       key={person}
                       value={person}
                       className="group flex items-center px-4 py-1 cursor-pointer text-gray-300 hover:text-gold "
+                      onClick={() => searchHandler}
                     >
                       {person}
                     </Combobox.Option>
