@@ -172,11 +172,11 @@ const Edit: NextPage = () => {
                 <label className="md:text-sm text-xs text-white font-body tracking-wider">
                   Profile Picture
                 </label>
-                <div className="flex justify-center">
+                <div className="flex justify-center my-4">
                   {displayPicture ? (
-                    <img src={displayPicture} width="125px" height="125px" />
+                    <img src={displayPicture} width="175px" height="175px" />
                   ) : (
-                    userProfile && <img src={userProfile[0].avatar} width="250px" height="250px" />
+                    userProfile && <img src={userProfile[0].avatar} width="175px" height="175px" />
                   )}
                 </div>
                 <div className="flex items-center justify-center w-full mt-2">
