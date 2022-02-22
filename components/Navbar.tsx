@@ -24,7 +24,6 @@ const Navbar = () => {
     try {
       const response = await fetch(userDataURL)
       const data = await response.json()
-
       const index = data.findIndex((wallet: any) => wallet.walletAddress === walletAddress)
       const role = data[index].type
       console.log('navbar data: ', role)

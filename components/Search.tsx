@@ -47,7 +47,7 @@ const Search = () => {
   const searchHandler = () => router.push(`/user/${selectedPerson}`)
 
   // console.log(query)
-  console.log(selectedPerson)
+  // console.log(selectedPerson)
   return (
     <div className="mt-7 ">
       <Combobox value={selectedPerson} onChange={setSelectedPerson}>
