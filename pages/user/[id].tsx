@@ -205,7 +205,7 @@ const Username = () => {
           <div className="flex flex-col gap-1 text-center">
             <div className="mt-6 w-fit mx-auto">
               <img
-                className="rounded-full"
+                className="rounded-full w-48 h-48"
                 src={artistProfile ? artistProfile[0].avatar : '-'}
                 width={140}
                 height={140}
