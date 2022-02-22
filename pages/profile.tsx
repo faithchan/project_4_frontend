@@ -134,7 +134,7 @@ const Profile: NextPage = () => {
             </div>
             <p className="text-gold text-2xl font-header mt-8">
               {username}
-              {type === 'designer' ? <Image src={verifiedImg} alt="Logo"></Image> : ''}
+              {context.isWhitelisted ? <Image src={verifiedImg} alt="Logo"></Image> : ''}
             </p>
 
             <span className="text-sm text-gray-300 mt-2 font-body">

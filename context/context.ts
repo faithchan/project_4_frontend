@@ -2,7 +2,6 @@ import { createContext } from 'react'
 
 interface userLoginStatus {
   login: boolean
-  designerState: boolean
   walletAddress: string
   signer: any
   nftContract: any
