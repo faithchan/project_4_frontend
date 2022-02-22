@@ -93,14 +93,16 @@ const Profile: NextPage = () => {
   }
   //get nft data - image
   const fetchTokensMetadata = async () => {
+    const unregisteredData = []
     for (let i of ownerTokens) {
       const uri = await context.nftContract.tokenURI(i)
       const response = await fetch(uri)
       const data = await response.json()
       data.tokenId = i
       data.listPrice = 0
-      setTokenData((prev: any) => [...prev, data])
+      unregisteredData.push(data)
     }
+    setTokenData(unregisteredData)
   }
 
   useEffect(() => {
