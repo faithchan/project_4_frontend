@@ -32,7 +32,7 @@ const Edit: NextPage = () => {
     data.username = data.username.toLowerCase()
     console.log('data: ', data)
     try {
-      const response = await fetch(`${process.env.API_ENDPOINT}/users/edit/${userProfile[0]._id}`, {
+      const response = await fetch(`${process.env.API_ENDPOINT}/users/edit/${userProfile._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ const Edit: NextPage = () => {
       if (data.length === 0) {
         console.log('user does not exist')
       } else {
-        setUserProfile(data)
+        setUserProfile(data[0])
       }
     } catch (err) {
       console.log(err)
@@ -135,7 +135,7 @@ const Edit: NextPage = () => {
                   type="text"
                   className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md w-full mt-2"
                   {...register('username')}
-                  placeholder={userProfile && userProfile[0].username}
+                  placeholder={userProfile && userProfile.username}
                 />
                 {errors.username && (
                   <div className="text-white">Please do not leave this field blank</div>
@@ -147,7 +147,7 @@ const Edit: NextPage = () => {
                   type="text"
                   className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
                   {...register('email', { validate: validateEmail })}
-                  placeholder={userProfile && userProfile[0].email}
+                  placeholder={userProfile && userProfile.email}
                 />
                 {errors.email && errors.email.type === 'validate' && (
                   <div className="text-white">Please enter a valid email address</div>
@@ -162,7 +162,7 @@ const Edit: NextPage = () => {
                   id="walletAddress"
                   className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
                   {...register('walletAddress', { validate: validateAddress })}
-                  placeholder={userProfile && userProfile[0].walletAddress}
+                  placeholder={userProfile && userProfile.walletAddress}
                 />
                 {errors.walletAddress && errors.walletAddress.type === 'validate' && (
                   <div className="text-white">Please enter a valid wallet address</div>
@@ -176,7 +176,7 @@ const Edit: NextPage = () => {
                   {displayPicture ? (
                     <img src={displayPicture} width="175px" height="175px" />
                   ) : (
-                    userProfile && <img src={userProfile[0].avatar} width="175px" height="175px" />
+                    userProfile && <img src={userProfile.avatar} width="175px" height="175px" />
                   )}
                 </div>
                 <div className="flex items-center justify-center w-full mt-2">
@@ -192,7 +192,7 @@ const Edit: NextPage = () => {
                       accept=".jpeg,.jpg,.png,.gif"
                       {...register('avatar')}
                       onChange={onFileUpload}
-                      placeholder={userProfile ? userProfile[0].avatar : ''}
+                      placeholder={userProfile ? userProfile.avatar : ''}
                     />
                   </label>
                 </div>
