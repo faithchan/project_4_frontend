@@ -13,6 +13,7 @@ interface connectWalletProps {
 
 const AccNavigation = (props: connectWalletProps) => {
   const context = useContext(globalContext)
+  console.log(context)
   const logoutHandler = () => {
     localStorage.removeItem('token')
     context.setLogin(false)
