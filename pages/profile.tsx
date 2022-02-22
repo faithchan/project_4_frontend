@@ -93,14 +93,16 @@ const Profile: NextPage = () => {
   }
   //get nft data - image
   const fetchTokensMetadata = async () => {
+    const unregisteredData = []
     for (let i of ownerTokens) {
       const uri = await context.nftContract.tokenURI(i)
       const response = await fetch(uri)
       const data = await response.json()
       data.tokenId = i
       data.listPrice = 0
-      setTokenData((prev: any) => [...prev, data])
+      unregisteredData.push(data)
     }
+    setTokenData(unregisteredData)
   }
 
   useEffect(() => {
@@ -134,7 +136,7 @@ const Profile: NextPage = () => {
             </div>
             <p className="text-gold text-2xl font-header mt-8">
               {username}
-              {type === 'designer' ? <Image src={verifiedImg} alt="Logo"></Image> : ''}
+              {context.isWhitelisted ? <Image src={verifiedImg} alt="Logo"></Image> : ''}
             </p>
 
             <span className="text-sm text-gray-300 mt-2 font-body">

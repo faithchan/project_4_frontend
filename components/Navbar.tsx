@@ -15,11 +15,20 @@ import tradeImg from '../public/trade.svg'
 import jwtDecode from 'jwt-decode'
 
 const Navbar = () => {
-  const { setSigner, setWalletAddress, signer, login, walletAddress, designerState } =
-    useContext(globalContext)
+  const {
+    setSigner,
+    setWalletAddress,
+    signer,
+    login,
+    walletAddress,
+    nftContract,
+    isWhitelisted,
+    setIsWhitelisted,
+  } = useContext(globalContext)
   const [type, setType] = useState('user')
 
   const userDataURL = `${process.env.API_ENDPOINT}/users`
+
   const userInfo = async () => {
     try {
       const response = await fetch(userDataURL)
@@ -74,10 +83,28 @@ const Navbar = () => {
     })
   }
 
+  const checkIfWhitelisted = async () => {
+    if (nftContract && walletAddress) {
+      const check = nftContract.isWhitelisted(walletAddress)
+      if (check) {
+        console.log(check)
+        setIsWhitelisted(true)
+      } else {
+        console.log('The current wallet address is not authorised, please contact admin')
+      }
+    }
+  }
+
   useEffect(() => {
     // userInfo()
     if (signer === null && login === true) {
       connectWallet()
+    }
+  }, [walletAddress])
+
+  useEffect(() => {
+    if (walletAddress && login === true) {
+      checkIfWhitelisted()
     }
   }, [walletAddress])
 
@@ -114,7 +141,7 @@ const Navbar = () => {
               </a>
             </li> */}
             <li className="ml-10 mr-10 mt-2 ">
-              {login && designerState ? (
+              {login && isWhitelisted ? (
                 <Link href="/mint">
                   <a onClick={connectWallet}>
                     <Image src={uploadImg}></Image>

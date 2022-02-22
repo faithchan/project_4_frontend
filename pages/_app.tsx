@@ -14,6 +14,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [nftContract, setNftContract] = useState()
   const [marketplaceContract, setMarketplaceContract] = useState()
   const [checkToken, setCheckToken] = useState('')
+  const [isWhitelisted, setIsWhitelisted] = useState(false)
 
   const userLoginData = {
     login: login,
@@ -22,6 +23,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     signer: signer,
     nftContract: nftContract,
     marketplaceContract: marketplaceContract,
+    isWhitelisted: isWhitelisted,
+    setIsWhitelisted: (isWhitelisted: boolean) => setIsWhitelisted(isWhitelisted),
     setLogin: (login: boolean) => setLogin(login),
     setSigner: (signer: any) => setSigner(signer),
     setNftContract: (nftContract: any) => setNftContract(nftContract),

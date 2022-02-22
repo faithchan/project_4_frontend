@@ -7,13 +7,13 @@ import { SearchIcon } from '@heroicons/react/solid'
 
 const Search = () => {
   const router = useRouter()
-  const { setSigner, setWalletAddress, signer, login, walletAddress, designerState } =
+  const { setSigner, setWalletAddress, signer, login, walletAddress, nftContract } =
     useContext(globalContext)
 
-  const [query, setQuery] = useState('')
-  const [allUsers, setAllUsers] = useState([])
-  const [selectedPerson, setSelectedPerson] = useState(allUsers[0])
-
+  const [query, setQuery] = useState<any>('')
+  const [allUsers, setAllUsers] = useState<any>([])
+  const [selectedPerson, setSelectedPerson] = useState<any>(allUsers[0])
+  const [allUsersData, setAllUsersData] = useState<any>([])
   const fetchAllUsers = async () => {
     try {
       const res = await fetch(`${process.env.API_ENDPOINT}/users`, {
@@ -23,31 +23,52 @@ const Search = () => {
         },
       })
       const data = await res.json()
+      console.log(data)
       if (data.length === 0) {
         console.log('error, no data was fetched')
       } else {
         let newArray = []
-        await data.map((user: any) => newArray.push(user.username))
-        // console.log(data)
+        let usersData = []
+        await data.map((user: any) => {
+          newArray.push(user.username)
+          usersData.push({ username: user.username, walletAddress: user.walletAddress })
+        })
         setAllUsers(newArray)
+        setAllUsersData(usersData)
+        // console.log(data)
       }
     } catch (err) {
       console.log(err)
     }
   }
-  useEffect(() => fetchAllUsers(), [])
+  useEffect(() => {
+    fetchAllUsers()
+  }, [])
 
   const filteredPeople =
     query === ''
       ? allUsers
-      : allUsers.filter((person) => {
+      : allUsers.filter((person: any) => {
           return person.toLowerCase().includes(query.toLowerCase())
         })
 
-  const searchHandler = () => router.push(`/user/${selectedPerson}`)
+  const searchHandler = () => {
+    if (walletAddress) {
+      const mainUser = allUsersData.find((user: any) => user.walletAddress == walletAddress)
+      console.log(mainUser)
+      if (selectedPerson == mainUser.username) {
+        router.push('/profile')
+      } else {
+        router.push(`/user/${selectedPerson}`)
+      }
+    } else {
+      alert('Wallet connection not established')
+    }
+  }
 
-  // console.log(query)
-  // console.log(selectedPerson)
+  console.log(allUsersData)
+  console.log(selectedPerson)
+
   return (
     <div className="mt-7 ">
       <Combobox value={selectedPerson} onChange={setSelectedPerson}>
@@ -79,7 +100,7 @@ const Search = () => {
             >
               <div className="bg-black absolute bg-opacity-20 w-40 mt-4 rounded-lg py-1">
                 <Combobox.Options className="font-body ">
-                  {filteredPeople.map((person) => (
+                  {filteredPeople.map((person: any) => (
                     <Combobox.Option
                       key={person}
                       value={person}
