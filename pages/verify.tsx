@@ -34,6 +34,7 @@ const Verify: NextPage = () => {
       alert('Please fill in all fields.')
     }
   }
+
   const isValidEmail = (email: any) => {
     const regex =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -60,7 +61,6 @@ const Verify: NextPage = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-
           <label className="text-sm  font-body text-gray-300 tracking-wide">Your Email</label>
           <input
             className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md w-full"

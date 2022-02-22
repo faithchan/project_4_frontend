@@ -12,7 +12,7 @@ import AccNavigation from './AccNavigation'
 import TradesNavigation from './TradesNavigation'
 import uploadImg from '../public/upload.svg'
 import tradeImg from '../public/trade.svg'
-import { AnyARecord } from 'node:dns'
+import jwtDecode from 'jwt-decode'
 
 const Navbar = () => {
   const {
@@ -33,15 +33,28 @@ const Navbar = () => {
     try {
       const response = await fetch(userDataURL)
       const data = await response.json()
-      console.log(data)
       const index = data.findIndex((wallet: any) => wallet.walletAddress === walletAddress)
       const role = data[index].type
+      console.log('navbar data: ', role)
       setType(role)
     } catch (err) {
       console.log('error:', err)
     }
   }
-  console.log(type)
+
+  useEffect(() => {
+    let token = localStorage.getItem('token')
+    let tempToken: any = token
+    if (tempToken) {
+      let decodedToken: any = jwtDecode(tempToken)
+      console.log('decoded token: ', decodedToken)
+      if (decodedToken.role === 'Admin') {
+        setType('Admin')
+      } else {
+        setType('user')
+      }
+    }
+  }, [])
 
   const connectWallet = async () => {
     if (typeof window.ethereum !== 'undefined') {
@@ -83,7 +96,7 @@ const Navbar = () => {
   }
 
   useEffect(() => {
-    userInfo()
+    // userInfo()
     if (signer === null && login === true) {
       connectWallet()
     }

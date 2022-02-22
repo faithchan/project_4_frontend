@@ -138,7 +138,7 @@ const TestAdmin: NextPage = () => {
 
   useEffect(() => {
     getAllWhitelistees()
-  }, [context.nftContract, context.signer])
+  }, [context.nftContract, allUsers])
 
   useEffect(() => {
     console.log('whitelist: ', whitelistedAddrs)

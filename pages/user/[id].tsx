@@ -51,7 +51,7 @@ const Username = () => {
         console.log('user does not exist')
       } else {
         // console.log('user profile: ', data)
-        setUserProfile(data)
+        setUserProfile(data[0])
       }
     } catch (err) {
       console.log(err)
@@ -67,14 +67,14 @@ const Username = () => {
   }
 
   const checkIfFollowing = async () => {
-    const following = userProfile[0].following
+    const following = userProfile.following
     const artistAddress = artistProfile[0].walletAddress
     const status = following.includes(artistAddress)
     setIsFollowing(status)
   }
 
   const followArtist = async () => {
-    const usersFollowing = userProfile[0].following
+    const usersFollowing = userProfile.following
     const artistAddress = artistProfile[0].walletAddress
     usersFollowing.push(artistAddress)
     const userObject = { following: usersFollowing }
@@ -110,7 +110,7 @@ const Username = () => {
   }
 
   const unfollowArtist = async () => {
-    const following = userProfile[0].following
+    const following = userProfile.following
     const artistAddress = artistProfile[0].walletAddress
     const usersFollowing = following.filter((x: any) => x !== artistAddress)
     console.log('unfollowed array: ', usersFollowing)

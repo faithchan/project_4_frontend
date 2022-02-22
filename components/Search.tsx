@@ -65,8 +65,10 @@ const Search = () => {
       alert('Wallet connection not established')
     }
   }
+
   console.log(allUsersData)
   console.log(selectedPerson)
+
   return (
     <div className="mt-7 ">
       <Combobox value={selectedPerson} onChange={setSelectedPerson}>
