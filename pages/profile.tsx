@@ -136,7 +136,6 @@ const Profile: NextPage = () => {
               {username}
               {type === 'designer' ? <Image src={verifiedImg} alt="Logo"></Image> : ''}
             </p>
-
             <span className="text-sm text-gray-300 mt-2 font-body">
               New York, NY - Los Angeles, CA
             </span>
