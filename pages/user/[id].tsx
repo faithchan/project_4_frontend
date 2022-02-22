@@ -14,6 +14,8 @@ const Username = () => {
   const [userProfile, setUserProfile] = useState<any>()
   const [isFollowing, setIsFollowing] = useState<boolean>(false)
   const [tokenCount, setTokenCount] = useState()
+  const [artistTokens, setArtistTokens] = useState<any>(new Set())
+  const [tokenData, setTokenData] = useState<any>([])
 
   const fetchArtistProfile = async () => {
     try {
@@ -153,6 +155,44 @@ const Username = () => {
     setTokenCount(num)
   }
 
+  //get nfts
+  const fetchNFTsOwned = async () => {
+    const totalSupply = await nftContract.totalSupply()
+    for (let i = 0; i < totalSupply; i++) {
+      const owner = await nftContract.ownerOf(i)
+      if (owner === artistProfile[0].walletAddress) {
+        setArtistTokens((prev: any) => new Set(prev.add(i)))
+      }
+    }
+  }
+  //get nft data - image
+  const fetchTokensMetadata = async () => {
+    const unregisteredData = []
+    for (let i of artistTokens) {
+      const uri = await nftContract.tokenURI(i)
+      const response = await fetch(uri)
+      const data = await response.json()
+      data.tokenId = i
+      data.listPrice = 0
+      unregisteredData.push(data)
+      console.log('data', data)
+    }
+    setTokenData(unregisteredData)
+  }
+  useEffect(() => {
+    if (nftContract && artistProfile) {
+      fetchNFTsOwned()
+    }
+  }, [nftContract, artistProfile])
+
+  useEffect(() => {
+    if (artistTokens) {
+      fetchTokensMetadata()
+    }
+  }, [artistTokens])
+
+  console.log('tokenData:', tokenData)
+
   useEffect(() => {
     if (id) {
       let token = localStorage.getItem('token')
@@ -275,12 +315,15 @@ const Username = () => {
         </div>
       </div>
       <div className="flex flex-wrap justify-center gap-10  mx-32  mb-16">
-        <UserNFTCard />
-        <UserNFTCard />
-        <UserNFTCard />
-        <UserNFTCard />
-        <UserNFTCard />
-        <UserNFTCard />
+        {tokenData
+          ? tokenData.map((data: any) => (
+              <img
+                className="block bg-center  bg-cover h-48 w-48 rounded-lg cursor-pointer"
+                src={data.image}
+                // onClick={() => setViewNFTModal(true)}
+              ></img>
+            ))
+          : ''}
       </div>
     </div>
   )

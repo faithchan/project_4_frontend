@@ -7,12 +7,13 @@ import { SearchIcon } from '@heroicons/react/solid'
 
 const Search = () => {
   const router = useRouter()
-  const { setSigner, setWalletAddress, signer, login, walletAddress } = useContext(globalContext)
+  const { setSigner, setWalletAddress, signer, login, walletAddress, nftContract } =
+    useContext(globalContext)
 
-  const [query, setQuery] = useState('')
-  const [allUsers, setAllUsers] = useState([])
-  const [selectedPerson, setSelectedPerson] = useState(allUsers[0])
-  const [allUsersData, setAllUsersData] = useState([])
+  const [query, setQuery] = useState<any>('')
+  const [allUsers, setAllUsers] = useState<any>([])
+  const [selectedPerson, setSelectedPerson] = useState<any>(allUsers[0])
+  const [allUsersData, setAllUsersData] = useState<any>([])
   const fetchAllUsers = async () => {
     try {
       const res = await fetch(`${process.env.API_ENDPOINT}/users`, {
@@ -40,12 +41,14 @@ const Search = () => {
       console.log(err)
     }
   }
-  useEffect(() => fetchAllUsers(), [])
+  useEffect(() => {
+    fetchAllUsers()
+  }, [])
 
   const filteredPeople =
     query === ''
       ? allUsers
-      : allUsers.filter((person) => {
+      : allUsers.filter((person: any) => {
           return person.toLowerCase().includes(query.toLowerCase())
         })
 
@@ -95,7 +98,7 @@ const Search = () => {
             >
               <div className="bg-black absolute bg-opacity-20 w-40 mt-4 rounded-lg py-1">
                 <Combobox.Options className="font-body ">
-                  {filteredPeople.map((person) => (
+                  {filteredPeople.map((person: any) => (
                     <Combobox.Option
                       key={person}
                       value={person}
