@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
 import { useRouter } from 'next/router'
-import UserNFTCard from '../../components/UserNFTCard'
 import globalContext from '../../context/context'
 import jwtDecode from 'jwt-decode'
 import Image from 'next/image'

@@ -27,8 +27,8 @@ const Search = () => {
       if (data.length === 0) {
         console.log('error, no data was fetched')
       } else {
-        let newArray = []
-        let usersData = []
+        let newArray: any = []
+        let usersData: any = []
         await data.map((user: any) => {
           newArray.push(user.username)
           usersData.push({ username: user.username, walletAddress: user.walletAddress })
