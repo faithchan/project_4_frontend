@@ -29,19 +29,6 @@ const Navbar = () => {
 
   const userDataURL = `${process.env.API_ENDPOINT}/users`
 
-  const userInfo = async () => {
-    try {
-      const response = await fetch(userDataURL)
-      const data = await response.json()
-      const index = data.findIndex((wallet: any) => wallet.walletAddress === walletAddress)
-      const role = data[index].type
-      console.log('navbar data: ', role)
-      setType(role)
-    } catch (err) {
-      console.log('error:', err)
-    }
-  }
-
   useEffect(() => {
     let token = localStorage.getItem('token')
     let tempToken: any = token
@@ -85,9 +72,9 @@ const Navbar = () => {
 
   const checkIfWhitelisted = async () => {
     if (nftContract && walletAddress) {
-      const check = nftContract.isWhitelisted(walletAddress)
+      const check = await nftContract.isWhitelisted(walletAddress)
       if (check) {
-        console.log(check)
+        // console.log(check)
         setIsWhitelisted(true)
       } else {
         console.log('The current wallet address is not authorised, please contact admin')
@@ -96,7 +83,6 @@ const Navbar = () => {
   }
 
   useEffect(() => {
-    // userInfo()
     if (signer === null && login === true) {
       connectWallet()
     }

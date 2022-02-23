@@ -23,7 +23,7 @@ const Search = () => {
         },
       })
       const data = await res.json()
-      console.log(data)
+      // console.log(data)
       if (data.length === 0) {
         console.log('error, no data was fetched')
       } else {
@@ -65,9 +65,6 @@ const Search = () => {
       alert('Wallet connection not established')
     }
   }
-
-  console.log(allUsersData)
-  console.log(selectedPerson)
 
   return (
     <div className="mt-7 ">

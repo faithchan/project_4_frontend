@@ -26,7 +26,7 @@ const TestAdmin: NextPage = () => {
         }
       }
     } else {
-      console.log('no users in database')
+      // console.log('no users in database')
     }
   }
 
@@ -50,7 +50,7 @@ const TestAdmin: NextPage = () => {
       alert('Please connect your Metamask wallet')
     }
   }
-  console.log(whitelistedAddrs)
+
   const removeFromWhitelist = async () => {
     if (context.nftContract) {
       if (validateAddress(whitelistAddress) === true) {
@@ -140,10 +140,6 @@ const TestAdmin: NextPage = () => {
   useEffect(() => {
     getAllWhitelistees()
   }, [context.nftContract, allUsers])
-
-  useEffect(() => {
-    console.log('whitelist: ', whitelistedAddrs)
-  }, [whitelistedAddrs])
 
   useEffect(() => {
     let token = localStorage.getItem('token')
