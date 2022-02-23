@@ -6,10 +6,19 @@ import TradeCard from '../components/TradeCard'
 import globalContext from '../context/context'
 import BurnNFTModal from '../components/BurnNFTModal'
 import Ellipsis from '../components/Spinner'
+import { useRouter } from 'next/router'
 
 const Trades: NextPage = () => {
-  const { nftContract, marketplaceContract, signer, walletAddress, setSigner, setWalletAddress } =
-    useContext(globalContext)
+  const {
+    login,
+    nftContract,
+    marketplaceContract,
+    signer,
+    walletAddress,
+    setSigner,
+    setWalletAddress,
+  } = useContext(globalContext)
+  const router = useRouter()
   const [tokenData, setTokenData] = useState<any>([])
   const [listedItemData, setListedItemData] = useState<any>([])
   const [unlistedItemData, setUnlistedItemData] = useState<any>([])
@@ -234,6 +243,12 @@ const Trades: NextPage = () => {
     filterItems()
   }, [ownerTokens, ownedItems])
 
+  useEffect(() => {
+    if (!login) {
+      router.push('/login')
+    }
+  }, [])
+
   //----------------Initialising Wallet----------------//
 
   const connectWallet = async () => {
@@ -268,6 +283,10 @@ const Trades: NextPage = () => {
       connectWallet()
     }
   }, [])
+
+  if (!login) {
+    return <></>
+  }
 
   return (
     <div>
