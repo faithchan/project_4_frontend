@@ -11,7 +11,7 @@ const SignupSection = () => {
     <div>
       <div className="flex my-20 justify-center">
         <span className="w-96">
-          <Image src={aboutImg} />
+          <Image src={aboutImg} alt="about" />
         </span>
         <span className="my-auto ml-32">
           <h2 className="text-gray-200 text-lg mb-4 font-header tracking-widest">WHO ARE WE?</h2>

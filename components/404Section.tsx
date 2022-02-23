@@ -13,7 +13,7 @@ const Error = () => {
         </div>
         <div className="max-w-md">
           <p className="text-2xl md:text-3xl font-body leading-normal text-gold">
-            Sorry we couldn't find this page.{' '}
+            Sorry we couldn&apos;t find this page.{' '}
           </p>
           <p className="my-4 font-body text-gray-300 text-sm">
             Contact our admin for more details.
