@@ -183,6 +183,7 @@ const Profile: NextPage = () => {
                     className="block bg-center  bg-cover h-48 w-48 rounded-lg cursor-pointer"
                     src={data.image}
                     onClick={() => setViewNFTModal(true)}
+                    key={data.image}
                   ></img>
                 ))
               : ''}

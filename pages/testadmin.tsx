@@ -267,7 +267,7 @@ const TestAdmin: NextPage = () => {
               <tbody>
                 {/* //.map here */}
                 {allUsers.map((user: any) => (
-                  <tr>
+                  <tr key={user._id}>
                     <td className="px-5 py-5 pl-10 border-b border-gray-200 bg-white text-sm">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 w-10 h-10">
