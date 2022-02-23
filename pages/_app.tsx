@@ -49,7 +49,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         console.log('token exists')
       }
     }
-  }, [checkToken])
+  }, [checkToken, login])
 
   return (
     <div>
