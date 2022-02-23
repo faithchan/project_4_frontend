@@ -18,7 +18,7 @@ const Feed: NextPage = () => {
   const [tokenData, setTokenData] = useState<any>([])
   const [createdLoaded, setCreatedLoaded] = useState<boolean>(false)
   const [ownedLoaded, setOwnedLoaded] = useState<boolean>(false)
-  const [dataFetched, setDataFetched] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
   const [currentItemId, setCurrentItemId] = useState<number>()
   const [currentTokenId, setCurrentTokenId] = useState<number>()
   const [currentItemOwner, setCurrentItemOwner] = useState<string>()
@@ -53,6 +53,7 @@ const Feed: NextPage = () => {
         details.username = ownerInfo[0].username
         details.avatar = ownerInfo[0].avatar
         fetchedData.push(details)
+        setIsLoading(false)
       } else {
         const uri = await nftContract.tokenURI(token)
         const response = await fetch(uri)
@@ -68,7 +69,6 @@ const Feed: NextPage = () => {
       }
     }
     setTokenData(fetchedData)
-    setDataFetched(true)
   }
 
   const renderCards = tokenData.map((item: any) => {
@@ -252,8 +252,7 @@ const Feed: NextPage = () => {
           setBuyModal={setBuyModal}
         />
       )}
-      {!dataFetched && <Ellipsis color="grey" />}
-      {dataFetched && renderCards}
+      {isLoading ? <Ellipsis color="grey" /> : renderCards}
     </div>
   )
 }
