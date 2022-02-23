@@ -18,7 +18,8 @@ const Admin: NextPage = () => {
 
   const getAllWhitelistees = async () => {
     if (allUsers && nftContract) {
-      for (let user of allUsers) {
+      let user: any
+      for (user of allUsers) {
         const txn = await nftContract.isWhitelisted(user.walletAddress)
         if (txn) {
           // console.log(`${user.username} is whitelisted`)

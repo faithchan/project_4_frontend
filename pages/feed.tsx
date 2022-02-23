@@ -6,10 +6,19 @@ import globalContext from '../context/context'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
 import Ellipsis from '../components/Spinner'
+import { useRouter } from 'next/router'
 
 const Feed: NextPage = () => {
-  const { marketplaceContract, nftContract, signer, walletAddress, setSigner, setWalletAddress } =
-    useContext(globalContext)
+  const {
+    login,
+    marketplaceContract,
+    nftContract,
+    signer,
+    walletAddress,
+    setSigner,
+    setWalletAddress,
+  } = useContext(globalContext)
+  const router = useRouter()
   const [buyModal, setBuyModal] = useState<boolean>(false)
   const [creatorsFollowed, setCreatorsFollowed] = useState<any>()
   const [ownedTokens, setOwnedTokens] = useState<any>(new Set())
@@ -201,6 +210,12 @@ const Feed: NextPage = () => {
     fetchUserInfo()
   }, [walletAddress])
 
+  useEffect(() => {
+    if (!login) {
+      router.push('/login')
+    }
+  }, [])
+
   //----------------Initialising Wallet----------------//
 
   const connectWallet = async () => {
@@ -239,6 +254,10 @@ const Feed: NextPage = () => {
       connectWallet()
     }
   }, [])
+
+  if (!login) {
+    return <></>
+  }
 
   return (
     <div>

@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
 import { useRouter } from 'next/router'
-import UserNFTCard from '../../components/UserNFTCard'
 import globalContext from '../../context/context'
 import jwtDecode from 'jwt-decode'
 import Image from 'next/image'
@@ -320,6 +319,7 @@ const Username = () => {
               <img
                 className="block bg-center  bg-cover h-48 w-48 rounded-lg cursor-pointer"
                 src={data.image}
+                key={data.image}
                 // onClick={() => setViewNFTModal(true)}
               ></img>
             ))
