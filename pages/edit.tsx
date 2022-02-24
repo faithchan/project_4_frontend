@@ -32,7 +32,7 @@ const Edit: NextPage = () => {
     data.username = data.username.toLowerCase()
     console.log('data: ', data)
     try {
-      const response = await fetch(`${process.env.API_ENDPOINT}/users/edit/${userProfile[0]._id}`, {
+      const response = await fetch(`${process.env.API_ENDPOINT}/users/edit/${userProfile._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -41,7 +41,8 @@ const Edit: NextPage = () => {
       })
       const res = await response.json()
       console.log('response:', res)
-      alert('Update success! Please wait while we redirect you to the login page....')
+      alert('Update success! Please click ok to be redirected to login.')
+      localStorage.removeItem('token')
       setTimeout(() => {
         router.push('/login')
       }, 1000)
@@ -64,7 +65,7 @@ const Edit: NextPage = () => {
       if (data.length === 0) {
         console.log('user does not exist')
       } else {
-        setUserProfile(data)
+        setUserProfile(data[0])
       }
     } catch (err) {
       console.log(err)
@@ -134,7 +135,7 @@ const Edit: NextPage = () => {
                   type="text"
                   className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md w-full mt-2"
                   {...register('username')}
-                  defaultValue={userProfile && userProfile[0].username}
+                  placeholder={userProfile && userProfile.username}
                 />
                 {errors.username && (
                   <div className="text-white">Please do not leave this field blank</div>
@@ -146,7 +147,7 @@ const Edit: NextPage = () => {
                   type="text"
                   className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
                   {...register('email', { validate: validateEmail })}
-                  defaultValue={userProfile && userProfile[0].email}
+                  placeholder={userProfile && userProfile.email}
                 />
                 {errors.email && errors.email.type === 'validate' && (
                   <div className="text-white">Please enter a valid email address</div>
@@ -161,7 +162,7 @@ const Edit: NextPage = () => {
                   id="walletAddress"
                   className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
                   {...register('walletAddress', { validate: validateAddress })}
-                  defaultValue={userProfile && userProfile[0].walletAddress}
+                  placeholder={userProfile && userProfile.walletAddress}
                 />
                 {errors.walletAddress && errors.walletAddress.type === 'validate' && (
                   <div className="text-white">Please enter a valid wallet address</div>
@@ -171,28 +172,16 @@ const Edit: NextPage = () => {
                 <label className="md:text-sm text-xs text-white font-body tracking-wider">
                   Profile Picture
                 </label>
-                {displayPicture ? (
-                  <img src={displayPicture} width="250px" height="250px" />
-                ) : (
-                  <img src={userProfile[0].avatar} width="250px" height="250px" />
-                )}
+                <div className="flex justify-center my-4">
+                  {displayPicture ? (
+                    <img src={displayPicture} width="175px" height="175px" />
+                  ) : (
+                    userProfile && <img src={userProfile.avatar} width="175px" height="175px" />
+                  )}
+                </div>
                 <div className="flex items-center justify-center w-full mt-2">
-                  <label className="flex flex-col border-2 border-dashed w-full rounded-lg h-32 group">
-                    <div className="flex flex-col items-center justify-center pt-7 cursor-pointer">
-                      <svg
-                        className="w-10 h-10 text-purple-400 group-hover:text-purple-600"
-                        fill="none"
-                        stroke="white"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        ></path>
-                      </svg>
+                  <label className="flex flex-col border-2 border-dashed w-full rounded-lg h-14 group">
+                    <div className="flex flex-col items-center justify-center pt-3 cursor-pointer">
                       <p className="lowercase text-sm text-white group-hover:text-purple-600 pt-1 tracking-wider">
                         Update Display Picture
                       </p>
@@ -203,7 +192,7 @@ const Edit: NextPage = () => {
                       accept=".jpeg,.jpg,.png,.gif"
                       {...register('avatar')}
                       onChange={onFileUpload}
-                      defaultValue={userProfile ? userProfile[0].avatar : ''}
+                      placeholder={userProfile ? userProfile.avatar : ''}
                     />
                   </label>
                 </div>

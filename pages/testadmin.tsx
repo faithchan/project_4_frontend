@@ -15,7 +15,8 @@ const TestAdmin: NextPage = () => {
 
   const getAllWhitelistees = async () => {
     if (allUsers && context.nftContract) {
-      for (let user of allUsers) {
+      let user: any
+      for (user of allUsers) {
         const txn = await context.nftContract.isWhitelisted(user.walletAddress)
         if (txn) {
           // console.log(`${user.username} is whitelisted`)
@@ -25,7 +26,7 @@ const TestAdmin: NextPage = () => {
         }
       }
     } else {
-      console.log('no users in database')
+      // console.log('no users in database')
     }
   }
 
@@ -49,7 +50,7 @@ const TestAdmin: NextPage = () => {
       alert('Please connect your Metamask wallet')
     }
   }
-  console.log(whitelistedAddrs)
+
   const removeFromWhitelist = async () => {
     if (context.nftContract) {
       if (validateAddress(whitelistAddress) === true) {
@@ -138,11 +139,7 @@ const TestAdmin: NextPage = () => {
 
   useEffect(() => {
     getAllWhitelistees()
-  }, [context.nftContract, context.signer])
-
-  useEffect(() => {
-    console.log('whitelist: ', whitelistedAddrs)
-  }, [whitelistedAddrs])
+  }, [context.nftContract, allUsers])
 
   useEffect(() => {
     let token = localStorage.getItem('token')
@@ -266,7 +263,7 @@ const TestAdmin: NextPage = () => {
               <tbody>
                 {/* //.map here */}
                 {allUsers.map((user: any) => (
-                  <tr>
+                  <tr key={user._id}>
                     <td className="px-5 py-5 pl-10 border-b border-gray-200 bg-white text-sm">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 w-10 h-10">

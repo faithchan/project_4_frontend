@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
 import { useRouter } from 'next/router'
-import UserNFTCard from '../../components/UserNFTCard'
 import globalContext from '../../context/context'
 import jwtDecode from 'jwt-decode'
 import Image from 'next/image'
@@ -51,7 +50,7 @@ const Username = () => {
         console.log('user does not exist')
       } else {
         // console.log('user profile: ', data)
-        setUserProfile(data)
+        setUserProfile(data[0])
       }
     } catch (err) {
       console.log(err)
@@ -67,14 +66,14 @@ const Username = () => {
   }
 
   const checkIfFollowing = async () => {
-    const following = userProfile[0].following
+    const following = userProfile.following
     const artistAddress = artistProfile[0].walletAddress
     const status = following.includes(artistAddress)
     setIsFollowing(status)
   }
 
   const followArtist = async () => {
-    const usersFollowing = userProfile[0].following
+    const usersFollowing = userProfile.following
     const artistAddress = artistProfile[0].walletAddress
     usersFollowing.push(artistAddress)
     const userObject = { following: usersFollowing }
@@ -110,7 +109,7 @@ const Username = () => {
   }
 
   const unfollowArtist = async () => {
-    const following = userProfile[0].following
+    const following = userProfile.following
     const artistAddress = artistProfile[0].walletAddress
     const usersFollowing = following.filter((x: any) => x !== artistAddress)
     console.log('unfollowed array: ', usersFollowing)
@@ -320,6 +319,7 @@ const Username = () => {
               <img
                 className="block bg-center  bg-cover h-48 w-48 rounded-lg cursor-pointer"
                 src={data.image}
+                key={data.image}
                 // onClick={() => setViewNFTModal(true)}
               ></img>
             ))

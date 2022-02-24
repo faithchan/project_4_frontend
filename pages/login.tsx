@@ -12,7 +12,7 @@ const Login: NextPage = () => {
       </h1>
       <LoginForm />
       <p className="text-center font-body text-gray-300 tracking-wider text-xs mb-28 mt-4">
-        Dont' have an account with us yet?{' '}
+        Don&apos;t have an account with us yet?{' '}
         <Link href="/signup">
           <a className="underline">Sign up now</a>
         </Link>

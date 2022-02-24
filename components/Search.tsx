@@ -23,12 +23,13 @@ const Search = () => {
         },
       })
       const data = await res.json()
-      console.log(data)
+      // console.log(data)
       if (data.length === 0) {
         console.log('error, no data was fetched')
       } else {
         let newArray: any[] = []
         let usersData: any[] = []
+
         await data.map((user: any) => {
           newArray.push(user.username)
           usersData.push({ username: user.username, walletAddress: user.walletAddress })
@@ -65,8 +66,7 @@ const Search = () => {
       alert('Wallet connection not established')
     }
   }
-  console.log(allUsersData)
-  console.log(selectedPerson)
+
   return (
     <div className="mt-7 ">
       <Combobox value={selectedPerson} onChange={setSelectedPerson}>

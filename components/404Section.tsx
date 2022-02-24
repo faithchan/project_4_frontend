@@ -9,11 +9,11 @@ const Error = () => {
     <div className="h-screen w-screen flex items-center justify-center">
       <div className="container flex flex-col md:flex-row items-center justify-center px-2 text-gray-700">
         <div className="max-w-lg mr-24">
-          <Image width={300} height={180} src={errorImg}></Image>
+          <Image width={300} height={180} src={errorImg} />
         </div>
         <div className="max-w-md">
           <p className="text-2xl md:text-3xl font-body leading-normal text-gold">
-            Sorry we couldn't find this page.{' '}
+            Sorry we couldn&apos;t find this page.{' '}
           </p>
           <p className="my-4 font-body text-gray-300 text-sm">
             Contact our admin for more details.

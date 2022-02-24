@@ -2,10 +2,21 @@ import type { NextPage } from 'next'
 import { useState, useEffect, useContext } from 'react'
 import MintNFTForm from '../components/MintNFTForm'
 import globalContext from '../context/context'
+import { useRouter } from 'next/router'
 
 const MintNFT: NextPage = () => {
-  const context = useContext(globalContext)
-  const [ListModal, setListModal] = useState<boolean>(false)
+  const { login } = useContext(globalContext)
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!login) {
+      router.push('/login')
+    }
+  }, [])
+
+  if (!login) {
+    return <></>
+  }
 
   return (
     <div>
