@@ -85,6 +85,8 @@ const Navbar = () => {
   useEffect(() => {
     if (signer === null && login === true) {
       connectWallet()
+    } else {
+      console.log('xxx')
     }
   }, [walletAddress])
 

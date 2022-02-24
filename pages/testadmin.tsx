@@ -231,9 +231,6 @@ const TestAdmin: NextPage = () => {
           </button>
         </div>
       </div>
-      <button className="text-white" onClick={getAllWhitelistees}>
-        Get whitelistees
-      </button>
       <div>
         <div className="sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
           <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">

@@ -28,8 +28,11 @@ const Trades: NextPage = () => {
   const [listedItems, setListedItems] = useState<any>(new Set()) // itemIds
   const [notListed, setNotListed] = useState<any>(new Set()) // itemsIds
   const [unregistered, setUnregistered] = useState<any>(new Set()) // tokenIds
-  const [loaded, setLoaded] = useState(false)
+  // const [loaded, setLoaded] = useState(false)
   const [currentTokenId, setCurrentTokenId] = useState<any>()
+  const [listedLoaded, setListedLoaded] = useState<boolean>(false)
+  const [unlistedLoaded, setUnlistedLoaded] = useState<boolean>(false)
+  const [unregisteredLoaded, setUnregisteredLoaded] = useState<boolean>(false)
 
   const filterItems = () => {
     if (ownerTokens.length === 0) {
@@ -89,6 +92,7 @@ const Trades: NextPage = () => {
       unregisteredData.push(data)
       setTokenData(unregisteredData)
     }
+    setUnregisteredLoaded(true)
   }
 
   const fetchListedItemsMetadata = async () => {
@@ -120,6 +124,7 @@ const Trades: NextPage = () => {
       listedData.push(details)
       setListedItemData(listedData)
     }
+    setListedLoaded(true)
   }
 
   const fetchUnlistedItemsMetadata = async () => {
@@ -151,7 +156,7 @@ const Trades: NextPage = () => {
       unlistedData.push(details)
       setUnlistedItemData(unlistedData)
     }
-    setLoaded(true)
+    setUnlistedLoaded(true)
   }
 
   const fetchCreatorInfo = async (creator: string) => {
@@ -243,11 +248,11 @@ const Trades: NextPage = () => {
     filterItems()
   }, [ownerTokens, ownedItems])
 
-  useEffect(() => {
-    if (!login) {
-      router.push('/login')
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (!login) {
+  //     router.push('/login')
+  //   }
+  // }, [])
 
   //----------------Initialising Wallet----------------//
 
@@ -294,10 +299,10 @@ const Trades: NextPage = () => {
         <BurnNFTModal tokenId={currentTokenId} burnModal={burnModal} setBurnModal={setBurnModal} />
       )}
       <div className="flex flex-wrap gap-10 justify-center my-20 mx-32">
-        {!loaded && <Ellipsis />}
-        {loaded && renderListedItems}
-        {loaded && renderUnlistedItems}
-        {loaded && renderTokens}
+        {!listedLoaded || !unlistedLoaded || (!unregisteredLoaded && <Ellipsis />)}
+        {listedLoaded && renderListedItems}
+        {unlistedLoaded && renderUnlistedItems}
+        {unregisteredLoaded && renderTokens}
       </div>
     </div>
   )

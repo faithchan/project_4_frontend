@@ -62,7 +62,8 @@ const Search = () => {
         router.push(`/user/${selectedPerson}`)
       }
     } else {
-      alert('Wallet connection not established')
+      // alert('Wallet connection not established')
+      router.push(`/user/${selectedPerson}`)
     }
   }
 

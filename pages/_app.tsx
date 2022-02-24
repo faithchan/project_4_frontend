@@ -34,16 +34,12 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
   useEffect(() => {
-    //localStorage.setItem('userID', "61d8fb4d770c3094270135f7")
     if (!login) {
       const loggedInUser = localStorage.getItem('token')
-      // console.log('user jwt: ', loggedInUser)
       if (loggedInUser) {
-        // console.log('found local storage setlogin to true')
         setCheckToken(loggedInUser)
         setLogin(true)
       } else {
-        // console.log('no local storage found for userID')
       }
       if (checkToken) {
         console.log('token exists')

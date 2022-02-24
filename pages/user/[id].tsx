@@ -38,22 +38,26 @@ const Username = () => {
   }
 
   const fetchUserProfile = async () => {
-    try {
-      const res = await fetch(`${process.env.API_ENDPOINT}/users/${walletAddress}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      const data = await res.json()
-      if (data.length === 0) {
-        console.log('user does not exist')
-      } else {
-        // console.log('user profile: ', data)
-        setUserProfile(data[0])
+    if (walletAddress) {
+      try {
+        const res = await fetch(`${process.env.API_ENDPOINT}/users/${walletAddress}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        const data = await res.json()
+        if (data.length === 0) {
+          console.log('user does not exist')
+        } else {
+          console.log('user profile: ', data)
+          setUserProfile(data[0])
+        }
+      } catch (err) {
+        console.log(err)
       }
-    } catch (err) {
-      console.log(err)
+    } else {
+      console.log('no wallet address')
     }
   }
 
@@ -190,7 +194,7 @@ const Username = () => {
     }
   }, [artistTokens])
 
-  console.log('tokenData:', tokenData)
+  // console.log('tokenData:', tokenData)
 
   useEffect(() => {
     if (id) {
@@ -229,7 +233,7 @@ const Username = () => {
       fetchArtistProfile()
     }
     fetchUserProfile()
-  }, [id, isFollowing])
+  }, [id, isFollowing, walletAddress])
 
   useEffect(() => {
     if (walletAddress) {
