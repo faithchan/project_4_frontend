@@ -123,8 +123,6 @@ const Profile: NextPage = () => {
     }
   }, [ownerTokens])
 
-  console.log(tokenData)
-
   return (
     <div>
       <ViewNFTCard viewNFTModal={viewNFTModal} setViewNFTModal={setViewNFTModal} />

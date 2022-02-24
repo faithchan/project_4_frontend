@@ -112,10 +112,7 @@ const TradeCard = (props: CardProps) => {
                   {props.creator}
                 </p>
                 <hr className="border-gold border my-2"></hr>
-                <p
-                  className="text-center text-white font-body text-xs tracking-widest"
-                  onClick={() => router.push(`/user/${creatorProfile.username}`)}
-                >
+                <p className="text-center text-white font-body text-xs tracking-widest">
                   View Profile
                 </p>
               </span>
