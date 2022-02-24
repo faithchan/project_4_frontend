@@ -271,7 +271,13 @@ const Feed: NextPage = () => {
           setBuyModal={setBuyModal}
         />
       )}
-      {isLoading ? <Ellipsis color="grey" /> : renderCards}
+      {isLoading ? (
+        <div className="h-screen grid content-center justify-center">
+          <Ellipsis color="grey" />
+        </div>
+      ) : (
+        renderCards
+      )}
     </div>
   )
 }
