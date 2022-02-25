@@ -14,6 +14,7 @@ const UploadNFTForm = () => {
     useContext(globalContext)
   const router = useRouter()
   // const [loggedIn, setLoggedIn] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [fileName, setFileName] = useState('')
   const [imageURL, setImageURL] = useState('')
   const [metadata, setMetadata] = useState({ name: '', description: '', image: '' })
@@ -25,11 +26,13 @@ const UploadNFTForm = () => {
           alert('Please do not leave any fields blank.')
           return
         }
+        setIsLoading(true)
         const { cid } = await client.add({ path: `${fileName}`, content: JSON.stringify(metadata) })
         const uri = `https://ipfs.infura.io/ipfs/${cid}`
         console.log('token URI: ', uri)
         const mintTxn = await nftContract.mint(walletAddress, uri)
         const txn = await mintTxn.wait()
+        setIsLoading(false)
         console.log('txn: ', txn)
         const id = txn.events[0].args['tokenId']
         const idNum = id.toNumber()
@@ -56,6 +59,7 @@ const UploadNFTForm = () => {
     setFileName(file.name)
     try {
       console.log(`adding ${file.name} to ipfs....`)
+      setIsLoading(true)
       const { cid } = await client.add(
         { content: file },
         {
@@ -64,6 +68,7 @@ const UploadNFTForm = () => {
         }
       )
       const url = `https://ipfs.infura.io/ipfs/${cid}`
+      setIsLoading(false)
       console.log('ipfs url: ', url)
       setImageURL(url)
       setMetadata({ ...metadata, image: url })
@@ -178,7 +183,11 @@ const UploadNFTForm = () => {
               </label>
             </div>
           )}
-          <Ellipsis />
+          {isLoading && (
+            <div className="flex justify-center">
+              <Ellipsis />
+            </div>
+          )}
         </div>
         <div className="flex items-center justify-center pt-5 pb-5">
           <button
