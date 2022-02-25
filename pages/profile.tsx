@@ -62,6 +62,9 @@ const Profile: NextPage = () => {
     const num = txn.toNumber()
     console.log(num)
     setTokensCount(num)
+    if (num === 0) {
+      setIsLoading(false)
+    }
   }
   //get nfts
   const fetchNFTsOwned = async () => {
