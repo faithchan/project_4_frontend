@@ -71,8 +71,8 @@ const Search = () => {
     <div className="mt-7 ">
       <Combobox value={selectedPerson} onChange={setSelectedPerson}>
         {/* Render a `Fragment` instead of an `input` */}
-        <div className="">
-          <div className="rounded-full text-xs font-body focus:outline-none flex bg-white">
+        <div className="bg-white rounded-full">
+          <div className="rounded-full text-xs font-body focus:outline-none flex ">
             <div>
               <Combobox.Input
                 onChange={(event) => setQuery(event.target.value)}
