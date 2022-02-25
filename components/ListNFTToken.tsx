@@ -21,8 +21,6 @@ const ListNFTToken = ({ tokenId, isCreator, setListNFTModal }: listingProps) => 
   const [royaltyAmount, setRoyaltyAmount] = useState<any>() // convert % to number between 0-10000
   const [listPrice, setListPrice] = useState('')
 
-  // console.log('list card tokenId: ', tokenId)
-
   //----------------Setting Royalties----------------//
 
   const setTokenRoyalty = async () => {
@@ -88,7 +86,7 @@ const ListNFTToken = ({ tokenId, isCreator, setListNFTModal }: listingProps) => 
     >
       <div className="absolute bg-black opacity-80 inset-0 z-0"></div>
       <div className="w-full  max-w-lg p-5 relative mx-auto my-auto rounded-xl shadow-lg  bg-purple">
-        {isCreator && showRoyalty ? (
+        {isCreator && showRoyalty && (
           <form className="" onSubmit={royaltyHandler}>
             <div className="text-center p-5 flex-auto justify-center">
               <p className="text-2xl text-gold font-header px-8">Set Royalty</p>
@@ -115,33 +113,27 @@ const ListNFTToken = ({ tokenId, isCreator, setListNFTModal }: listingProps) => 
               >
                 Cancel
               </button>
-              {showRoyaltyBtn ? (
+              {showRoyaltyBtn && (
                 <button
                   className="mb-2 md:mb-0 bg-gold px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg "
                   onClick={setTokenRoyalty}
                 >
                   Set Royalty
                 </button>
-              ) : (
-                ''
               )}
-              {showContBtn ? (
+              {showContBtn && (
                 <button
                   className="mb-2 md:mb-0 bg-gold px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg "
                   type="submit"
                 >
                   Continue to List
                 </button>
-              ) : (
-                <div></div>
               )}
             </div>
           </form>
-        ) : (
-          ''
         )}
         {/* Next Form */}
-        {showList ? (
+        {showList && (
           <form className="" onSubmit={listTokenHandler}>
             <div className="text-center p-5 flex-auto justify-center">
               <p className="text-2xl text-gold font-header px-8">Enter Price</p>
@@ -176,8 +168,6 @@ const ListNFTToken = ({ tokenId, isCreator, setListNFTModal }: listingProps) => 
               </button>
             </div>
           </form>
-        ) : (
-          ''
         )}
       </div>
     </div>

@@ -72,7 +72,7 @@ const AccNavigation = (props: connectWalletProps) => {
         >
           <Menu.Items className="origin-top-right absolute left-0 mt-2 w-32 rounded-md shadow-lg bg-opacity-20  bg-black  divide-y divide-gray-100 focus:outline-none">
             <div className="py-1 ">
-              {!login ? (
+              {!login && (
                 <Menu.Item>
                   <Link href="/login">
                     <a className="group flex items-center px-4 py-1  text-gray-300 hover:text-gold">
@@ -80,10 +80,8 @@ const AccNavigation = (props: connectWalletProps) => {
                     </a>
                   </Link>
                 </Menu.Item>
-              ) : (
-                ''
               )}
-              {!login ? (
+              {!login && (
                 <Menu.Item>
                   <Link href="/signup">
                     <a className="group flex items-center px-4 py-1 text-gray-300 hover:text-gold">
@@ -91,10 +89,8 @@ const AccNavigation = (props: connectWalletProps) => {
                     </a>
                   </Link>
                 </Menu.Item>
-              ) : (
-                ''
               )}
-              {props.type === 'Admin' && login ? (
+              {props.type === 'Admin' && login && (
                 <Menu.Item>
                   <Link href="/admin">
                     <a className="group flex items-center px-4 py-1  text-gray-300 hover:text-gold">
@@ -102,10 +98,8 @@ const AccNavigation = (props: connectWalletProps) => {
                     </a>
                   </Link>
                 </Menu.Item>
-              ) : (
-                ''
               )}
-              {props.type === 'Admin' && login ? (
+              {props.type === 'Admin' && login && (
                 <Menu.Item>
                   <Link href="/testadmin">
                     <a className="group flex items-center px-4 py-1  text-gray-300 hover:text-gold">
@@ -113,10 +107,8 @@ const AccNavigation = (props: connectWalletProps) => {
                     </a>
                   </Link>
                 </Menu.Item>
-              ) : (
-                ''
               )}
-              {login ? (
+              {login && (
                 <Menu.Item>
                   <Link href="/">
                     <a
@@ -127,10 +119,8 @@ const AccNavigation = (props: connectWalletProps) => {
                     </a>
                   </Link>
                 </Menu.Item>
-              ) : (
-                ''
               )}
-              {login && props.type !== 'Admin' ? (
+              {login && props.type !== 'Admin' && (
                 <Menu.Item>
                   <Link href="/edit">
                     <a className="group flex items-center px-4 py-1 text-gray-300 hover:text-gold">
@@ -138,8 +128,6 @@ const AccNavigation = (props: connectWalletProps) => {
                     </a>
                   </Link>
                 </Menu.Item>
-              ) : (
-                ''
               )}
             </div>
           </Menu.Items>
