@@ -48,6 +48,7 @@ const Navbar = () => {
   }, [token])
 
   const connectWallet = async () => {
+    console.log('xxx')
     if (typeof window.ethereum !== 'undefined') {
       if (window.ethereum.chainId !== '0x4') {
         console.log('switch to rinkeby network')

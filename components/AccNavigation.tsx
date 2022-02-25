@@ -7,7 +7,7 @@ import { ChevronDownIcon } from '@heroicons/react/solid'
 import globalContext from '../context/context'
 
 interface connectWalletProps {
-  connectWallet: (a: any) => void
+  connectWallet: () => void
   type: string
 }
 
@@ -32,7 +32,7 @@ const AccNavigation = (props: connectWalletProps) => {
 
   const connectWalletHandler = () => {
     if (signer === null && login === true) {
-      props.connectWallet
+      props.connectWallet()
     } else {
       console.log('You are not authorised')
     }
