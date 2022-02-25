@@ -49,7 +49,7 @@ const Admin: NextPage = () => {
         alert('Please enter a valid address.')
       }
     } else {
-      alert('Please connect your Metamask wallet')
+      console.log('Please connect your Metamask wallet')
     }
   }
 
@@ -72,7 +72,7 @@ const Admin: NextPage = () => {
         alert('Please enter a valid address.')
       }
     } else {
-      alert('Please connect your Metamask wallet')
+      console.log('Please connect your Metamask wallet')
     }
   }
 
@@ -91,7 +91,7 @@ const Admin: NextPage = () => {
         alert('Please enter a valid address.')
       }
     } else {
-      alert('Please connect your Metamask wallet')
+      console.log('Please connect your Metamask wallet')
     }
   }
 
