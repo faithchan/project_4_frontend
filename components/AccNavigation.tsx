@@ -12,18 +12,26 @@ interface connectWalletProps {
 }
 
 const AccNavigation = (props: connectWalletProps) => {
-  const context = useContext(globalContext)
+  const {
+    setLogin,
+    setSigner,
+    setNftContract,
+    setMarketplaceContract,
+    setWalletAddress,
+    signer,
+    login,
+  } = useContext(globalContext)
   const logoutHandler = () => {
     localStorage.removeItem('token')
-    context.setLogin(false)
-    context.setSigner(null)
-    context.setNftContract(null)
-    context.setMarketplaceContract(null)
-    context.setWalletAddress('')
+    setLogin(false)
+    setSigner(null)
+    setNftContract(null)
+    setMarketplaceContract(null)
+    setWalletAddress('')
   }
 
   const connectWalletHandler = () => {
-    if (context.signer === null && context.login === true) {
+    if (signer === null && login === true) {
       props.connectWallet
     } else {
       console.log('You are not authorised')
@@ -35,7 +43,7 @@ const AccNavigation = (props: connectWalletProps) => {
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button className="inline-flex justify-center w-full  text-sm font-medium text-white  rounded-md  focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-            {context.login ? (
+            {login ? (
               <Link href="/profile">
                 <a onClick={connectWalletHandler}>
                   <Image src={accountImg}></Image>
@@ -64,7 +72,7 @@ const AccNavigation = (props: connectWalletProps) => {
         >
           <Menu.Items className="origin-top-right absolute left-0 mt-2 w-32 rounded-md shadow-lg bg-opacity-20  bg-black  divide-y divide-gray-100 focus:outline-none">
             <div className="py-1 ">
-              {!context.login ? (
+              {!login ? (
                 <Menu.Item>
                   <Link href="/login">
                     <a className="group flex items-center px-4 py-1  text-gray-300 hover:text-gold">
@@ -75,7 +83,7 @@ const AccNavigation = (props: connectWalletProps) => {
               ) : (
                 ''
               )}
-              {!context.login ? (
+              {!login ? (
                 <Menu.Item>
                   <Link href="/signup">
                     <a className="group flex items-center px-4 py-1 text-gray-300 hover:text-gold">
@@ -86,7 +94,7 @@ const AccNavigation = (props: connectWalletProps) => {
               ) : (
                 ''
               )}
-              {props.type === 'Admin' && context.login ? (
+              {props.type === 'Admin' && login ? (
                 <Menu.Item>
                   <Link href="/admin">
                     <a className="group flex items-center px-4 py-1  text-gray-300 hover:text-gold">
@@ -97,7 +105,7 @@ const AccNavigation = (props: connectWalletProps) => {
               ) : (
                 ''
               )}
-              {props.type === 'Admin' && context.login ? (
+              {props.type === 'Admin' && login ? (
                 <Menu.Item>
                   <Link href="/testadmin">
                     <a className="group flex items-center px-4 py-1  text-gray-300 hover:text-gold">
@@ -108,7 +116,7 @@ const AccNavigation = (props: connectWalletProps) => {
               ) : (
                 ''
               )}
-              {context.login ? (
+              {login ? (
                 <Menu.Item>
                   <Link href="/">
                     <a
@@ -122,7 +130,7 @@ const AccNavigation = (props: connectWalletProps) => {
               ) : (
                 ''
               )}
-              {context.login && props.type !== 'Admin' ? (
+              {login && props.type !== 'Admin' ? (
                 <Menu.Item>
                   <Link href="/edit">
                     <a className="group flex items-center px-4 py-1 text-gray-300 hover:text-gold">

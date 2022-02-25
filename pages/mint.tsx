@@ -7,7 +7,6 @@ import Error401 from '../components/401Section'
 
 const MintNFT: NextPage = () => {
   const { login } = useContext(globalContext)
-  const router = useRouter()
 
   if (!login) {
     return <Error401 />
