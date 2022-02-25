@@ -7,17 +7,17 @@ import globalContext from '../context/context'
 import { useRouter } from 'next/router'
 
 const TestAdmin: NextPage = () => {
-  const context = useContext(globalContext)
+  const { signer, nftContract, setSigner, setWalletAddress } = useContext(globalContext)
   const [whitelistAddress, setWhitelistAddress] = useState('')
   const [whitelistedAddrs, setWhitelistedAddrs] = useState<any>(new Set())
   const [allUsers, setAllUsers] = useState([])
   const router = useRouter()
 
   const getAllWhitelistees = async () => {
-    if (allUsers && context.nftContract) {
+    if (allUsers && nftContract) {
       let user: any
       for (user of allUsers) {
-        const txn = await context.nftContract.isWhitelisted(user.walletAddress)
+        const txn = await nftContract.isWhitelisted(user.walletAddress)
         if (txn) {
           // console.log(`${user.username} is whitelisted`)
           setWhitelistedAddrs((prev: any) => new Set(prev.add(user.walletAddress)))
@@ -31,11 +31,11 @@ const TestAdmin: NextPage = () => {
   }
 
   const addToWhitelist = async () => {
-    if (context.nftContract) {
+    if (nftContract) {
       if (validateAddress(whitelistAddress) === true) {
         console.log(`adding ${whitelistAddress} to whitelist`)
         try {
-          const txn = await context.nftContract.addToWhitelist(whitelistAddress)
+          const txn = await nftContract.addToWhitelist(whitelistAddress)
           const receipt = await txn.wait()
           console.log('whitelist txn: ', receipt)
           setWhitelistAddress('')
@@ -52,11 +52,11 @@ const TestAdmin: NextPage = () => {
   }
 
   const removeFromWhitelist = async () => {
-    if (context.nftContract) {
+    if (nftContract) {
       if (validateAddress(whitelistAddress) === true) {
         console.log(`removing ${whitelistAddress} from whitelist`)
         try {
-          const txn = await context.nftContract.removeFromWhitelist(whitelistAddress)
+          const txn = await nftContract.removeFromWhitelist(whitelistAddress)
           const receipt = await txn.wait()
           console.log('whitelist txn: ', receipt)
           setWhitelistAddress('')
@@ -75,11 +75,11 @@ const TestAdmin: NextPage = () => {
   }
 
   const checkWhitelistStatus = async () => {
-    if (context.nftContract) {
+    if (nftContract) {
       if (validateAddress(whitelistAddress) === true) {
         console.log(`checking ${whitelistAddress} whitelist status`)
         try {
-          const txn = await context.nftContract.isWhitelisted(whitelistAddress)
+          const txn = await nftContract.isWhitelisted(whitelistAddress)
           console.log('whitelist txn: ', txn)
           setWhitelistAddress('')
         } catch (err) {
@@ -139,7 +139,7 @@ const TestAdmin: NextPage = () => {
 
   useEffect(() => {
     getAllWhitelistees()
-  }, [context.nftContract, allUsers])
+  }, [nftContract, allUsers])
 
   useEffect(() => {
     let token = localStorage.getItem('token')
@@ -170,8 +170,8 @@ const TestAdmin: NextPage = () => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         const connectedAddress = await signer.getAddress()
-        context.setSigner(signer)
-        context.setWalletAddress(connectedAddress)
+        setSigner(signer)
+        setWalletAddress(connectedAddress)
       }
     } else {
       console.log('Please install Metamask')
@@ -187,7 +187,7 @@ const TestAdmin: NextPage = () => {
   }
 
   useEffect(() => {
-    if (context.signer === null) {
+    if (signer === null) {
       connectWallet()
     }
   }, [])
