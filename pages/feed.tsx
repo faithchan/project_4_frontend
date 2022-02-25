@@ -38,6 +38,11 @@ const Feed: NextPage = () => {
   const [currentOwnerUsername, setCurrentOwnerUsername] = useState<any>()
 
   const fetchTokenData = async () => {
+    if (filteredTokens.size === 0) {
+      console.log('no tokens')
+      setIsLoading(false)
+      return
+    }
     const fetchedData = []
     for (let token of filteredTokens) {
       const itemId = await marketplaceContract.getItemId(token)
