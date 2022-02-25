@@ -228,14 +228,14 @@ const Admin: NextPage = () => {
             className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto"
             onClick={removeFromWhitelist}
           >
-            DELETE USER
+            REMOVE USER
           </button>
-          <button
+          {/* <button
             className="bg-gold text-white tracking-widest font-header py-2 px-8 rounded-full text-xs mx-auto"
             onClick={checkWhitelistStatus}
           >
             VERIFY USER
-          </button>
+          </button> */}
         </div>
       </div>
       <div>
