@@ -168,11 +168,11 @@ const Profile: NextPage = () => {
               <Ellipsis />
             </div>
           )}
-          <div className="grid grid-cols-3 gap-6 mt-3 mb-6">
+          <div className="flex flex-wrap justify-center gap-10  mx-32 mt-2 mb-16">
             {tokenData &&
               tokenData.map((data: any) => (
                 <img
-                  className="object-cover h-48 w-48 rounded-lg cursor-pointe"
+                  className="object-cover h-48 w-48 rounded-lg cursor-pointer"
                   src={data.image}
                   onClick={() => setViewNFTModal(true)}
                   key={data.image}
