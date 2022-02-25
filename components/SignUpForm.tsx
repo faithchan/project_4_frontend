@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { create } from 'ipfs-http-client'
 import { useState } from 'react'
+import Ellipsis from '../components/Spinner'
 
 const url: string | any = 'https://ipfs.infura.io:5001/api/v0'
 const client = create(url)
@@ -18,6 +19,7 @@ type FormData = {
 const SignUpForm = () => {
   const router = useRouter()
   const [imageURL, setImageURL] = useState('')
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const {
     register,
@@ -56,6 +58,7 @@ const SignUpForm = () => {
     const file = e.target.files[0]
     try {
       console.log(`adding ${file.name} to ipfs....`)
+      setIsLoading(true)
       const { cid } = await client.add(
         { content: file },
         {
@@ -64,6 +67,7 @@ const SignUpForm = () => {
         }
       )
       const url = `https://ipfs.infura.io/ipfs/${cid}`
+      setIsLoading(false)
       console.log('ipfs url: ', url)
       setImageURL(url)
       setValue('avatar', url)
@@ -179,6 +183,11 @@ const SignUpForm = () => {
                         onChange={onFileUpload}
                       />
                     </label>
+                  </div>
+                )}
+                {isLoading && (
+                  <div className="flex justify-center">
+                    <Ellipsis />
                   </div>
                 )}
               </div>

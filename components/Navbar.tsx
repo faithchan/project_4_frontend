@@ -74,7 +74,6 @@ const Navbar = () => {
     if (nftContract && walletAddress) {
       const check = await nftContract.isWhitelisted(walletAddress)
       if (check) {
-        // console.log(check)
         setIsWhitelisted(true)
       } else {
         console.log('The current wallet address is not authorised, please contact admin')
@@ -92,7 +91,7 @@ const Navbar = () => {
     if (walletAddress && login === true) {
       checkIfWhitelisted()
     }
-  }, [walletAddress])
+  }, [walletAddress, login])
 
   return (
     <div className="text-gold font-header text-xs">

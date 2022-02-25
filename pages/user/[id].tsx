@@ -50,7 +50,7 @@ const Username = () => {
         if (data.length === 0) {
           console.log('user does not exist')
         } else {
-          console.log('user profile: ', data)
+          // console.log('user profile: ', data)
           setUserProfile(data[0])
         }
       } catch (err) {
@@ -105,7 +105,7 @@ const Username = () => {
         body: JSON.stringify(artistObject),
       })
       const data = await res.json()
-      console.log('added to artist followers: ', data)
+      // console.log('added to artist followers: ', data)
     } catch (err) {
       console.log('error adding followers: ', err)
     }
@@ -178,7 +178,7 @@ const Username = () => {
       data.tokenId = i
       data.listPrice = 0
       unregisteredData.push(data)
-      console.log('data', data)
+      // console.log('data', data)
     }
     setTokenData(unregisteredData)
   }
