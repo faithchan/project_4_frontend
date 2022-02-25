@@ -151,7 +151,6 @@ const Trades: NextPage = () => {
       unlistedData.push(details)
       setUnlistedItemData(unlistedData)
     }
-    setLoaded(true)
   }
 
   const fetchCreatorInfo = async (creator: string) => {
@@ -226,11 +225,12 @@ const Trades: NextPage = () => {
     )
   })
 
-  useEffect(() => {
-    fetchTokensMetadata()
-    fetchListedItemsMetadata()
-    fetchUnlistedItemsMetadata()
-  }, [unregistered, listedItems, notListed])
+  const awaitRenders = async () => {
+    await fetchTokensMetadata()
+    await fetchListedItemsMetadata()
+    await fetchUnlistedItemsMetadata()
+    setLoaded(true)
+  }
 
   useEffect(() => {
     if (nftContract && marketplaceContract) {
@@ -240,14 +240,21 @@ const Trades: NextPage = () => {
   }, [nftContract, marketplaceContract])
 
   useEffect(() => {
+    // fetchTokensMetadata()
+    // fetchListedItemsMetadata()
+    // fetchUnlistedItemsMetadata()
+    awaitRenders()
+  }, [unregistered, listedItems, notListed])
+
+  useEffect(() => {
     filterItems()
   }, [ownerTokens, ownedItems])
 
-  useEffect(() => {
-    if (!login) {
-      router.push('/login')
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (!login) {
+  //     router.push('/login')
+  //   }
+  // }, [])
 
   //----------------Initialising Wallet----------------//
 
@@ -287,14 +294,15 @@ const Trades: NextPage = () => {
   if (!login) {
     return <></>
   }
-
+  console.log('loaded', loaded)
   return (
     <div>
       {burnModal && (
         <BurnNFTModal tokenId={currentTokenId} burnModal={burnModal} setBurnModal={setBurnModal} />
       )}
+
+      {!loaded ? <Ellipsis /> : ''}
       <div className="flex flex-wrap gap-10 justify-center my-20 mx-32">
-        {!loaded && <Ellipsis />}
         {loaded && renderListedItems}
         {loaded && renderUnlistedItems}
         {loaded && renderTokens}
