@@ -31,6 +31,7 @@ const Trades: NextPage = () => {
   const [unregistered, setUnregistered] = useState<any>(new Set()) // tokenIds
   const [loaded, setLoaded] = useState(false)
   const [currentTokenId, setCurrentTokenId] = useState<any>()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const filterItems = () => {
     if (ownerTokens.length === 0) {
@@ -231,19 +232,18 @@ const Trades: NextPage = () => {
     await fetchListedItemsMetadata()
     await fetchUnlistedItemsMetadata()
     setLoaded(true)
+    setIsLoading(false)
   }
 
   useEffect(() => {
     if (nftContract && marketplaceContract) {
+      setIsLoading(true)
       fetchNFTsOwned()
       fetchMarketItems()
     }
   }, [nftContract, marketplaceContract])
 
   useEffect(() => {
-    // fetchTokensMetadata()
-    // fetchListedItemsMetadata()
-    // fetchUnlistedItemsMetadata()
     awaitRenders()
   }, [unregistered, listedItems, notListed])
 
@@ -290,14 +290,16 @@ const Trades: NextPage = () => {
     return <Error401 />
   }
 
-  console.log('loaded', loaded)
   return (
     <div>
       {burnModal && (
         <BurnNFTModal tokenId={currentTokenId} burnModal={burnModal} setBurnModal={setBurnModal} />
       )}
-
-      {!loaded ? <Ellipsis /> : ''}
+      {isLoading && (
+        <div className="h-screen flex justify-center mt-20">
+          <Ellipsis />
+        </div>
+      )}
       <div className="flex flex-wrap gap-10 justify-center my-20 mx-32">
         {loaded && renderListedItems}
         {loaded && renderUnlistedItems}
