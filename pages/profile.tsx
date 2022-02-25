@@ -18,6 +18,7 @@ const Profile: NextPage = () => {
   const [followers, setFollowers] = useState('')
   const [avatar, setAvatar] = useState('')
   const [ownerTokens, setOwnerTokens] = useState<any>(new Set())
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const userDataURL = `${process.env.API_ENDPOINT}/users/${walletAddress}`
 
@@ -54,8 +55,6 @@ const Profile: NextPage = () => {
     }
   }
 
-  // console.log(userProfile)
-
   //get tokens of user
   const fetchTokenCount = async () => {
     const address = userProfile[0].walletAddress
@@ -86,6 +85,7 @@ const Profile: NextPage = () => {
       unregisteredData.push(data)
     }
     setTokenData(unregisteredData)
+    setIsLoading(false)
   }
 
   useEffect(() => {
@@ -95,6 +95,7 @@ const Profile: NextPage = () => {
 
   useEffect(() => {
     if (userProfile && nftContract) {
+      setIsLoading(true)
       fetchNFTsOwned()
       fetchTokenCount()
     }
@@ -123,12 +124,10 @@ const Profile: NextPage = () => {
               {username}
               {isWhitelisted ? <Image src={verifiedImg} alt="Logo"></Image> : ''}
             </p>
-
             <span className="text-sm text-gray-300 mt-2 font-body">
               New York, NY - Los Angeles, CA
             </span>
           </div>
-
           <div className="flex justify-center items-center gap-2 my-4">
             <div className="text-center mx-4">
               <p className="text-gold text-sm font-header">{tokensCount ? tokensCount : 0}</p>
@@ -161,6 +160,11 @@ const Profile: NextPage = () => {
               </svg>
             </button>
           </div>
+          {isLoading && (
+            <div className="flex justify-center">
+              <Ellipsis />
+            </div>
+          )}
           <div className="grid grid-cols-3 gap-6 mt-3 mb-6">
             {tokenData
               ? tokenData.map((data: any) => (
