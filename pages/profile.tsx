@@ -166,16 +166,15 @@ const Profile: NextPage = () => {
             </div>
           )}
           <div className="grid grid-cols-3 gap-6 mt-3 mb-6">
-            {tokenData
-              ? tokenData.map((data: any) => (
-                  <img
-                    className="block bg-center  bg-cover h-48 w-48 rounded-lg cursor-pointer"
-                    src={data.image}
-                    onClick={() => setViewNFTModal(true)}
-                    key={data.image}
-                  ></img>
-                ))
-              : ''}
+            {tokenData &&
+              tokenData.map((data: any) => (
+                <img
+                  className="block bg-center  bg-cover h-48 w-48 rounded-lg cursor-pointer"
+                  src={data.image}
+                  onClick={() => setViewNFTModal(true)}
+                  key={data.image}
+                ></img>
+              ))}
           </div>
         </div>
       </div>

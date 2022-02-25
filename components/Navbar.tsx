@@ -76,7 +76,7 @@ const Navbar = () => {
       if (check) {
         setIsWhitelisted(true)
       } else {
-        console.log('The current wallet address is not authorised, please contact admin')
+        console.log('The current wallet address is not whitelisted')
       }
     }
   }
@@ -88,10 +88,10 @@ const Navbar = () => {
   }, [walletAddress])
 
   useEffect(() => {
-    if (walletAddress && login === true) {
+    if (walletAddress && nftContract) {
       checkIfWhitelisted()
     }
-  }, [walletAddress, login])
+  }, [walletAddress, nftContract])
 
   return (
     <div className="text-gold font-header text-xs">

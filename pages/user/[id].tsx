@@ -327,16 +327,15 @@ const Username = () => {
         </div>
       )}
       <div className="flex flex-wrap justify-center gap-10  mx-32  mb-16">
-        {tokenData
-          ? tokenData.map((data: any) => (
-              <img
-                className="block bg-center  bg-cover h-48 w-48 rounded-lg cursor-pointer"
-                src={data.image}
-                key={data.image}
-                // onClick={() => setViewNFTModal(true)}
-              ></img>
-            ))
-          : ''}
+        {tokenData &&
+          tokenData.map((data: any) => (
+            <img
+              className="block bg-center  bg-cover h-48 w-48 rounded-lg cursor-pointer"
+              src={data.image}
+              key={data.image}
+              // onClick={() => setViewNFTModal(true)}
+            ></img>
+          ))}
       </div>
     </div>
   )
