@@ -3,15 +3,13 @@ import Image from 'next/image'
 import { useEffect, useState, useContext } from 'react'
 import verifiedImg from '../public/verified.svg'
 import ViewNFTCard from '../components/ViewNFTCard'
-import { id } from 'ethers/lib/utils'
 import globalContext from '../context/context'
-import Web3Modal from 'web3modal'
-import { ethers } from 'ethers'
+import Error401 from '../components/401Section'
 
 // fetch tokens from currently logged in and connected wallet addresses
 
 const Profile: NextPage = () => {
-  const context = useContext(globalContext)
+  const { nftContract, login, walletAddress, isWhitelisted } = useContext(globalContext)
   const [userProfile, setUserProfile] = useState<any>()
   const [tokenData, setTokenData] = useState<any>([])
   const [userData, setUserData] = useState({})
@@ -25,15 +23,9 @@ const Profile: NextPage = () => {
   const [type, setType] = useState('user')
   const [id, setId] = useState('')
   const [ownerTokens, setOwnerTokens] = useState<any>(new Set())
-  const [listedItems, setListedItems] = useState<any>(new Set()) // itemIds
-  const [notListed, setNotListed] = useState<any>(new Set()) // itemsIds
-  const [unregistered, setUnregistered] = useState<any>(new Set()) // tokenIds
-  const [ownedItems, setOwnedItems] = useState<any>([])
-  const [verified, setVerified] = useState(true)
-  // console.log(context.login)
 
   //Get user details - image, followers, following, type of user,
-  const userDataURL = `${process.env.API_ENDPOINT}/users/${context.walletAddress}`
+  const userDataURL = `${process.env.API_ENDPOINT}/users/${walletAddress}`
 
   const userInfo = async () => {
     try {
@@ -53,7 +45,7 @@ const Profile: NextPage = () => {
   }
   const fetchUserProfile = async () => {
     try {
-      const res = await fetch(`${process.env.API_ENDPOINT}/users/${context.walletAddress}`, {
+      const res = await fetch(`${process.env.API_ENDPOINT}/users/${walletAddress}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -76,17 +68,17 @@ const Profile: NextPage = () => {
   //get tokens of user
   const fetchTokenCount = async () => {
     const address = userProfile[0].walletAddress
-    const txn = await context.nftContract.balanceOf(address)
+    const txn = await nftContract.balanceOf(address)
     const num = txn.toNumber()
     console.log(num)
     setTokensCount(num)
   }
   //get nfts
   const fetchNFTsOwned = async () => {
-    const totalSupply = await context.nftContract.totalSupply()
+    const totalSupply = await nftContract.totalSupply()
     for (let i = 0; i < totalSupply; i++) {
-      const owner = await context.nftContract.ownerOf(i)
-      if (owner === context.walletAddress) {
+      const owner = await nftContract.ownerOf(i)
+      if (owner === walletAddress) {
         setOwnerTokens((prev: any) => new Set(prev.add(i)))
       }
     }
@@ -95,7 +87,7 @@ const Profile: NextPage = () => {
   const fetchTokensMetadata = async () => {
     const unregisteredData = []
     for (let i of ownerTokens) {
-      const uri = await context.nftContract.tokenURI(i)
+      const uri = await nftContract.tokenURI(i)
       const response = await fetch(uri)
       const data = await response.json()
       data.tokenId = i
@@ -111,17 +103,21 @@ const Profile: NextPage = () => {
   }, [])
 
   useEffect(() => {
-    if (userProfile && context.nftContract) {
+    if (userProfile && nftContract) {
       fetchNFTsOwned()
       fetchTokenCount()
     }
-  }, [userProfile, context.nftContract])
+  }, [userProfile, nftContract])
 
   useEffect(() => {
     if (ownerTokens) {
       fetchTokensMetadata()
     }
   }, [ownerTokens])
+
+  if (!login) {
+    return <Error401 />
+  }
 
   return (
     <div>
@@ -134,7 +130,7 @@ const Profile: NextPage = () => {
             </div>
             <p className="text-gold text-2xl font-header mt-8">
               {username}
-              {context.isWhitelisted ? <Image src={verifiedImg} alt="Logo"></Image> : ''}
+              {isWhitelisted ? <Image src={verifiedImg} alt="Logo"></Image> : ''}
             </p>
 
             <span className="text-sm text-gray-300 mt-2 font-body">
