@@ -7,6 +7,7 @@ import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
 import Ellipsis from '../components/Spinner'
 import { useRouter } from 'next/router'
+import Error401 from '../components/401Section'
 
 const Feed: NextPage = () => {
   const {
@@ -210,12 +211,6 @@ const Feed: NextPage = () => {
     fetchUserInfo()
   }, [walletAddress])
 
-  // useEffect(() => {
-  //   if (!login) {
-  //     router.push('/login')
-  //   }
-  // }, [])
-
   //----------------Initialising Wallet----------------//
 
   const connectWallet = async () => {
@@ -256,7 +251,7 @@ const Feed: NextPage = () => {
   }, [])
 
   if (!login) {
-    return <></>
+    return <Error401 />
   }
 
   return (

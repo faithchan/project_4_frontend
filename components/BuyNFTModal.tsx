@@ -14,11 +14,13 @@ interface buyProps {
   setBuyModal: (a: boolean) => void
 }
 
-const BuyNFTModal = ({ itemId, tokenId, owner, price, buyModal, setBuyModal }: buyProps) => {
+const BuyNFTModal = ({ itemId, tokenId, owner, price, setBuyModal }: buyProps) => {
   const { nftContract, marketplaceContract } = useContext(globalContext)
   const router = useRouter()
   const [showPurchase, setShowPurchase] = useState(true)
   const [success, setSuccess] = useState(false)
+
+  console.log('price: ', price)
 
   const checkOwnership = async () => {
     const txn = await nftContract.ownerOf(tokenId)
@@ -113,7 +115,7 @@ const BuyNFTModal = ({ itemId, tokenId, owner, price, buyModal, setBuyModal }: b
                   Designed by Fakurian
                 </p>
                 <p className="text-left text-sm font-body text-gray-300 mt-2">
-                  List Price 0.01 Eth
+                  List Price {price} Eth
                 </p>
               </span>
             </div>
