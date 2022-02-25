@@ -8,6 +8,7 @@ import { ethers } from 'ethers'
 interface buyProps {
   name: string
   image: string
+  username: string
   itemId: number | undefined
   tokenId: number | undefined
   owner: string | undefined
@@ -16,13 +17,22 @@ interface buyProps {
   setBuyModal: (a: boolean) => void
 }
 
-const BuyNFTModal = ({ name, image, itemId, tokenId, owner, price, setBuyModal }: buyProps) => {
+const BuyNFTModal = ({
+  name,
+  image,
+  username,
+  itemId,
+  tokenId,
+  owner,
+  price,
+  setBuyModal,
+}: buyProps) => {
   const { nftContract, marketplaceContract } = useContext(globalContext)
   const router = useRouter()
   const [showPurchase, setShowPurchase] = useState(true)
   const [success, setSuccess] = useState(false)
 
-  console.log('owner: ', owner)
+  console.log('iamge: ', image)
 
   const checkOwnership = async () => {
     const txn = await nftContract.ownerOf(tokenId)
@@ -68,11 +78,11 @@ const BuyNFTModal = ({ name, image, itemId, tokenId, owner, price, setBuyModal }
               <p className="text-2xl text-gold font-header px-8">Purchase NFT</p>
             </div>
             <div className="flex justify-center px-6 pt-2 pb-4">
-              <img className="w-56 h-56 object-cover rounded-3xl" src="" alt={image} />
+              <img className="w-56 h-56 object-cover rounded-3xl" src={image} alt={image} />
               <span className="ml-8 my-auto">
                 <p className="text-left text-xl font-header text-gold ">{name}</p>
                 <p className="text-left text-sm font-body text-gray-300 mt-2">
-                  Designed by Fakurian
+                  Designed by {username}
                 </p>
                 <p className="text-left text-sm font-body text-gray-300 mt-2">
                   List Price {price} ETH

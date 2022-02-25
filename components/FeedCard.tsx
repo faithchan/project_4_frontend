@@ -19,13 +19,12 @@ interface FeedProps {
   setCurrentItemOwner: (a: string) => void
   setCurrentPrice: (a: string) => void
   setCurrentTokenName: (a: string) => void
-  setCurrentTokenDescription: (a: string) => void
   setCurrentTokenImage: (a: string) => void
+  setCurrentOwnerUsername: (a: string) => void
 }
 
 const FeedCard = (props: FeedProps) => {
   const { walletAddress } = useContext(globalContext)
-  console.log('feed card price', props.price)
 
   return (
     <div className="flex justify-center mt-20 mb-10">
@@ -64,6 +63,7 @@ const FeedCard = (props: FeedProps) => {
                     props.setCurrentItemOwner(props.owner)
                     props.setCurrentTokenName(props.name)
                     props.setCurrentTokenImage(props.image)
+                    props.setCurrentOwnerUsername(props.username)
                   }}
                 >
                   Buy

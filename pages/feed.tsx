@@ -35,6 +35,7 @@ const Feed: NextPage = () => {
   const [currentPrice, setCurrentPrice] = useState<any>()
   const [currentTokenName, setCurrentTokenName] = useState<any>()
   const [currentTokenImage, setCurrentTokenImage] = useState<any>()
+  const [currentOwnerUsername, setCurrentOwnerUsername] = useState<any>()
 
   const fetchTokenData = async () => {
     const fetchedData = []
@@ -103,6 +104,7 @@ const Feed: NextPage = () => {
         setCurrentPrice={setCurrentPrice}
         setCurrentTokenName={setCurrentTokenName}
         setCurrentTokenImage={setCurrentTokenImage}
+        setCurrentOwnerUsername={setCurrentOwnerUsername}
       />
     )
   })
@@ -265,6 +267,7 @@ const Feed: NextPage = () => {
           itemId={currentItemId}
           tokenId={currentTokenId}
           owner={currentItemOwner}
+          username={currentOwnerUsername}
           price={currentPrice}
           buyModal={buyModal}
           setBuyModal={setBuyModal}
