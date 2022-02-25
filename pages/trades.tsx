@@ -7,6 +7,7 @@ import globalContext from '../context/context'
 import BurnNFTModal from '../components/BurnNFTModal'
 import Ellipsis from '../components/Spinner'
 import { useRouter } from 'next/router'
+import Error401 from '../components/401Section'
 
 const Trades: NextPage = () => {
   const {
@@ -248,12 +249,6 @@ const Trades: NextPage = () => {
     filterItems()
   }, [ownerTokens, ownedItems])
 
-  // useEffect(() => {
-  //   if (!login) {
-  //     router.push('/login')
-  //   }
-  // }, [])
-
   //----------------Initialising Wallet----------------//
 
   const connectWallet = async () => {
@@ -290,7 +285,7 @@ const Trades: NextPage = () => {
   }, [])
 
   if (!login) {
-    return <></>
+    return <Error401 />
   }
 
   return (

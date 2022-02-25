@@ -16,14 +16,14 @@ const Error401 = () => {
             Sorry, you are unauthorised to view this page.
           </p>
           <p className="my-4 font-body text-gray-300 text-sm">
-            Contact our admin for more details.
+            Please log in or contact us for more details.
           </p>
 
           <button
             className="bg-gold hover:bg-blue-450 text-white font-semibold tracking-widest font-header py-2 px-4 rounded-full text-xs mx-auto "
-            onClick={() => router.push('/')}
+            onClick={() => router.push('/login')}
           >
-            Back to Home
+            Go to login
           </button>
         </div>
       </div>
