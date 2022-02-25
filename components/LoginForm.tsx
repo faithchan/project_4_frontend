@@ -49,7 +49,7 @@ const LoginForm = () => {
   return (
     <div className="flex justify-center items-center w-full  mt-4">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className=" px-10 pt-8 rounded-xl w-screen shadow-md max-w-sm">
+        <div className=" px-10 pt-8 rounded-xl w-screen max-w-sm">
           <div className="space-y-6">
             <div>
               <label className="block mb-1 text-gray-300 font-semibold">Email</label>

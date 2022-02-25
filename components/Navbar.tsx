@@ -28,6 +28,8 @@ const Navbar = () => {
   const [type, setType] = useState('user')
   let token: any
 
+  let token: any
+
   const userDataURL = `${process.env.API_ENDPOINT}/users`
 
   if (typeof window !== 'undefined') {
