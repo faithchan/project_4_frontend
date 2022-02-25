@@ -26,11 +26,16 @@ const Navbar = () => {
     setIsWhitelisted,
   } = useContext(globalContext)
   const [type, setType] = useState('user')
+  let token: any
 
   const userDataURL = `${process.env.API_ENDPOINT}/users`
-  let token = localStorage.getItem('token')
-  let tempToken: any = token
+
+  if (typeof window !== 'undefined') {
+    token = localStorage.getItem('token')
+  }
+
   useEffect(() => {
+    let tempToken: any = token
     if (tempToken) {
       let decodedToken: any = jwtDecode(tempToken)
       console.log('decoded token: ', decodedToken)
