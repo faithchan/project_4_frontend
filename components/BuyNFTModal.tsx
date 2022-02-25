@@ -85,7 +85,7 @@ const BuyNFTModal = ({
                   Designed by {username}
                 </p>
                 <p className="text-left text-sm font-body text-gray-300 mt-2">
-                  List Price {price} ETH
+                  List Price: {price} ETH
                 </p>
               </span>
             </div>
@@ -112,15 +112,11 @@ const BuyNFTModal = ({
               <p className="text-2xl text-gold font-header px-8">Success!</p>
             </div>
             <div className="flex justify-center px-6 pt-2 pb-4">
-              <img
-                className="w-56 h-56 object-cover rounded-3xl"
-                src="https://images.unsplash.com/photo-1617791160505-6f00504e3519?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1856&q=80"
-                alt=""
-              />
+              <img className="w-56 h-56 object-cover rounded-3xl" src={image} alt={image} />
               <span className="ml-8 my-auto">
-                <p className="text-left text-xl font-header text-gold ">Title of the NFT</p>
+                <p className="text-left text-xl font-header text-gold ">{name}</p>
                 <p className="text-left text-sm font-body text-gray-300 mt-2">
-                  Designed by Fakurian
+                  Designed by {username}
                 </p>
                 <p className="text-left text-sm font-body text-gray-300 mt-2">
                   List Price: {price} Eth
