@@ -4,6 +4,7 @@ import Image from 'next/image'
 import ListNFTToken from './ListNFTToken'
 import globalContext from '../context/context'
 import { useRouter } from 'next/router'
+import { PencilIcon } from '@heroicons/react/solid'
 
 interface CardProps {
   listPrice: number
@@ -124,16 +125,24 @@ const TradeCard = (props: CardProps) => {
             <p className="text-gold text-xs font-header tracking-widest mt-2">
               {shortenAddress(walletAddress)}
             </p>
-            <span className="flex justify-between">
-              <span className="pt-2 cursor-pointer" onClick={() => props.setBurnModal(true)}>
-                <Image className="mt-4" src={deleteImg} alt="Logo" />
-              </span>
+
+            <span className="flex justify-end mt-8">
               {props.isListed && (
+                <span
+                  className="p-auto cursor-pointer w-10 h-10 border-gold border-2 rounded-full grid justify-items-center"
+                  onClick={() => props.setBurnModal(true)}
+                >
+                  {/* <Image className="mt-4" src={deleteImg} alt="Logo" />
+                   */}
+                  <PencilIcon className="text-gold w-6 h-6 my-auto" />
+                </span>
+              )}
+            </span>
+            {/* {props.isListed && (
                 <button className="text-white" onClick={delistItem}>
                   Delist
                 </button>
-              )}
-            </span>
+              )} */}
           </span>
         </div>
       </div>
