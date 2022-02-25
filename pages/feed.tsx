@@ -269,10 +269,10 @@ const Feed: NextPage = () => {
         <BuyNFTModal
           name={currentTokenName}
           image={currentTokenImage}
+          username={currentOwnerUsername}
           itemId={currentItemId}
           tokenId={currentTokenId}
           owner={currentItemOwner}
-          username={currentOwnerUsername}
           price={currentPrice}
           buyModal={buyModal}
           setBuyModal={setBuyModal}
