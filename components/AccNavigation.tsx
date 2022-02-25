@@ -110,21 +110,21 @@ const AccNavigation = (props: connectWalletProps) => {
               )}
               {login && (
                 <Menu.Item>
+                  <Link href="/edit">
+                    <a className="group flex items-center px-4 py-1 text-gray-300 hover:text-gold">
+                      Edit Profile
+                    </a>
+                  </Link>
+                </Menu.Item>
+              )}
+              {login && (
+                <Menu.Item>
                   <Link href="/">
                     <a
                       className="group flex items-center px-4 py-1 text-gray-300 hover:text-gold"
                       onClick={logoutHandler}
                     >
                       Log Out
-                    </a>
-                  </Link>
-                </Menu.Item>
-              )}
-              {login && props.type !== 'Admin' && (
-                <Menu.Item>
-                  <Link href="/edit">
-                    <a className="group flex items-center px-4 py-1 text-gray-300 hover:text-gold">
-                      Edit Profile
                     </a>
                   </Link>
                 </Menu.Item>
