@@ -5,26 +5,20 @@ import verifiedImg from '../public/verified.svg'
 import ViewNFTCard from '../components/ViewNFTCard'
 import globalContext from '../context/context'
 import Error401 from '../components/401Section'
-
-// fetch tokens from currently logged in and connected wallet addresses
+import Ellipsis from '../components/Spinner'
 
 const Profile: NextPage = () => {
   const { nftContract, login, walletAddress, isWhitelisted } = useContext(globalContext)
   const [userProfile, setUserProfile] = useState<any>()
   const [tokenData, setTokenData] = useState<any>([])
-  const [userData, setUserData] = useState({})
   const [tokensCount, setTokensCount] = useState([])
-  const [tokensCreated, setTokensCreated] = useState([])
   const [viewNFTModal, setViewNFTModal] = useState(false)
   const [username, setUsername] = useState('')
   const [following, setFollowing] = useState('')
   const [followers, setFollowers] = useState('')
   const [avatar, setAvatar] = useState('')
-  const [type, setType] = useState('user')
-  const [id, setId] = useState('')
   const [ownerTokens, setOwnerTokens] = useState<any>(new Set())
 
-  //Get user details - image, followers, following, type of user,
   const userDataURL = `${process.env.API_ENDPOINT}/users/${walletAddress}`
 
   const userInfo = async () => {
@@ -32,13 +26,10 @@ const Profile: NextPage = () => {
       const response = await fetch(userDataURL)
       const data = await response.json()
       console.log(data)
-      setUserData(data[0])
       setUsername(data[0].username)
       setFollowing(data[0].following.length)
       setFollowers(data[0].followers.length)
       setAvatar(data[0].avatar)
-      setType(data[0].type)
-      setId(data[0]._id)
     } catch (err) {
       console.log('error:', err)
     }
