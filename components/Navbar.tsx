@@ -58,7 +58,7 @@ const Navbar = () => {
         setWalletAddress(connectedAddress)
       }
     } else {
-      alert('Please install Metamask')
+      console.log('Please install Metamask')
     }
   }
 
@@ -85,8 +85,6 @@ const Navbar = () => {
   useEffect(() => {
     if (signer === null && login === true) {
       connectWallet()
-    } else {
-      console.log('xxx')
     }
   }, [walletAddress])
 

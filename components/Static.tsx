@@ -37,7 +37,7 @@ const Layout = ({ children }: { children: any }) => {
         setWalletAddress(connectedAddress)
       }
     } else {
-      alert('Please install Metamask')
+      console.log('Please install Metamask')
     }
   }
   const changeNetwork = async () => {
@@ -53,11 +53,15 @@ const Layout = ({ children }: { children: any }) => {
   }
 
   useEffect(() => {
-    window.ethereum.on('accountsChanged', function (accounts: any) {
-      console.log('account: ', accounts[0])
-      connectWallet()
-      router.reload()
-    })
+    if (typeof window.ethereum !== 'undefined') {
+      window.ethereum.on('accountsChanged', function (accounts: any) {
+        console.log('account: ', accounts[0])
+        connectWallet()
+        router.reload()
+      })
+    } else {
+      console.log('Please install Metamask')
+    }
   }, [])
 
   useEffect(() => {

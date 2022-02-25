@@ -210,11 +210,11 @@ const Feed: NextPage = () => {
     fetchUserInfo()
   }, [walletAddress])
 
-  useEffect(() => {
-    if (!login) {
-      router.push('/login')
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (!login) {
+  //     router.push('/login')
+  //   }
+  // }, [])
 
   //----------------Initialising Wallet----------------//
 
@@ -233,7 +233,7 @@ const Feed: NextPage = () => {
         setWalletAddress(connectedAddress)
       }
     } else {
-      alert('Please install Metamask')
+      console.log('Please install Metamask')
     }
   }
 
