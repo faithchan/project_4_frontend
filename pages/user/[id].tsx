@@ -322,7 +322,7 @@ const Username = () => {
         </div>
       </div>
       {isLoading && (
-        <div className="flex justify-center">
+        <div className="h-screen grid content-center justify-center">
           <Ellipsis />
         </div>
       )}

@@ -296,7 +296,7 @@ const Trades: NextPage = () => {
         <BurnNFTModal tokenId={currentTokenId} burnModal={burnModal} setBurnModal={setBurnModal} />
       )}
       {isLoading && (
-        <div className="h-screen flex justify-center mt-20">
+        <div className="">
           <Ellipsis />
         </div>
       )}
