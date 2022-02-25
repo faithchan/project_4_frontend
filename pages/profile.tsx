@@ -118,7 +118,7 @@ const Profile: NextPage = () => {
         <div className="px-3 py-2">
           <div className="flex flex-col gap-1 text-center">
             <div className="mt-6 w-fit mx-auto">
-              <img className="rounded-full w-48 h-48" src={avatar}></img>
+              <img className="rounded-full w-48 h-48 object-cover" src={avatar}></img>
             </div>
             <p className="text-gold text-2xl font-header mt-8">
               {username}
