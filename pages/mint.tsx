@@ -1,8 +1,7 @@
 import type { NextPage } from 'next'
-import { useState, useEffect, useContext } from 'react'
+import { useContext } from 'react'
 import MintNFTForm from '../components/MintNFTForm'
 import globalContext from '../context/context'
-import { useRouter } from 'next/router'
 import Error401 from '../components/401Section'
 
 const MintNFT: NextPage = () => {

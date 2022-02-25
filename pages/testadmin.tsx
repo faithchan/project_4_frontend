@@ -5,12 +5,14 @@ import { ethers } from 'ethers'
 import jwtDecode from 'jwt-decode'
 import globalContext from '../context/context'
 import { useRouter } from 'next/router'
+import Error401 from '../components/401Section'
 
 const TestAdmin: NextPage = () => {
-  const { signer, nftContract, setSigner, setWalletAddress } = useContext(globalContext)
+  const { login, signer, nftContract, setSigner, setWalletAddress } = useContext(globalContext)
   const [whitelistAddress, setWhitelistAddress] = useState('')
   const [whitelistedAddrs, setWhitelistedAddrs] = useState<any>(new Set())
   const [allUsers, setAllUsers] = useState([])
+  const [role, setRole] = useState('')
   const router = useRouter()
 
   const getAllWhitelistees = async () => {
@@ -147,11 +149,12 @@ const TestAdmin: NextPage = () => {
     if (tempToken) {
       let decodedToken: any = jwtDecode(tempToken)
       // console.log('decoded token: ', decodedToken)
-      if (decodedToken.role !== 'Admin') {
-        router.push('/404')
-      } else {
-        fetchAllUsers()
-      }
+      setRole(decodedToken.role)
+      // if (decodedToken.role !== 'Admin') {
+      //   router.push('/404')
+      // } else {
+      //   fetchAllUsers()
+      // }
     } else {
       router.push('/404')
     }
@@ -191,6 +194,14 @@ const TestAdmin: NextPage = () => {
       connectWallet()
     }
   }, [])
+
+  if (!login) {
+    return <Error401 />
+  }
+
+  if (role !== 'Admin') {
+    return <Error401 />
+  }
 
   return (
     <div className="bg-purple opacity-80 py-8 px-14 rounded-xl mx-32 my-20">
