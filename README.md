@@ -12,7 +12,7 @@
 
 ARKIV, the design focused NFT marketplace. At Arkiv, we are passionate about a new type of digital good called non-fungible token AKA NFT.NFTs have exciting new properties: they’re unique, provably scarce, tradeable, and usable across multiple applications. Just like physical goods, you can do whatever you want with them! You could throw them in the trash, gift them to a friend across the world, or go sell them on an open marketplace. The whole idea of Arkiv revolves around sharing real art with the world and giving designers who are unfamiliar with blockchain to have a safe platform space where art here is treated fairly with respect. At Arkiv, we've implemented an instagram inspired follow and view feed so that you can share your support of our verified designers by following them and featuring your purchases of their NFTS on your feed.
 
-## 🩺 Features
+## 🈶 Features
 
 - User can sign up and start transacting their NFTs on the marketplace
 - User can find and view other account users, follow and unfollow other users
