@@ -150,13 +150,9 @@ const TestAdmin: NextPage = () => {
       let decodedToken: any = jwtDecode(tempToken)
       // console.log('decoded token: ', decodedToken)
       setRole(decodedToken.role)
-      // if (decodedToken.role !== 'Admin') {
-      //   router.push('/404')
-      // } else {
-      //   fetchAllUsers()
-      // }
-    } else {
-      router.push('/404')
+      if (decodedToken.role === 'Admin') {
+        fetchAllUsers()
+      }
     }
   }, [])
 
