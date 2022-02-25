@@ -6,6 +6,8 @@ import { nftaddress } from '../config'
 import { ethers } from 'ethers'
 
 interface buyProps {
+  name: string
+  image: string
   itemId: number | undefined
   tokenId: number | undefined
   owner: string | undefined
@@ -14,13 +16,13 @@ interface buyProps {
   setBuyModal: (a: boolean) => void
 }
 
-const BuyNFTModal = ({ itemId, tokenId, owner, price, setBuyModal }: buyProps) => {
+const BuyNFTModal = ({ name, image, itemId, tokenId, owner, price, setBuyModal }: buyProps) => {
   const { nftContract, marketplaceContract } = useContext(globalContext)
   const router = useRouter()
   const [showPurchase, setShowPurchase] = useState(true)
   const [success, setSuccess] = useState(false)
 
-  console.log('price: ', price)
+  console.log('owner: ', owner)
 
   const checkOwnership = async () => {
     const txn = await nftContract.ownerOf(tokenId)
@@ -66,13 +68,9 @@ const BuyNFTModal = ({ itemId, tokenId, owner, price, setBuyModal }: buyProps) =
               <p className="text-2xl text-gold font-header px-8">Purchase NFT</p>
             </div>
             <div className="flex justify-center px-6 pt-2 pb-4">
-              <img
-                className="w-56 h-56 object-cover rounded-3xl"
-                src="https://images.unsplash.com/photo-1617791160505-6f00504e3519?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1856&q=80"
-                alt=""
-              />
+              <img className="w-56 h-56 object-cover rounded-3xl" src="" alt={image} />
               <span className="ml-8 my-auto">
-                <p className="text-left text-xl font-header text-gold ">Title of the NFT</p>
+                <p className="text-left text-xl font-header text-gold ">{name}</p>
                 <p className="text-left text-sm font-body text-gray-300 mt-2">
                   Designed by Fakurian
                 </p>
@@ -115,7 +113,7 @@ const BuyNFTModal = ({ itemId, tokenId, owner, price, setBuyModal }: buyProps) =
                   Designed by Fakurian
                 </p>
                 <p className="text-left text-sm font-body text-gray-300 mt-2">
-                  List Price {price} Eth
+                  List Price: {price} Eth
                 </p>
               </span>
             </div>

@@ -18,6 +18,9 @@ interface FeedProps {
   setCurrentTokenId: (a: number) => void
   setCurrentItemOwner: (a: string) => void
   setCurrentPrice: (a: string) => void
+  setCurrentTokenName: (a: string) => void
+  setCurrentTokenDescription: (a: string) => void
+  setCurrentTokenImage: (a: string) => void
 }
 
 const FeedCard = (props: FeedProps) => {
@@ -59,6 +62,8 @@ const FeedCard = (props: FeedProps) => {
                     props.setCurrentTokenId(props.tokenId)
                     props.setCurrentPrice(props.price)
                     props.setCurrentItemOwner(props.owner)
+                    props.setCurrentTokenName(props.name)
+                    props.setCurrentTokenImage(props.image)
                   }}
                 >
                   Buy

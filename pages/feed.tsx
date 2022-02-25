@@ -33,6 +33,8 @@ const Feed: NextPage = () => {
   const [currentTokenId, setCurrentTokenId] = useState<number>()
   const [currentItemOwner, setCurrentItemOwner] = useState<string>()
   const [currentPrice, setCurrentPrice] = useState<any>()
+  const [currentTokenName, setCurrentTokenName] = useState<any>()
+  const [currentTokenImage, setCurrentTokenImage] = useState<any>()
 
   const fetchTokenData = async () => {
     const fetchedData = []
@@ -59,7 +61,6 @@ const Feed: NextPage = () => {
         details.description = data.description
         details.image = data.image
         const ownerInfo = await fetchCreatorInfo(details.owner)
-        console.log('owner: ', ownerInfo)
         details.username = ownerInfo[0].username
         details.avatar = ownerInfo[0].avatar
         fetchedData.push(details)
@@ -72,7 +73,6 @@ const Feed: NextPage = () => {
         data.listPrice = 0
         const creator = await nftContract.tokenCreator(data.tokenId)
         const creatorInfo = await fetchCreatorInfo(creator)
-        // console.log('creator info: ', creatorInfo)
         data.username = creatorInfo[0].username
         data.avatar = creatorInfo[0].avatar
         fetchedData.push(data)
@@ -101,6 +101,8 @@ const Feed: NextPage = () => {
         setCurrentTokenId={setCurrentTokenId}
         setCurrentItemOwner={setCurrentItemOwner}
         setCurrentPrice={setCurrentPrice}
+        setCurrentTokenName={setCurrentTokenName}
+        setCurrentTokenImage={setCurrentTokenImage}
       />
     )
   })
@@ -258,6 +260,8 @@ const Feed: NextPage = () => {
     <div>
       {buyModal && (
         <BuyNFTModal
+          name={currentTokenName}
+          image={currentTokenImage}
           itemId={currentItemId}
           tokenId={currentTokenId}
           owner={currentItemOwner}
