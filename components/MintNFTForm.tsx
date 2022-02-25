@@ -1,10 +1,10 @@
 import { useEffect, useState, useContext } from 'react'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
-import jwtDecode from 'jwt-decode'
 import globalContext from '../context/context'
 import { create } from 'ipfs-http-client'
 import { useRouter } from 'next/router'
+import Ellipsis from '../components/Spinner'
 
 const url: string | any = 'https://ipfs.infura.io:5001/api/v0'
 const client = create(url)
@@ -13,7 +13,8 @@ const UploadNFTForm = () => {
   const { signer, nftContract, walletAddress, setSigner, setWalletAddress } =
     useContext(globalContext)
   const router = useRouter()
-  const [loggedIn, setLoggedIn] = useState<boolean>(false)
+  // const [loggedIn, setLoggedIn] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [fileName, setFileName] = useState('')
   const [imageURL, setImageURL] = useState('')
   const [metadata, setMetadata] = useState({ name: '', description: '', image: '' })
@@ -25,11 +26,13 @@ const UploadNFTForm = () => {
           alert('Please do not leave any fields blank.')
           return
         }
+        setIsLoading(true)
         const { cid } = await client.add({ path: `${fileName}`, content: JSON.stringify(metadata) })
         const uri = `https://ipfs.infura.io/ipfs/${cid}`
         console.log('token URI: ', uri)
         const mintTxn = await nftContract.mint(walletAddress, uri)
         const txn = await mintTxn.wait()
+        setIsLoading(false)
         console.log('txn: ', txn)
         const id = txn.events[0].args['tokenId']
         const idNum = id.toNumber()
@@ -56,6 +59,7 @@ const UploadNFTForm = () => {
     setFileName(file.name)
     try {
       console.log(`adding ${file.name} to ipfs....`)
+      setIsLoading(true)
       const { cid } = await client.add(
         { content: file },
         {
@@ -64,6 +68,7 @@ const UploadNFTForm = () => {
         }
       )
       const url = `https://ipfs.infura.io/ipfs/${cid}`
+      setIsLoading(false)
       console.log('ipfs url: ', url)
       setImageURL(url)
       setMetadata({ ...metadata, image: url })
@@ -80,13 +85,6 @@ const UploadNFTForm = () => {
 
   useEffect(() => {
     checkWhitelist()
-    let token = localStorage.getItem('token')
-    let tempToken: any = token
-    if (tempToken) {
-      let decodedToken: any = jwtDecode(tempToken)
-      // console.log('decoded token: ', decodedToken)
-      setLoggedIn(true)
-    }
   }, [])
 
   //----------------Initialising Wallet----------------//
@@ -106,7 +104,7 @@ const UploadNFTForm = () => {
         setWalletAddress(connectedAddress)
       }
     } else {
-      alert('Please install Metamask')
+      console.log('Please install Metamask')
     }
   }
 
@@ -183,6 +181,11 @@ const UploadNFTForm = () => {
                   onChange={onFileUpload}
                 />
               </label>
+            </div>
+          )}
+          {isLoading && (
+            <div className="flex justify-center">
+              <Ellipsis />
             </div>
           )}
         </div>

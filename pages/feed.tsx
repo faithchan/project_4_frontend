@@ -7,6 +7,7 @@ import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
 import Ellipsis from '../components/Spinner'
 import { useRouter } from 'next/router'
+import Error401 from '../components/401Section'
 import MarketFeedTab from '../components/MarketFeedTab'
 
 const Feed: NextPage = () => {
@@ -33,8 +34,16 @@ const Feed: NextPage = () => {
   const [currentTokenId, setCurrentTokenId] = useState<number>()
   const [currentItemOwner, setCurrentItemOwner] = useState<string>()
   const [currentPrice, setCurrentPrice] = useState<any>()
+  const [currentTokenName, setCurrentTokenName] = useState<any>()
+  const [currentTokenImage, setCurrentTokenImage] = useState<any>()
+  const [currentOwnerUsername, setCurrentOwnerUsername] = useState<any>()
 
   const fetchTokenData = async () => {
+    if (filteredTokens.size === 0) {
+      console.log('no tokens')
+      setIsLoading(false)
+      return
+    }
     const fetchedData = []
     for (let token of filteredTokens) {
       const itemId = await marketplaceContract.getItemId(token)
@@ -59,7 +68,6 @@ const Feed: NextPage = () => {
         details.description = data.description
         details.image = data.image
         const ownerInfo = await fetchCreatorInfo(details.owner)
-        console.log('owner: ', ownerInfo)
         details.username = ownerInfo[0].username
         details.avatar = ownerInfo[0].avatar
         fetchedData.push(details)
@@ -72,7 +80,6 @@ const Feed: NextPage = () => {
         data.listPrice = 0
         const creator = await nftContract.tokenCreator(data.tokenId)
         const creatorInfo = await fetchCreatorInfo(creator)
-        // console.log('creator info: ', creatorInfo)
         data.username = creatorInfo[0].username
         data.avatar = creatorInfo[0].avatar
         fetchedData.push(data)
@@ -101,6 +108,9 @@ const Feed: NextPage = () => {
         setCurrentTokenId={setCurrentTokenId}
         setCurrentItemOwner={setCurrentItemOwner}
         setCurrentPrice={setCurrentPrice}
+        setCurrentTokenName={setCurrentTokenName}
+        setCurrentTokenImage={setCurrentTokenImage}
+        setCurrentOwnerUsername={setCurrentOwnerUsername}
       />
     )
   })
@@ -211,12 +221,6 @@ const Feed: NextPage = () => {
     fetchUserInfo()
   }, [walletAddress])
 
-  useEffect(() => {
-    if (!login) {
-      router.push('/login')
-    }
-  }, [])
-
   //----------------Initialising Wallet----------------//
 
   const connectWallet = async () => {
@@ -234,7 +238,7 @@ const Feed: NextPage = () => {
         setWalletAddress(connectedAddress)
       }
     } else {
-      alert('Please install Metamask')
+      console.log('Please install Metamask')
     }
   }
 
@@ -257,7 +261,7 @@ const Feed: NextPage = () => {
   }, [])
 
   if (!login) {
-    return <></>
+    return <Error401 />
   }
 
   return (
@@ -265,6 +269,9 @@ const Feed: NextPage = () => {
       <MarketFeedTab />
       {buyModal && (
         <BuyNFTModal
+          name={currentTokenName}
+          image={currentTokenImage}
+          username={currentOwnerUsername}
           itemId={currentItemId}
           tokenId={currentTokenId}
           owner={currentItemOwner}

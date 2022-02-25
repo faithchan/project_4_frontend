@@ -18,17 +18,13 @@ interface FeedProps {
   setCurrentTokenId: (a: number) => void
   setCurrentItemOwner: (a: string) => void
   setCurrentPrice: (a: string) => void
+  setCurrentTokenName: (a: string) => void
+  setCurrentTokenImage: (a: string) => void
+  setCurrentOwnerUsername: (a: string) => void
 }
 
 const FeedCard = (props: FeedProps) => {
   const { walletAddress } = useContext(globalContext)
-
-  useEffect(() => {
-    props.setCurrentItemId(props.itemId)
-    props.setCurrentTokenId(props.tokenId)
-    props.setCurrentPrice(props.price)
-    props.setCurrentItemOwner(props.owner)
-  }, [])
 
   return (
     <div className="flex justify-center mt-20 mb-10">
@@ -59,7 +55,16 @@ const FeedCard = (props: FeedProps) => {
               {props.owner !== walletAddress && props.isListed && (
                 <button
                   className="mb-2 md:mb-0 bg-green-400 px-5 py-2 text-xs shadow-sm  font-header tracking-wider text-white rounded-full hover:shadow-lg"
-                  onClick={() => props.setBuyModal(true)}
+                  onClick={() => {
+                    props.setBuyModal(true)
+                    props.setCurrentItemId(props.itemId)
+                    props.setCurrentTokenId(props.tokenId)
+                    props.setCurrentPrice(props.price)
+                    props.setCurrentItemOwner(props.owner)
+                    props.setCurrentTokenName(props.name)
+                    props.setCurrentTokenImage(props.image)
+                    props.setCurrentOwnerUsername(props.username)
+                  }}
                 >
                   Buy
                 </button>

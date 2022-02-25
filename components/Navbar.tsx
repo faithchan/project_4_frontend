@@ -58,7 +58,7 @@ const Navbar = () => {
         setWalletAddress(connectedAddress)
       }
     } else {
-      alert('Please install Metamask')
+      console.log('Please install Metamask')
     }
   }
 
@@ -121,11 +121,6 @@ const Navbar = () => {
                 </Link>
               )}
             </li>
-            {/* <li className="ml-10 mr-10 mt-2 ">
-              <a onClick={connectWallet}>
-                <Image src={walletImg}></Image>
-              </a>
-            </li> */}
             <li className="ml-10 mr-10 mt-2 ">
               {login && isWhitelisted ? (
                 <Link href="/mint">

@@ -7,6 +7,7 @@ import globalContext from '../context/context'
 import BurnNFTModal from '../components/BurnNFTModal'
 import Ellipsis from '../components/Spinner'
 import { useRouter } from 'next/router'
+import Error401 from '../components/401Section'
 
 const Trades: NextPage = () => {
   const {
@@ -250,12 +251,6 @@ const Trades: NextPage = () => {
     filterItems()
   }, [ownerTokens, ownedItems])
 
-  // useEffect(() => {
-  //   if (!login) {
-  //     router.push('/login')
-  //   }
-  // }, [])
-
   //----------------Initialising Wallet----------------//
 
   const connectWallet = async () => {
@@ -273,7 +268,7 @@ const Trades: NextPage = () => {
         setWalletAddress(connectedAddress)
       }
     } else {
-      alert('Please install Metamask')
+      console.log('Please install Metamask')
     }
   }
 
@@ -292,8 +287,9 @@ const Trades: NextPage = () => {
   }, [])
 
   if (!login) {
-    return <></>
+    return <Error401 />
   }
+
   console.log('loaded', loaded)
   return (
     <div>

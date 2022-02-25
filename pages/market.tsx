@@ -18,6 +18,9 @@ const Market: NextPage = () => {
   const [currentTokenId, setCurrentTokenId] = useState<number>()
   const [currentItemOwner, setCurrentItemOwner] = useState<string>()
   const [currentPrice, setCurrentPrice] = useState<any>()
+  const [currentTokenName, setCurrentTokenName] = useState<any>()
+  const [currentTokenImage, setCurrentTokenImage] = useState<any>()
+  const [currentOwnerUsername, setCurrentOwnerUsername] = useState<any>()
 
   const fetchMarketItems = async () => {
     const listed = await marketplaceContract.getListedItems()
@@ -93,6 +96,9 @@ const Market: NextPage = () => {
         setCurrentTokenId={setCurrentTokenId}
         setCurrentItemOwner={setCurrentItemOwner}
         setCurrentPrice={setCurrentPrice}
+        setCurrentTokenName={setCurrentTokenName}
+        setCurrentTokenImage={setCurrentTokenImage}
+        setCurrentOwnerUsername={setCurrentOwnerUsername}
       />
     )
   })
@@ -113,7 +119,7 @@ const Market: NextPage = () => {
         setWalletAddress(connectedAddress)
       }
     } else {
-      alert('Please install Metamask')
+      console.log('Please install Metamask')
     }
   }
 
@@ -140,6 +146,9 @@ const Market: NextPage = () => {
       <MarketFeedTab />
       {buyModal && (
         <BuyNFTModal
+          name={currentTokenName}
+          image={currentTokenImage}
+          username={currentOwnerUsername}
           itemId={currentItemId}
           tokenId={currentTokenId}
           owner={currentItemOwner}

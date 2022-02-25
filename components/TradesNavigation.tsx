@@ -9,10 +9,10 @@ interface connectWalletProps {
   connectWallet: (a: any) => void
 }
 const TradesNavigation = (props: connectWalletProps) => {
-  const context = useContext(globalContext)
+  const { signer, login } = useContext(globalContext)
 
   const connectWalletHandler = () => {
-    if (context.signer === null && context.login === true) {
+    if (signer === null && login === true) {
       props.connectWallet
     } else {
       // console.log('You are not authorised')
@@ -24,7 +24,7 @@ const TradesNavigation = (props: connectWalletProps) => {
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button className="inline-flex justify-center w-full  text-sm font-medium text-white  rounded-md  focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-            {context.login ? (
+            {login ? (
               <Link href="/trades">
                 <a onClick={connectWalletHandler}>
                   <Image src={tradeImg}></Image>
@@ -54,7 +54,7 @@ const TradesNavigation = (props: connectWalletProps) => {
           <Menu.Items className="origin-top-right absolute left-0 mt-2 w-32 rounded-md shadow-lg bg-opacity-20  bg-black  divide-y divide-gray-100 focus:outline-none">
             <div className="py-1 ">
               <Menu.Item>
-                {context.login ? (
+                {login ? (
                   <Link href="/trades">
                     <a className="group flex items-center px-4 py-1  text-gray-300 hover:text-gold">
                       History
@@ -69,7 +69,7 @@ const TradesNavigation = (props: connectWalletProps) => {
                 )}
               </Menu.Item>
               <Menu.Item>
-                {context.login ? (
+                {login ? (
                   <Link href="/mint">
                     <a className="group flex items-center px-4 py-1 text-gray-300 hover:text-gold">
                       Upload NFT
