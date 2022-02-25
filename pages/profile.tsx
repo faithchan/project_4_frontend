@@ -5,26 +5,21 @@ import verifiedImg from '../public/verified.svg'
 import ViewNFTCard from '../components/ViewNFTCard'
 import globalContext from '../context/context'
 import Error401 from '../components/401Section'
-
-// fetch tokens from currently logged in and connected wallet addresses
+import Ellipsis from '../components/Spinner'
 
 const Profile: NextPage = () => {
   const { nftContract, login, walletAddress, isWhitelisted } = useContext(globalContext)
   const [userProfile, setUserProfile] = useState<any>()
   const [tokenData, setTokenData] = useState<any>([])
-  const [userData, setUserData] = useState({})
   const [tokensCount, setTokensCount] = useState([])
-  const [tokensCreated, setTokensCreated] = useState([])
   const [viewNFTModal, setViewNFTModal] = useState(false)
   const [username, setUsername] = useState('')
   const [following, setFollowing] = useState('')
   const [followers, setFollowers] = useState('')
   const [avatar, setAvatar] = useState('')
-  const [type, setType] = useState('user')
-  const [id, setId] = useState('')
   const [ownerTokens, setOwnerTokens] = useState<any>(new Set())
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  //Get user details - image, followers, following, type of user,
   const userDataURL = `${process.env.API_ENDPOINT}/users/${walletAddress}`
 
   const userInfo = async () => {
@@ -32,13 +27,10 @@ const Profile: NextPage = () => {
       const response = await fetch(userDataURL)
       const data = await response.json()
       console.log(data)
-      setUserData(data[0])
       setUsername(data[0].username)
       setFollowing(data[0].following.length)
       setFollowers(data[0].followers.length)
       setAvatar(data[0].avatar)
-      setType(data[0].type)
-      setId(data[0]._id)
     } catch (err) {
       console.log('error:', err)
     }
@@ -62,8 +54,6 @@ const Profile: NextPage = () => {
       console.log(err)
     }
   }
-
-  // console.log(userProfile)
 
   //get tokens of user
   const fetchTokenCount = async () => {
@@ -95,6 +85,7 @@ const Profile: NextPage = () => {
       unregisteredData.push(data)
     }
     setTokenData(unregisteredData)
+    setIsLoading(false)
   }
 
   useEffect(() => {
@@ -104,6 +95,7 @@ const Profile: NextPage = () => {
 
   useEffect(() => {
     if (userProfile && nftContract) {
+      setIsLoading(true)
       fetchNFTsOwned()
       fetchTokenCount()
     }
@@ -132,12 +124,10 @@ const Profile: NextPage = () => {
               {username}
               {isWhitelisted ? <Image src={verifiedImg} alt="Logo"></Image> : ''}
             </p>
-
             <span className="text-sm text-gray-300 mt-2 font-body">
               New York, NY - Los Angeles, CA
             </span>
           </div>
-
           <div className="flex justify-center items-center gap-2 my-4">
             <div className="text-center mx-4">
               <p className="text-gold text-sm font-header">{tokensCount ? tokensCount : 0}</p>
@@ -170,17 +160,21 @@ const Profile: NextPage = () => {
               </svg>
             </button>
           </div>
+          {isLoading && (
+            <div className="flex justify-center">
+              <Ellipsis />
+            </div>
+          )}
           <div className="grid grid-cols-3 gap-6 mt-3 mb-6">
-            {tokenData
-              ? tokenData.map((data: any) => (
-                  <img
-                    className=" object-cover h-48 w-48 rounded-lg cursor-pointer"
-                    src={data.image}
-                    onClick={() => setViewNFTModal(true)}
-                    key={data.image}
-                  ></img>
-                ))
-              : ''}
+            {tokenData &&
+              tokenData.map((data: any) => (
+                <img
+                  className="object-cover h-48 w-48 rounded-lg cursor-pointe"
+                  src={data.image}
+                  onClick={() => setViewNFTModal(true)}
+                  key={data.image}
+                ></img>
+              ))}
           </div>
         </div>
       </div>

@@ -13,7 +13,6 @@ const UploadNFTForm = () => {
   const { signer, nftContract, walletAddress, setSigner, setWalletAddress } =
     useContext(globalContext)
   const router = useRouter()
-  // const [loggedIn, setLoggedIn] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [fileName, setFileName] = useState('')
   const [imageURL, setImageURL] = useState('')

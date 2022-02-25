@@ -55,7 +55,7 @@ const Layout = ({ children }: { children: any }) => {
   useEffect(() => {
     if (typeof window.ethereum !== 'undefined') {
       window.ethereum.on('accountsChanged', function (accounts: any) {
-        console.log('account: ', accounts[0])
+        console.log('switched account: ', accounts[0])
         connectWallet()
         router.reload()
       })

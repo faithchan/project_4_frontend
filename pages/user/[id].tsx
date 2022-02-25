@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import globalContext from '../../context/context'
 import jwtDecode from 'jwt-decode'
 import Image from 'next/image'
+import Ellipsis from '../../components/Spinner'
 
 const Username = () => {
   const router = useRouter()
@@ -15,6 +16,7 @@ const Username = () => {
   const [tokenCount, setTokenCount] = useState()
   const [artistTokens, setArtistTokens] = useState<any>(new Set())
   const [tokenData, setTokenData] = useState<any>([])
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const fetchArtistProfile = async () => {
     try {
@@ -50,7 +52,7 @@ const Username = () => {
         if (data.length === 0) {
           console.log('user does not exist')
         } else {
-          console.log('user profile: ', data)
+          // console.log('user profile: ', data)
           setUserProfile(data[0])
         }
       } catch (err) {
@@ -105,7 +107,7 @@ const Username = () => {
         body: JSON.stringify(artistObject),
       })
       const data = await res.json()
-      console.log('added to artist followers: ', data)
+      // console.log('added to artist followers: ', data)
     } catch (err) {
       console.log('error adding followers: ', err)
     }
@@ -178,12 +180,14 @@ const Username = () => {
       data.tokenId = i
       data.listPrice = 0
       unregisteredData.push(data)
-      console.log('data', data)
+      // console.log('data', data)
     }
     setTokenData(unregisteredData)
+    setIsLoading(false)
   }
   useEffect(() => {
     if (nftContract && artistProfile) {
+      setIsLoading(true)
       fetchNFTsOwned()
     }
   }, [nftContract, artistProfile])
@@ -317,17 +321,21 @@ const Username = () => {
           </div>
         </div>
       </div>
+      {isLoading && (
+        <div className="flex justify-center">
+          <Ellipsis />
+        </div>
+      )}
       <div className="flex flex-wrap justify-center gap-10  mx-32  mb-16">
-        {tokenData
-          ? tokenData.map((data: any) => (
-              <img
-                className="object-cover h-48 w-48 rounded-lg cursor-pointer"
-                src={data.image}
-                key={data.image}
-                // onClick={() => setViewNFTModal(true)}
-              ></img>
-            ))
-          : ''}
+        {tokenData &&
+          tokenData.map((data: any) => (
+            <img
+              className="object-cover h-48 w-48 rounded-lg cursor-pointer"
+              src={data.image}
+              key={data.image}
+              // onClick={() => setViewNFTModal(true)}
+            ></img>
+          ))}
       </div>
     </div>
   )

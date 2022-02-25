@@ -6,7 +6,6 @@ import globalContext from '../context/context'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
 import Ellipsis from '../components/Spinner'
-import { useRouter } from 'next/router'
 import Error401 from '../components/401Section'
 import MarketFeedTab from '../components/MarketFeedTab'
 
@@ -20,7 +19,6 @@ const Feed: NextPage = () => {
     setSigner,
     setWalletAddress,
   } = useContext(globalContext)
-  const router = useRouter()
   const [buyModal, setBuyModal] = useState<boolean>(false)
   const [creatorsFollowed, setCreatorsFollowed] = useState<any>()
   const [ownedTokens, setOwnedTokens] = useState<any>(new Set())
@@ -29,7 +27,7 @@ const Feed: NextPage = () => {
   const [tokenData, setTokenData] = useState<any>([])
   const [createdLoaded, setCreatedLoaded] = useState<boolean>(false)
   const [ownedLoaded, setOwnedLoaded] = useState<boolean>(false)
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [currentItemId, setCurrentItemId] = useState<number>()
   const [currentTokenId, setCurrentTokenId] = useState<number>()
   const [currentItemOwner, setCurrentItemOwner] = useState<string>()
@@ -199,10 +197,12 @@ const Feed: NextPage = () => {
   }
 
   useEffect(() => {
-    if (filteredTokens) {
-      fetchTokenData()
+    if (creatorsFollowed && nftContract) {
+      setIsLoading(true)
+      fetchCreatorOwned()
+      fetchCreatorCreated()
     }
-  }, [filteredTokens])
+  }, [creatorsFollowed, nftContract])
 
   useEffect(() => {
     if (createdLoaded && ownedLoaded) {
@@ -211,11 +211,10 @@ const Feed: NextPage = () => {
   }, [createdLoaded && ownedLoaded])
 
   useEffect(() => {
-    if (creatorsFollowed && nftContract) {
-      fetchCreatorOwned()
-      fetchCreatorCreated()
+    if (filteredTokens) {
+      fetchTokenData()
     }
-  }, [creatorsFollowed])
+  }, [filteredTokens])
 
   useEffect(() => {
     fetchUserInfo()
@@ -282,7 +281,7 @@ const Feed: NextPage = () => {
       )}
       {isLoading ? (
         <div className="h-screen grid content-center justify-center">
-          <Ellipsis color="grey" />
+          <Ellipsis />
         </div>
       ) : (
         renderCards

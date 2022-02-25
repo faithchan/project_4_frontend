@@ -4,6 +4,8 @@ import { useRouter } from 'next/router'
 import jwtDecode from 'jwt-decode'
 import { useForm } from 'react-hook-form'
 import { create } from 'ipfs-http-client'
+import Ellipsis from '../components/Spinner'
+
 const url: string | any = 'https://ipfs.infura.io:5001/api/v0'
 const client = create(url)
 
@@ -20,6 +22,7 @@ const Edit: NextPage = () => {
   const [userProfile, setUserProfile] = useState<any>()
   const [userAddress, setUserAddress] = useState<string>()
   const [displayPicture, setDisplayPicture] = useState<string>('')
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const {
     register,
@@ -76,6 +79,7 @@ const Edit: NextPage = () => {
     const file = e.target.files[0]
     try {
       console.log(`adding ${file.name} to ipfs....`)
+      setIsLoading(true)
       const { cid } = await client.add(
         { content: file },
         {
@@ -86,6 +90,7 @@ const Edit: NextPage = () => {
       const url = `https://ipfs.infura.io/ipfs/${cid}`
       console.log('ipfs url: ', url)
       setDisplayPicture(url)
+      setIsLoading(false)
       setValue('avatar', url)
     } catch (e) {
       console.error('Error uploading file: ', e)
@@ -124,79 +129,80 @@ const Edit: NextPage = () => {
   return (
     <div className="flex justify-center items-center w-full mt-4 mb-32">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <div className=" px-10 pt-8 rounded-xl w-screen max-w-sm">
-            <div className="space-y-6">
-              <div>
-                <label className="block mb-1 md:text-sm text-xs text-white font-body">
-                  Username
-                </label>
-                <input
-                  type="text"
-                  className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md w-full mt-2"
-                  {...register('username')}
-                  placeholder={userProfile && userProfile.username}
-                />
-                {errors.username && (
-                  <div className="text-white">Please do not leave this field blank</div>
+        <div className=" px-10 pt-8 rounded-xl w-screen max-w-sm">
+          <div className="space-y-6">
+            <div>
+              <label className="block mb-1 md:text-sm text-xs text-white font-body">Username</label>
+              <input
+                type="text"
+                className="bg-gray-800 text-white border border-gray-400 px-4 py-2 outline-none rounded-md w-full mt-2"
+                {...register('username')}
+                placeholder={userProfile && userProfile.username}
+              />
+              {errors.username && (
+                <div className="text-white">Please do not leave this field blank</div>
+              )}
+            </div>
+            <div>
+              <label className="block mb-1 md:text-sm text-xs text-white font-body">Email</label>
+              <input
+                type="text"
+                className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
+                {...register('email', { validate: validateEmail })}
+                placeholder={userProfile && userProfile.email}
+              />
+              {errors.email && errors.email.type === 'validate' && (
+                <div className="text-white">Please enter a valid email address</div>
+              )}
+            </div>
+            <div>
+              <label className="block mb-1 md:text-sm text-xs text-white font-body">
+                Metamask Wallet
+              </label>
+              <input
+                type="text"
+                id="walletAddress"
+                className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
+                {...register('walletAddress', { validate: validateAddress })}
+                placeholder={userProfile && userProfile.walletAddress}
+              />
+              {errors.walletAddress && errors.walletAddress.type === 'validate' && (
+                <div className="text-white">Please enter a valid wallet address</div>
+              )}
+            </div>
+            <div>
+              <label className="md:text-sm text-xs text-white font-body tracking-wider">
+                Profile Picture
+              </label>
+              <div className="flex justify-center my-4">
+                {displayPicture ? (
+                  <img src={displayPicture} width="175px" height="175px" />
+                ) : (
+                  userProfile && <img src={userProfile.avatar} width="175px" height="175px" />
                 )}
               </div>
-              <div>
-                <label className="block mb-1 md:text-sm text-xs text-white font-body">Email</label>
-                <input
-                  type="text"
-                  className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
-                  {...register('email', { validate: validateEmail })}
-                  placeholder={userProfile && userProfile.email}
-                />
-                {errors.email && errors.email.type === 'validate' && (
-                  <div className="text-white">Please enter a valid email address</div>
-                )}
-              </div>
-              <div>
-                <label className="block mb-1 md:text-sm text-xs text-white font-body">
-                  Metamask Wallet
+              <div className="flex items-center justify-center w-full mt-2">
+                <label className="flex flex-col border-2 border-dashed w-full rounded-lg h-14 group">
+                  <div className="flex flex-col items-center justify-center pt-3 cursor-pointer">
+                    <p className="text-sm text-white group-hover:text-purple-600 pt-1 tracking-wider">
+                      Update display picture
+                    </p>
+                  </div>
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept=".jpeg,.jpg,.png,.gif"
+                    {...register('avatar')}
+                    onChange={onFileUpload}
+                    placeholder={userProfile ? userProfile.avatar : ''}
+                  />
                 </label>
-                <input
-                  type="text"
-                  id="walletAddress"
-                  className="bg-gray-800 px-4 py-2 border text-white border-gray-400 outline-none rounded-md w-full mt-2"
-                  {...register('walletAddress', { validate: validateAddress })}
-                  placeholder={userProfile && userProfile.walletAddress}
-                />
-                {errors.walletAddress && errors.walletAddress.type === 'validate' && (
-                  <div className="text-white">Please enter a valid wallet address</div>
-                )}
               </div>
-              <div>
-                <label className="md:text-sm text-xs text-white font-body tracking-wider">
-                  Profile Picture
-                </label>
-                <div className="flex justify-center my-4">
-                  {displayPicture ? (
-                    <img src={displayPicture} width="175px" height="175px" />
-                  ) : (
-                    userProfile && <img src={userProfile.avatar} width="175px" height="175px" />
-                  )}
+              {isLoading && (
+                <div className="flex justify-center">
+                  <Ellipsis />
                 </div>
-                <div className="flex items-center justify-center w-full mt-2">
-                  <label className="flex flex-col border-2 border-dashed w-full rounded-lg h-14 group">
-                    <div className="flex flex-col items-center justify-center pt-3 cursor-pointer">
-                      <p className="lowercase text-sm text-white group-hover:text-purple-600 pt-1 tracking-wider">
-                        Update Display Picture
-                      </p>
-                    </div>
-                    <input
-                      type="file"
-                      className="hidden"
-                      accept=".jpeg,.jpg,.png,.gif"
-                      {...register('avatar')}
-                      onChange={onFileUpload}
-                      placeholder={userProfile ? userProfile.avatar : ''}
-                    />
-                  </label>
-                </div>
-              </div>
+              )}
             </div>
             <div className="flex justify-center">
               <button
