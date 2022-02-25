@@ -1,10 +1,10 @@
 import { useEffect, useState, useContext } from 'react'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
-import jwtDecode from 'jwt-decode'
 import globalContext from '../context/context'
 import { create } from 'ipfs-http-client'
 import { useRouter } from 'next/router'
+import Ellipsis from '../components/Spinner'
 
 const url: string | any = 'https://ipfs.infura.io:5001/api/v0'
 const client = create(url)
@@ -13,7 +13,7 @@ const UploadNFTForm = () => {
   const { signer, nftContract, walletAddress, setSigner, setWalletAddress } =
     useContext(globalContext)
   const router = useRouter()
-  const [loggedIn, setLoggedIn] = useState<boolean>(false)
+  // const [loggedIn, setLoggedIn] = useState<boolean>(false)
   const [fileName, setFileName] = useState('')
   const [imageURL, setImageURL] = useState('')
   const [metadata, setMetadata] = useState({ name: '', description: '', image: '' })
@@ -80,13 +80,6 @@ const UploadNFTForm = () => {
 
   useEffect(() => {
     checkWhitelist()
-    let token = localStorage.getItem('token')
-    let tempToken: any = token
-    if (tempToken) {
-      let decodedToken: any = jwtDecode(tempToken)
-      // console.log('decoded token: ', decodedToken)
-      setLoggedIn(true)
-    }
   }, [])
 
   //----------------Initialising Wallet----------------//
@@ -185,6 +178,7 @@ const UploadNFTForm = () => {
               </label>
             </div>
           )}
+          <Ellipsis />
         </div>
         <div className="flex items-center justify-center pt-5 pb-5">
           <button
