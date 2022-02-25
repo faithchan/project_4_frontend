@@ -69,7 +69,6 @@ const Feed: NextPage = () => {
         details.username = ownerInfo[0].username
         details.avatar = ownerInfo[0].avatar
         fetchedData.push(details)
-        setIsLoading(false)
       } else {
         const uri = await nftContract.tokenURI(token)
         const response = await fetch(uri)
@@ -83,6 +82,7 @@ const Feed: NextPage = () => {
         fetchedData.push(data)
       }
     }
+    setIsLoading(false)
     setTokenData(fetchedData)
   }
 

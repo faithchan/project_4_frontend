@@ -21,6 +21,7 @@ const Market: NextPage = () => {
   const [currentTokenName, setCurrentTokenName] = useState<any>()
   const [currentTokenImage, setCurrentTokenImage] = useState<any>()
   const [currentOwnerUsername, setCurrentOwnerUsername] = useState<any>()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const fetchMarketItems = async () => {
     const listed = await marketplaceContract.getListedItems()
@@ -53,6 +54,7 @@ const Market: NextPage = () => {
       setTokenData(allTokens)
     }
     setLoaded(true)
+    setIsLoading(false)
   }
 
   const fetchProfileInfo = async (creator: string) => {
@@ -72,6 +74,7 @@ const Market: NextPage = () => {
 
   useEffect(() => {
     if (marketplaceContract) {
+      setIsLoading(true)
       fetchMarketItems()
     }
   }, [marketplaceContract])
@@ -157,7 +160,7 @@ const Market: NextPage = () => {
           setBuyModal={setBuyModal}
         />
       )}
-      {!loaded && (
+      {isLoading && (
         <div className="h-screen grid content-center justify-center">
           <Ellipsis />
         </div>

@@ -26,7 +26,6 @@ const Navbar = () => {
     setIsWhitelisted,
   } = useContext(globalContext)
   const [type, setType] = useState('user')
-
   let token: any
 
   const userDataURL = `${process.env.API_ENDPOINT}/users`
