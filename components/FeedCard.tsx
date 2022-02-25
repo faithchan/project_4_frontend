@@ -44,8 +44,8 @@ const FeedCard = (props: FeedProps) => {
           </span>
           <span className="font-MT font-semibold text-left leading-loose">
             <img className="w-96 h-96 object-cover rounded-3xl" src={props.image} alt="" />
-            <p className="text-gold mt-4 text-md font-header tracking-widest">{props.name}</p>
-            <p className="text-gray-300 font-body mt-4 text-xs tracking-widest">
+            <p className="text-gold w-96 mt-4 text-md font-header tracking-widest">{props.name}</p>
+            <p className="text-gray-300 w-96 font-body mt-4 text-xs tracking-widest">
               {props.description}
             </p>
             <span className="flex justify-between">

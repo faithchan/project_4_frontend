@@ -28,10 +28,9 @@ const Navbar = () => {
   const [type, setType] = useState('user')
 
   const userDataURL = `${process.env.API_ENDPOINT}/users`
-
+  let token = localStorage.getItem('token')
+  let tempToken: any = token
   useEffect(() => {
-    let token = localStorage.getItem('token')
-    let tempToken: any = token
     if (tempToken) {
       let decodedToken: any = jwtDecode(tempToken)
       console.log('decoded token: ', decodedToken)
@@ -41,7 +40,7 @@ const Navbar = () => {
         setType('user')
       }
     }
-  }, [])
+  }, [token])
 
   const connectWallet = async () => {
     if (typeof window.ethereum !== 'undefined') {
