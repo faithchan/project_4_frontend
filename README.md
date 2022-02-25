@@ -1,34 +1,49 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# SEI7 Project 4 - ARKIV
 
-## Getting Started
+[ARKIV - Demo Link](https://arkiv.vercel.app/)
 
-First, run the development server:
+[Front Repo](https://github.com/faithchan/project_4_frontend)
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+[Backend Repo](https://github.com/faithchan/project-4-backend)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[Contracts Repo](https://github.com/faithchan/project4-contracts)
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## 🌌 Introduction
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+ARKIV, the design focused NFT marketplace. At Arkiv, we are passionate about a new type of digital good called non-fungible token AKA NFT.NFTs have exciting new properties: they’re unique, provably scarce, tradeable, and usable across multiple applications. Just like physical goods, you can do whatever you want with them! You could throw them in the trash, gift them to a friend across the world, or go sell them on an open marketplace. The whole idea of Arkiv revolves around sharing real art with the world and giving designers who are unfamiliar with blockchain to have a safe platform space where art here is treated fairly with respect. At Arkiv, we've implemented an instagram inspired follow and view feed so that you can share your support of our verified designers by following them and featuring your purchases of their NFTS on your feed.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## 🈶 Features
 
-## Learn More
+- User can sign up and start transacting their NFTs on the marketplace
+- User can find and view other account users, follow and unfollow other users
+- To mint and list a token (NFT), user must submit a request form to admin. Admin will review and grant user whitelist the into "designer's database. Hence only (whitelisted) verified designers will be able to upload NFT and set royalties on their own NFTs. For normal users, the only difference is that they will not be able to upload NFTs and upon reselling (listing) the NFT, they will not have the power to set royalties.
+- View your followings feed, purchase NFT from there
+- View marketplace to see what NFTs are available to purchase
+- Edit personal details
+- Admin able to whitelist (verify) users, remove users from whitelist and delete a user permanantly
+- view your trades page as a form of your purchase history and decide whenever if you want to list or delist an listed item
+- Functions together with metamask, hence metamask must be installed to use this app.
+- You must have a wallet address to be able to sign up and transact
 
-To learn more about Next.js, take a look at the following resources:
+## 🎨 Front-End
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 💻 Technologies
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Front-End
 
-## Deploy on Vercel
+- Tailwindcss
+- React
+- NextJS
+- Typescript
+- HeadlessUI
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Back-End
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Node.js
+- Express, express-session
+- MongoDb/Mongoose
+
+## Contributors
+
+- Faith @faithchan
+- HuiYi @thryec

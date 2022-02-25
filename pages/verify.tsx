@@ -9,7 +9,8 @@ const Verify: NextPage = () => {
   const [description, setDescription] = useState('')
   const [formSent, setFormSent] = useState(false)
 
-  const submit = () => {
+  const submit = (e: any) => {
+    e.preventDefault()
     if (name && email && wallet && description) {
       const serviceId = 'service_gyzxz0u'
       const templateId = 'template_4im6s3r'
@@ -99,14 +100,14 @@ const Verify: NextPage = () => {
           >
             SUBMIT
           </button>
-          {formSent ? (
-            <h2 className="text-sm text-blue-400">
-              Thank you for your message, we will be in touch in no time!
-            </h2>
-          ) : (
-            ''
-          )}
         </div>
+        {formSent ? (
+          <h2 className="text-sm text-blue-400 text-center">
+            Thank you for your message, we will be in touch in no time!
+          </h2>
+        ) : (
+          ''
+        )}
       </form>
     </div>
   )

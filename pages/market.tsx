@@ -6,6 +6,7 @@ import globalContext from '../context/context'
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
 import Ellipsis from '../components/Spinner'
+import MarketFeedTab from '../components/MarketFeedTab'
 
 const Market: NextPage = () => {
   const { signer, marketplaceContract, nftContract, setSigner, setWalletAddress } =
@@ -141,7 +142,8 @@ const Market: NextPage = () => {
   }, [])
 
   return (
-    <div>
+    <div className="my-20">
+      <MarketFeedTab />
       {buyModal && (
         <BuyNFTModal
           name={currentTokenName}
@@ -156,7 +158,7 @@ const Market: NextPage = () => {
         />
       )}
       {!loaded && (
-        <div className="flex justify-center">
+        <div className="h-screen grid content-center justify-center">
           <Ellipsis />
         </div>
       )}

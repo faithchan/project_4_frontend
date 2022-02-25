@@ -8,6 +8,7 @@ import { ethers } from 'ethers'
 import Ellipsis from '../components/Spinner'
 import { useRouter } from 'next/router'
 import Error401 from '../components/401Section'
+import MarketFeedTab from '../components/MarketFeedTab'
 
 const Feed: NextPage = () => {
   const {
@@ -264,7 +265,8 @@ const Feed: NextPage = () => {
   }
 
   return (
-    <div>
+    <div className="my-20">
+      <MarketFeedTab />
       {buyModal && (
         <BuyNFTModal
           name={currentTokenName}

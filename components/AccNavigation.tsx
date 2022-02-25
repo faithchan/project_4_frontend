@@ -99,15 +99,6 @@ const AccNavigation = (props: connectWalletProps) => {
                   </Link>
                 </Menu.Item>
               )}
-              {props.type === 'Admin' && login && (
-                <Menu.Item>
-                  <Link href="/testadmin">
-                    <a className="group flex items-center px-4 py-1  text-gray-300 hover:text-gold">
-                      Test Admin
-                    </a>
-                  </Link>
-                </Menu.Item>
-              )}
               {login && (
                 <Menu.Item>
                   <Link href="/edit">
