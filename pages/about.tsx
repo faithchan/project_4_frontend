@@ -48,6 +48,7 @@ const About: NextPage = () => {
               title={card.title}
               artist={card.artist}
               price={card.price}
+              key={card.title}
             />
           ))}
           {/* <FeaturedCard />

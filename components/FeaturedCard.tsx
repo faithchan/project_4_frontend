@@ -6,6 +6,7 @@ interface detailProps {
   title: string
   price: string
   artist: string
+  key: string
 }
 const FeaturedCard = (props: detailProps) => {
   return (
