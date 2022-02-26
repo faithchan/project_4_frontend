@@ -168,7 +168,7 @@ const Profile: NextPage = () => {
               <Ellipsis />
             </div>
           )}
-          <div className="flex flex-wrap justify-center gap-10  mx-32 mt-2 mb-16">
+          <div className="grid grid-cols-3 gap-6 mt-3 mb-6">
             {tokenData &&
               tokenData.map((data: any) => (
                 <img
