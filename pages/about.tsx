@@ -6,6 +6,29 @@ import userContext from '../context/context'
 import { useRouter } from 'next/router'
 
 const About: NextPage = () => {
+  const featureCardArr = [
+    {
+      image:
+        'https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwcm9maWxlLXBhZ2V8MTA1fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=700&q=60',
+      title: 'MILKY WAY',
+      artist: 'FAKURIAN',
+      price: '0.01',
+    },
+    {
+      image:
+        'https://images.unsplash.com/photo-1617791160536-598cf32026fb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwcm9maWxlLXBhZ2V8MTEzfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=700&q=60',
+      title: 'BRAIN SURGE',
+      artist: 'FAKURIA',
+      price: '0.02',
+    },
+    {
+      image:
+        'https://images.unsplash.com/photo-1617791160505-6f00504e3519?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwcm9maWxlLXBhZ2V8MTA5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=700&q=60',
+      title: 'DISC RAP',
+      artist: 'FAKURIA',
+      price: '0.01',
+    },
+  ]
   const router = useRouter()
   const context = useContext(userContext)
   // console.log('context: ', context)
@@ -19,9 +42,17 @@ const About: NextPage = () => {
       <div className="">
         <h1 className="font-header text-gold text-center text-xl">Featured Artist NFTs</h1>
         <div className="flex flex-wrap justify-center space-x-20">
+          {featureCardArr.map((card) => (
+            <FeaturedCard
+              image={card.image}
+              title={card.title}
+              artist={card.artist}
+              price={card.price}
+            />
+          ))}
+          {/* <FeaturedCard />
           <FeaturedCard />
-          <FeaturedCard />
-          <FeaturedCard />
+          <FeaturedCard /> */}
         </div>
       </div>
 
